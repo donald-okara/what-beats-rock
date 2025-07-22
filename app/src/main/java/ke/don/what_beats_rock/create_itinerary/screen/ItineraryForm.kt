@@ -1,6 +1,5 @@
-package ke.don.itinerar_ai.create_itinerary.screen
+package ke.don.what_beats_rock.create_itinerary.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,12 +29,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ke.don.itinerar_ai.R
-import ke.don.itinerar_ai.create_itinerary.components.FormTextField
-import ke.don.itinerar_ai.create_itinerary.components.ItineraryList
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryFormUiState
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryIntentHandler
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryViewModel
+import ke.don.what_beats_rock.R
+import ke.don.what_beats_rock.create_itinerary.components.FormTextField
+import ke.don.what_beats_rock.create_itinerary.components.ItineraryList
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryFormUiState
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryIntentHandler
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryViewModel
 
 
 @Composable

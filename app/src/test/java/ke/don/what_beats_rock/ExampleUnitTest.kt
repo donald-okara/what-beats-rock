@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai
+package ke.don.what_beats_rock
 
 import org.junit.Test
 

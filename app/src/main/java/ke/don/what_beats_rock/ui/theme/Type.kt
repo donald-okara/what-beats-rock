@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai.ui.theme
+package ke.don.what_beats_rock.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai
+package ke.don.what_beats_rock
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,15 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryViewModel
-import ke.don.itinerar_ai.create_itinerary.screen.ItineraryApp
-import ke.don.itinerar_ai.create_itinerary.screen.ItineraryForm
-import ke.don.itinerar_ai.ui.theme.ItinerarAITheme
+import ke.don.what_beats_rock.create_itinerary.screen.ItineraryApp
+import ke.don.what_beats_rock.ui.theme.ItinerarAITheme
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

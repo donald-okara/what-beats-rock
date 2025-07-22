@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai.create_itinerary.model
+package ke.don.what_beats_rock.create_itinerary.model
 
 sealed class ItineraryIntentHandler {
     data class UpdateTitle(val title: String) : ItineraryIntentHandler()

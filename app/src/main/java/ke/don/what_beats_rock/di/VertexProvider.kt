@@ -1,19 +1,17 @@
-package ke.don.itinerar_ai.di
+package ke.don.what_beats_rock.di
 
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
-import com.google.firebase.ai.type.GenerateContentResponse
-import ke.don.itinerar_ai.create_itinerary.model.InsertionSuggestion
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryItem
-import ke.don.itinerar_ai.di.Prompts.GEMINI_MODEL
-import ke.don.itinerar_ai.di.Prompts.buildDescriptionPrompt
-import ke.don.itinerar_ai.di.Prompts.buildInsertPrompt
-import ke.don.itinerar_ai.di.Prompts.buildItineraryPrompt
+import ke.don.what_beats_rock.create_itinerary.model.InsertionSuggestion
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryItem
+import ke.don.what_beats_rock.di.Prompts.GEMINI_MODEL
+import ke.don.what_beats_rock.di.Prompts.buildDescriptionPrompt
+import ke.don.what_beats_rock.di.Prompts.buildInsertPrompt
+import ke.don.what_beats_rock.di.Prompts.buildItineraryPrompt
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 
 class VertexProviderImpl: VertexProvider {

@@ -1,10 +1,10 @@
-package ke.don.itinerar_ai.create_itinerary.model
+package ke.don.what_beats_rock.create_itinerary.model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.itinerar_ai.di.GeminiResult
-import ke.don.itinerar_ai.di.VertexProvider
+import ke.don.what_beats_rock.di.GeminiResult
+import ke.don.what_beats_rock.di.VertexProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

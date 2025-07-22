@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai
+package ke.don.what_beats_rock
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

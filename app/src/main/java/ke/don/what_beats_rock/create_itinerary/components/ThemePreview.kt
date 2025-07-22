@@ -1,10 +1,10 @@
-package ke.don.itinerar_ai.create_itinerary.components
+package ke.don.what_beats_rock.create_itinerary.components
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ke.don.itinerar_ai.ui.theme.ItinerarAITheme
+import ke.don.what_beats_rock.ui.theme.ItinerarAITheme
 
 class ThemeModeProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean> = sequenceOf(false, true) // false = light, true = dark

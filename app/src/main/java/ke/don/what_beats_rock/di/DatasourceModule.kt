@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai.di
+package ke.don.what_beats_rock.di
 
 import dagger.Module
 import dagger.Provides

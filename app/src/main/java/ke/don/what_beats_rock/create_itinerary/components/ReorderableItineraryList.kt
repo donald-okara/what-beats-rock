@@ -1,4 +1,4 @@
-package ke.don.itinerar_ai.create_itinerary.components
+package ke.don.what_beats_rock.create_itinerary.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -33,13 +33,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryFormUiState
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryIntentHandler
-import ke.don.itinerar_ai.create_itinerary.model.ItineraryItem
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryFormUiState
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryIntentHandler
+import ke.don.what_beats_rock.create_itinerary.model.ItineraryItem
 
 
 @Composable

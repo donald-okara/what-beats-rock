@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Itinerar-AI"
+rootProject.name = "What beats rock"
 include(":app")
  

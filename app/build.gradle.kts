@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "ke.don.itinerar_ai"
+    namespace = "ke.don.what_beats_rock"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "ke.don.itinerar_ai"
+        applicationId = "ke.don.what_beats_rock"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

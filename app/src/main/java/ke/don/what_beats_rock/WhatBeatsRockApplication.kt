@@ -1,14 +1,13 @@
-package ke.don.itinerar_ai
+package ke.don.what_beats_rock
 
 import android.app.Application
 import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
-import com.google.firebase.appcheck.playintegrity.PlayIntegrityAppCheckProviderFactory
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class ItineraryApplication: Application() {
+class WhatBeatsRockApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         FirebaseApp.initializeApp(this)

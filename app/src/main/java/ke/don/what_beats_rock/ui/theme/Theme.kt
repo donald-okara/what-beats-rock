@@ -1,6 +1,5 @@
-package ke.don.itinerar_ai.ui.theme
+package ke.don.what_beats_rock.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
