@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_datasource.ai
 
 import android.util.Log
@@ -14,7 +29,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 
-class VertexProviderImpl: VertexProvider {
+class VertexProviderImpl : VertexProvider {
     private val vertexAI = Firebase.ai
     private val model = vertexAI.generativeModel(GEMINI_MODEL)
 
@@ -31,10 +46,9 @@ class VertexProviderImpl: VertexProvider {
         emit(GeminiResult.Error(e.message ?: "Unknown error"))
     }
 
-
     override fun generateItineraryItems(
         title: String,
-        description: String
+        description: String,
     ): Flow<GeminiResult<List<ItineraryItem>>> = flow {
         emit(GeminiResult.Loading)
 
@@ -45,7 +59,7 @@ class VertexProviderImpl: VertexProvider {
         responseStream.collect { chunk ->
             chunk.text?.let { jsonBuilder.append(it) }
         }
-        Log.d("VertexAI", "✅ JSON generated: ${jsonBuilder.toString()}")
+        Log.d("VertexAI", "✅ JSON generated: $jsonBuilder")
 
         try {
             val parsed = Json.decodeFromString<List<ItineraryItem>>(jsonBuilder.toString())
@@ -63,7 +77,7 @@ class VertexProviderImpl: VertexProvider {
     override fun insertItineraryItems(
         title: String,
         description: String,
-        itineraryList: List<ItineraryItem>
+        itineraryList: List<ItineraryItem>,
     ): Flow<GeminiResult<List<InsertionSuggestion>>> = flow {
         emit(GeminiResult.Loading)
 
@@ -74,7 +88,7 @@ class VertexProviderImpl: VertexProvider {
         responseStream.collect { chunk ->
             chunk.text?.let { jsonBuilder.append(it) }
         }
-        Log.d("VertexAI", "✅ JSON generated: ${jsonBuilder.toString()}")
+        Log.d("VertexAI", "✅ JSON generated: $jsonBuilder")
 
         try {
             val rawJson = jsonBuilder
@@ -94,15 +108,13 @@ class VertexProviderImpl: VertexProvider {
         Log.e("VertexAI", "🔥 Failed to generate itinerary items", e)
         emit(GeminiResult.Error(e.message ?: "Unknown error"))
     }
-
 }
 
 interface VertexProvider {
     fun generateDescription(title: String): Flow<GeminiResult<String>>
     fun generateItineraryItems(title: String, description: String): Flow<GeminiResult<List<ItineraryItem>>>
-    fun insertItineraryItems(title: String,description: String, itineraryList: List<ItineraryItem>): Flow<GeminiResult<List<InsertionSuggestion>>>
+    fun insertItineraryItems(title: String, description: String, itineraryList: List<ItineraryItem>): Flow<GeminiResult<List<InsertionSuggestion>>>
 }
-
 
 sealed class GeminiResult<out T> {
     data object Loading : GeminiResult<Nothing>()

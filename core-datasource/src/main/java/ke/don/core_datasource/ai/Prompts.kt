@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_datasource.ai
 
 import ke.don.core_datasource.domain.ItineraryItem
@@ -24,14 +39,13 @@ object Prompts {
         Use short titles. Use unique string IDs like "a1", "b2", etc. 
         Set isGenerated to true and isLocked to false.
         Do NOT include markdown (no ```json), no explanations, and no prose — ONLY the JSON array. 
-    """.trimIndent()
+        """.trimIndent()
     }
-
 
     fun buildDescriptionPrompt(title: String): String {
         return "Hi Gemini, I'm planning an itinerary titled '$title'." +
-                "Could you help me write a description for it? Please keep it stictly within $MAX_TOKENS tokens." +
-                "        Do not make it markdown or give me options, just a sentence, keep it first person and acknowledge if plural"
+            "Could you help me write a description for it? Please keep it stictly within $MAX_TOKENS tokens." +
+            "        Do not make it markdown or give me options, just a sentence, keep it first person and acknowledge if plural"
     }
 
     fun buildInsertPrompt(title: String, description: String, currentList: List<ItineraryItem>): String {
@@ -63,11 +77,9 @@ object Prompts {
         Respond with a JSON array of such objects only. No markdown or prose.
         
         This means your string starts with backticks and not the `[` character expected by the JSON parser.
-    """.trimIndent()
+        """.trimIndent()
     }
-
 
     const val GEMINI_MODEL = "gemini-2.5-flash"
     const val MAX_TOKENS = 100
-
 }

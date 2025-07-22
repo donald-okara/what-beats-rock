@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.create_itinerary.screen
 
 import androidx.compose.foundation.layout.Arrangement
@@ -36,12 +51,11 @@ import ke.don.what_beats_rock.create_itinerary.model.ItineraryFormUiState
 import ke.don.what_beats_rock.create_itinerary.model.ItineraryIntentHandler
 import ke.don.what_beats_rock.create_itinerary.model.ItineraryViewModel
 
-
 @Composable
 fun ItineraryApp(
     modifier: Modifier,
-){
-    val viewModel:ItineraryViewModel = hiltViewModel()
+) {
+    val viewModel: ItineraryViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
     val handleIntent = viewModel::handleIntent
 
@@ -57,13 +71,13 @@ fun ItineraryForm(
     modifier: Modifier,
     uiState: ItineraryFormUiState,
     handleIntent: (ItineraryIntentHandler) -> Unit,
-){
+) {
     val itineraryItemLength = uiState.itineraryItem?.title?.length ?: 0
     val itineraryLengthError = itineraryItemLength > 250
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         Icon(
             painter = painterResource(id = R.drawable.event_list_24dp_e3e3e3_fill0_wght400_grad0_opsz24),
@@ -71,7 +85,7 @@ fun ItineraryForm(
             tint = MaterialTheme.colorScheme.primary,
             modifier = Modifier
                 .padding(16.dp)
-                .size(32.dp)
+                .size(32.dp),
         )
 
         Column(
@@ -81,16 +95,16 @@ fun ItineraryForm(
                 .verticalScroll(rememberScrollState())
                 .padding(8.dp)
                 .fillMaxSize(),
-        ){
+        ) {
             FormTextField(
                 label = "Title",
                 placeholder = "Trip to Malawi",
-                onValueChange = {handleIntent(ItineraryIntentHandler.UpdateTitle(it))},
+                onValueChange = { handleIntent(ItineraryIntentHandler.UpdateTitle(it)) },
                 text = uiState.title.orEmpty(),
                 enabled = true,
                 isError = false,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    capitalization = KeyboardCapitalization.Words
+                    capitalization = KeyboardCapitalization.Words,
                 ),
             )
 
@@ -105,13 +119,13 @@ fun ItineraryForm(
                 isError = uiState.descriptionIsError || uiState.title.isNullOrBlank(),
                 maxLength = 500,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    capitalization = KeyboardCapitalization.Sentences
+                    capitalization = KeyboardCapitalization.Sentences,
                 ),
                 nameLength = uiState.description?.length ?: 0,
                 showLength = true,
                 singleLine = false,
-                errorMessage = if(uiState.descriptionIsError) uiState.descriptionErrorMessage else if (uiState.title.isNullOrBlank() && uiState.description.isNullOrBlank()) "Title is required" else null,
-                comment = animatedGeneratingText(isActive = uiState.isGeneratingDescription)
+                errorMessage = if (uiState.descriptionIsError) uiState.descriptionErrorMessage else if (uiState.title.isNullOrBlank() && uiState.description.isNullOrBlank()) "Title is required" else null,
+                comment = animatedGeneratingText(isActive = uiState.isGeneratingDescription),
             )
 
             FormTextField(
@@ -122,41 +136,43 @@ fun ItineraryForm(
                 trailingIcon = Icons.Outlined.Check,
                 enabled = !itineraryLengthError,
                 onClick = {
-                    if (uiState.itineraryItem?.id == null) handleIntent(ItineraryIntentHandler.AddItineraryItem)
-                    else handleIntent(ItineraryIntentHandler.UpdateItineraryItem)
+                    if (uiState.itineraryItem?.id == null) {
+                        handleIntent(ItineraryIntentHandler.AddItineraryItem)
+                    } else {
+                        handleIntent(ItineraryIntentHandler.UpdateItineraryItem)
+                    }
                 },
                 isError = itineraryLengthError,
                 maxLength = 250,
                 keyboardOptions = KeyboardOptions.Default.copy(
-                    capitalization = KeyboardCapitalization.Sentences
+                    capitalization = KeyboardCapitalization.Sentences,
                 ),
                 nameLength = itineraryItemLength,
                 showLength = true,
                 singleLine = true,
-                errorMessage = if(itineraryLengthError) "Itinerary title is too long" else null,
+                errorMessage = if (itineraryLengthError) "Itinerary title is too long" else null,
             )
 
-            if (uiState.itinerary.isEmpty()){
+            if (uiState.itinerary.isEmpty()) {
                 Button(
                     enabled = uiState.description?.isNotBlank() == true && !uiState.isGeneratingItinerary,
-                    onClick = { handleIntent(ItineraryIntentHandler.GenerateItinerary) }
+                    onClick = { handleIntent(ItineraryIntentHandler.GenerateItinerary) },
                 ) {
                     Text(text = "Generate Itinerary")
                 }
-            }else{
+            } else {
                 Button(
                     enabled = uiState.description?.isNotBlank() == true && !uiState.isGeneratingItinerary,
-                    onClick = { handleIntent(ItineraryIntentHandler.SuggestItineraryItems) }
+                    onClick = { handleIntent(ItineraryIntentHandler.SuggestItineraryItems) },
                 ) {
                     Text(text = "Suggest changes")
                 }
             }
 
-
             Text(
                 text = animatedGeneratingText(
                     "Generating itinerary",
-                    isActive = uiState.isGeneratingItinerary
+                    isActive = uiState.isGeneratingItinerary,
                 ) ?: "",
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.tertiary,
@@ -164,8 +180,7 @@ fun ItineraryForm(
                     .fillMaxWidth(),
             )
 
-
-            if (uiState.itineraryIsError){
+            if (uiState.itineraryIsError) {
                 Text(
                     text = uiState.itineraryErrorMessage ?: "Something went wrong",
                     style = MaterialTheme.typography.labelMedium,
@@ -175,17 +190,14 @@ fun ItineraryForm(
                 )
             }
 
-
             if (uiState.itinerary.isNotEmpty()) {
                 ItineraryList(
                     state = uiState,
-                    handleIntent = handleIntent
+                    handleIntent = handleIntent,
                 )
             }
-
         }
     }
-
 }
 
 @Composable
