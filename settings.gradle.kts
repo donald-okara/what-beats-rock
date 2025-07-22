@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "What beats rock"
 include(":app")
- 
+include(":core-datasource")

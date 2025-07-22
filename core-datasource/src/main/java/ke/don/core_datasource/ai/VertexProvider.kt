@@ -1,14 +1,14 @@
-package ke.don.what_beats_rock.di
+package ke.don.core_datasource.ai
 
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
-import ke.don.what_beats_rock.create_itinerary.model.InsertionSuggestion
-import ke.don.what_beats_rock.create_itinerary.model.ItineraryItem
-import ke.don.what_beats_rock.di.Prompts.GEMINI_MODEL
-import ke.don.what_beats_rock.di.Prompts.buildDescriptionPrompt
-import ke.don.what_beats_rock.di.Prompts.buildInsertPrompt
-import ke.don.what_beats_rock.di.Prompts.buildItineraryPrompt
+import ke.don.core_datasource.ai.Prompts.GEMINI_MODEL
+import ke.don.core_datasource.ai.Prompts.buildDescriptionPrompt
+import ke.don.core_datasource.ai.Prompts.buildInsertPrompt
+import ke.don.core_datasource.ai.Prompts.buildItineraryPrompt
+import ke.don.core_datasource.domain.InsertionSuggestion
+import ke.don.core_datasource.domain.ItineraryItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

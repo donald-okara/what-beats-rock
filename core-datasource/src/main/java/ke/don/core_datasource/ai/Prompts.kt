@@ -1,6 +1,6 @@
-package ke.don.what_beats_rock.di
+package ke.don.core_datasource.ai
 
-import ke.don.what_beats_rock.create_itinerary.model.ItineraryItem
+import ke.don.core_datasource.domain.ItineraryItem
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

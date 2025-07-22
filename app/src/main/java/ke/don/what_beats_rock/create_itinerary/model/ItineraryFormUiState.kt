@@ -1,5 +1,6 @@
 package ke.don.what_beats_rock.create_itinerary.model
 
+import ke.don.core_datasource.domain.ItineraryItem
 import kotlinx.serialization.Serializable
 
 data class ItineraryFormUiState(
@@ -14,22 +15,5 @@ data class ItineraryFormUiState(
     val isGeneratingItinerary: Boolean = false,
     val itineraryIsError: Boolean = false,
     val itineraryErrorMessage: String? = null,
-)
-
-@Serializable
-data class ItineraryItem(
-    val id: String? = null,
-    val title: String = "",
-    val isLocked: Boolean = false,
-    val isGenerated: Boolean = false,
-)
-
-@Serializable
-data class InsertionSuggestion(
-    val id: String,
-    val title: String,
-    val isLocked: Boolean,
-    val isGenerated: Boolean,
-    val position: Int
 )
 

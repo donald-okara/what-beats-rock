@@ -36,9 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import ke.don.core_datasource.domain.ItineraryItem
 import ke.don.what_beats_rock.create_itinerary.model.ItineraryFormUiState
 import ke.don.what_beats_rock.create_itinerary.model.ItineraryIntentHandler
-import ke.don.what_beats_rock.create_itinerary.model.ItineraryItem
 
 
 @Composable

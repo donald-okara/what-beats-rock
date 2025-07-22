@@ -3,8 +3,10 @@ package ke.don.what_beats_rock.create_itinerary.model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.what_beats_rock.di.GeminiResult
-import ke.don.what_beats_rock.di.VertexProvider
+import ke.don.core_datasource.ai.GeminiResult
+import ke.don.core_datasource.ai.VertexProvider
+import ke.don.core_datasource.domain.InsertionSuggestion
+import ke.don.core_datasource.domain.ItineraryItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update

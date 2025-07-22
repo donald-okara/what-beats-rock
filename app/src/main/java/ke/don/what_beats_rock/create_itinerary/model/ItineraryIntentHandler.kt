@@ -1,5 +1,7 @@
 package ke.don.what_beats_rock.create_itinerary.model
 
+import ke.don.core_datasource.domain.ItineraryItem
+
 sealed class ItineraryIntentHandler {
     data class UpdateTitle(val title: String) : ItineraryIntentHandler()
     data class UpdateDescription(val description: String) : ItineraryIntentHandler()
