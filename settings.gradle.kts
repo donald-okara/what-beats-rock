@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "What beats rock"
 include(":app")
 include(":core-datasource")
+include(":feature-chat")
+include(":core-designsystem")

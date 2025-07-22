@@ -1,10 +1,9 @@
-package ke.don.what_beats_rock.create_itinerary.components
+package ke.don.core_designsystem.material_theme.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import ke.don.what_beats_rock.ui.theme.ItinerarAITheme
 
 class ThemeModeProvider : PreviewParameterProvider<Boolean> {
     override val values: Sequence<Boolean> = sequenceOf(false, true) // false = light, true = dark
@@ -15,7 +14,7 @@ fun ThemedPreviewTemplate(
     isDarkTheme: Boolean = false,
     content: @Composable () -> Unit,
 ) {
-    ItinerarAITheme(isDarkTheme) {
+    AppTheme(isDarkTheme) {
         Surface(
             color = MaterialTheme.colorScheme.surface,
         ) {

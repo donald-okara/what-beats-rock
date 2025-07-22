@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
+import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
 import ke.don.what_beats_rock.create_itinerary.screen.ItineraryApp
 import ke.don.what_beats_rock.ui.theme.ItinerarAITheme
 
@@ -43,7 +44,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    ItinerarAITheme {
+    AppTheme {
         Greeting("Android")
     }
 }
