@@ -19,101 +19,128 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import ke.don.core_datasource.ai.Prompts.GEMINI_MODEL
-import ke.don.core_datasource.ai.Prompts.buildDescriptionPrompt
-import ke.don.core_datasource.ai.Prompts.buildInsertPrompt
-import ke.don.core_datasource.ai.Prompts.buildItineraryPrompt
-import ke.don.core_datasource.domain.InsertionSuggestion
-import ke.don.core_datasource.domain.ItineraryItem
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import ke.don.core_datasource.ai.Prompts.buildMediumStrictPrompt
+import ke.don.core_datasource.ai.Prompts.buildStrictChatAnswerPrompt
+import ke.don.core_datasource.domain.ChatBotResponse
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.boolean
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonObject
 
 class VertexProviderImpl : VertexProvider {
     private val vertexAI = Firebase.ai
     private val model = vertexAI.generativeModel(GEMINI_MODEL)
 
-    override fun generateDescription(title: String): Flow<GeminiResult<String>> = flow {
-        emit(GeminiResult.Loading)
+    override suspend fun generateChatResponse(
+        pastResponses: List<String>,
+        newResponse: String
+    ): GeminiResult<ChatBotResponse> {
+        val prompt = buildStrictChatAnswerPrompt(pastResponses, newResponse)
 
-        val responseStream = model.generateContentStream(buildDescriptionPrompt(title))
+        repeat(5) { attempt ->
+            try {
+                val responseStream = model.generateContentStream(prompt)
 
-        responseStream.collect { chunk ->
-            emit(GeminiResult.Success(chunk.text.orEmpty()))
+                val jsonBuilder = StringBuilder()
+                responseStream.collect { chunk ->
+                    chunk.text?.let { jsonBuilder.append(it) }
+                }
+
+                Log.d("VertexAI", "✅ JSON generated: $jsonBuilder")
+
+                val rawJson = jsonBuilder
+                    .toString()
+                    .replace("```json", "")
+                    .replace("```", "")
+                    .trim()
+
+                return try {
+                    val parsed = Json.decodeFromString<ChatBotResponse>(rawJson)
+                    GeminiResult.Success(parsed)
+                } catch (decodeError: Exception) {
+                    Log.w("VertexAI", "🛠️ Attempting repair after decode failure: ${decodeError.message}")
+
+                    try {
+                        val fallbackJson = Json.parseToJsonElement(rawJson).jsonObject
+                        val repaired = repairChatBotJson(fallbackJson)
+                        GeminiResult.Success(repaired)
+                    } catch (repairError: Exception) {
+                        Log.w("VertexAI", "❌ Repair failed: ${repairError.message}")
+                        throw repairError
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w("VertexAI", "⚠️ Attempt ${attempt + 1} failed: ${e.message}")
+                if (attempt == 4) {
+                    Log.e("VertexAI", "🚨 Final failure to parse JSON", e)
+                    return GeminiResult.Error("Failed to parse generated chat after 5 tries: ${e.message}")
+                }
+            }
         }
-    }.catch { e ->
-        Log.e("VertexAI", "🔥 Failed to generate content", e)
-        emit(GeminiResult.Error(e.message ?: "Unknown error"))
+
+        return GeminiResult.Error("Unexpected error") // Defensive fallback
     }
 
-    override fun generateItineraryItems(
-        title: String,
-        description: String,
-    ): Flow<GeminiResult<List<ItineraryItem>>> = flow {
-        emit(GeminiResult.Loading)
+    fun repairChatBotJson(json: JsonObject): ChatBotResponse {
+        val stringValues = mutableListOf<String>()
+        val intValues = mutableListOf<Int>()
+        val boolValues = mutableListOf<Boolean>()
 
-        val responseStream = model.generateContentStream(buildItineraryPrompt(title, description))
+        Log.d("JsonRepair", "🔧 Starting repair process on: $json")
 
-        val jsonBuilder = StringBuilder()
-
-        responseStream.collect { chunk ->
-            chunk.text?.let { jsonBuilder.append(it) }
+        for ((key, value) in json) {
+            when {
+                value is JsonPrimitive && value.isString -> {
+                    stringValues += value.content
+                    Log.d("JsonRepair", "📝 Mapped string key '$key' → '${value.content}'")
+                }
+                value is JsonPrimitive && value.intOrNull != null -> {
+                    intValues += value.int
+                    Log.d("JsonRepair", "🔢 Mapped int key '$key' → ${value.int}")
+                }
+                value is JsonPrimitive && value.booleanOrNull != null -> {
+                    boolValues += value.boolean
+                    Log.d("JsonRepair", "✅ Mapped bool key '$key' → ${value.boolean}")
+                }
+                else -> {
+                    Log.w("JsonRepair", "⚠️ Unrecognized type or malformed value at key '$key': $value")
+                }
+            }
         }
-        Log.d("VertexAI", "✅ JSON generated: $jsonBuilder")
 
-        try {
-            val parsed = Json.decodeFromString<List<ItineraryItem>>(jsonBuilder.toString())
-            val capped = parsed.take(4)
-            emit(GeminiResult.Success(capped))
-        } catch (e: Exception) {
-            Log.e("VertexAI", "🚨 JSON parsing failed", e)
-            emit(GeminiResult.Error("Failed to parse generated itinerary: ${e.message}"))
+        if (stringValues.size != 1 || intValues.size != 1 || boolValues.size != 1) {
+            val errorMsg = buildString {
+                append("Unable to repair JSON:\n")
+                append(" - Strings: $stringValues\n")
+                append(" - Ints: $intValues\n")
+                append(" - Bools: $boolValues")
+            }
+            Log.e("JsonRepair", "❌ $errorMsg")
+            throw IllegalArgumentException(errorMsg)
         }
-    }.catch { e ->
-        Log.e("VertexAI", "🔥 Failed to generate itinerary items", e)
-        emit(GeminiResult.Error(e.message ?: "Unknown error"))
+
+        val result = ChatBotResponse(
+            message = stringValues.first(),
+            awardedPoints = intValues.first(),
+            isValid = boolValues.first()
+        )
+
+        Log.d("JsonRepair", "✅ Successfully repaired JSON into: $result")
+        return result
     }
 
-    override fun insertItineraryItems(
-        title: String,
-        description: String,
-        itineraryList: List<ItineraryItem>,
-    ): Flow<GeminiResult<List<InsertionSuggestion>>> = flow {
-        emit(GeminiResult.Loading)
 
-        val responseStream = model.generateContentStream(buildInsertPrompt(title, description, itineraryList))
-
-        val jsonBuilder = StringBuilder()
-
-        responseStream.collect { chunk ->
-            chunk.text?.let { jsonBuilder.append(it) }
-        }
-        Log.d("VertexAI", "✅ JSON generated: $jsonBuilder")
-
-        try {
-            val rawJson = jsonBuilder
-                .toString()
-                .replace("```json", "")
-                .replace("```", "")
-                .trim()
-
-            val parsed = Json.decodeFromString<List<InsertionSuggestion>>(rawJson)
-            val capped = parsed.take(4)
-            emit(GeminiResult.Success(capped))
-        } catch (e: Exception) {
-            Log.e("VertexAI", "🚨 JSON parsing failed", e)
-            emit(GeminiResult.Error("Failed to parse generated itinerary: ${e.message}"))
-        }
-    }.catch { e ->
-        Log.e("VertexAI", "🔥 Failed to generate itinerary items", e)
-        emit(GeminiResult.Error(e.message ?: "Unknown error"))
-    }
 }
 
 interface VertexProvider {
-    fun generateDescription(title: String): Flow<GeminiResult<String>>
-    fun generateItineraryItems(title: String, description: String): Flow<GeminiResult<List<ItineraryItem>>>
-    fun insertItineraryItems(title: String, description: String, itineraryList: List<ItineraryItem>): Flow<GeminiResult<List<InsertionSuggestion>>>
+    suspend fun generateChatResponse(
+        pastResponses: List<String>,
+        newResponse: String
+    ): GeminiResult<ChatBotResponse>
 }
 
 sealed class GeminiResult<out T> {

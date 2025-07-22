@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.what_beats_rock.create_itinerary.components
+package ke.don.core_designsystem.material_theme.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -74,6 +74,39 @@ fun FormTextField(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier.fillMaxWidth(),
     ) {
+        if (showLength || isError) {
+            Row(
+                modifier = Modifier
+                    .padding(4.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (isError) {
+                    Text(
+                        text = errorMessage.orEmpty(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.weight(0.8f),
+                    )
+                } else {
+                    Spacer(modifier = Modifier.weight(0.8f))
+                }
+
+                if (showLength) {
+                    Text(
+                        text = "$nameLength / $maxLength",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = counterColor,
+                        modifier = Modifier.weight(0.2f),
+                        textAlign = TextAlign.End,
+                    )
+                } else {
+                    Spacer(modifier = Modifier.weight(0.2f))
+                }
+            }
+        }
+
         // Optional clickable wrapper
         OutlinedTextField(
             value = text,
@@ -82,6 +115,7 @@ fun FormTextField(
             readOnly = readOnly,
             enabled = enabled,
             singleLine = singleLine,
+            modifier = Modifier.fillMaxWidth(),
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             placeholder = { Text(placeholder ?: "") },
@@ -97,11 +131,10 @@ fun FormTextField(
                 }
             },
             shape = RoundedCornerShape(16.dp),
-            modifier = modifier.fillMaxWidth(),
             trailingIcon = if (onClick != null && trailingIcon != null) {
                 {
                     IconButton(onClick = { if (enabled) onClick() }) {
-                        Icon(imageVector = trailingIcon, contentDescription = label)
+                        Icon(imageVector = trailingIcon, contentDescription = label, tint = MaterialTheme.colorScheme.primary)
                     }
                 }
             } else {
@@ -114,45 +147,13 @@ fun FormTextField(
             },
         )
 
-        if (showLength || isError) {
-            Row(
-                modifier = modifier
-                    .padding(4.dp)
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                if (isError) {
-                    Text(
-                        text = errorMessage.orEmpty(),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = modifier.weight(0.8f),
-                    )
-                } else {
-                    Spacer(modifier = modifier.weight(0.8f))
-                }
-
-                if (showLength) {
-                    Text(
-                        text = "$nameLength / $maxLength",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = counterColor,
-                        modifier = modifier.weight(0.2f),
-                        textAlign = TextAlign.End,
-                    )
-                } else {
-                    Spacer(modifier = modifier.weight(0.2f))
-                }
-            }
-        }
 
         if (!comment.isNullOrEmpty()) {
             Text(
                 text = comment,
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.tertiary,
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth(),
             )
         }
