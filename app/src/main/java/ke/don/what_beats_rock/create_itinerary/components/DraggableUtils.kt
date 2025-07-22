@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.create_itinerary.components
 
 import android.annotation.SuppressLint
@@ -21,7 +36,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.channels.Channel
 
-
 inline fun <T : Any> LazyListScope.draggableItems(
     items: List<T>,
     dragDropState: DragDropState,
@@ -29,7 +43,7 @@ inline fun <T : Any> LazyListScope.draggableItems(
 ) {
     itemsIndexed(
         items = items,
-        contentType = { index, _ -> DraggableItem(index = index) }
+        contentType = { index, _ -> DraggableItem(index = index) },
     ) { index, item ->
         val modifier = if (dragDropState.draggingItemIndex == index) {
             Modifier
@@ -42,20 +56,20 @@ inline fun <T : Any> LazyListScope.draggableItems(
     }
 }
 
-
 @SuppressLint("SuspiciousModifierThen")
 fun Modifier.dragContainer(dragDropState: DragDropState): Modifier {
-    return this.then(pointerInput(dragDropState) {
-        detectDragGesturesAfterLongPress(
-            onDrag = { change, offset ->
-                change.consume()
-                dragDropState.onDrag(offset = offset)
-            },
-            onDragStart = { offset -> dragDropState.onDragStart(offset) },
-            onDragEnd = { dragDropState.onDragInterrupted() },
-            onDragCancel = { dragDropState.onDragInterrupted() }
-        )
-    }
+    return this.then(
+        pointerInput(dragDropState) {
+            detectDragGesturesAfterLongPress(
+                onDrag = { change, offset ->
+                    change.consume()
+                    dragDropState.onDrag(offset = offset)
+                },
+                onDragStart = { offset -> dragDropState.onDragStart(offset) },
+                onDragEnd = { dragDropState.onDragInterrupted() },
+                onDragCancel = { dragDropState.onDragInterrupted() },
+            )
+        },
     )
 }
 
@@ -63,9 +77,8 @@ fun Modifier.dragContainer(dragDropState: DragDropState): Modifier {
 fun rememberDragDropState(
     lazyListState: LazyListState,
     onMove: (Int, Int) -> Unit,
-    draggableItemsNum: Int
+    draggableItemsNum: Int,
 ): DragDropState {
-
     val state =
         remember(lazyListState) {
             DragDropState(
@@ -133,8 +146,8 @@ class DragDropState(
         val targetItem =
             stateList.layoutInfo.visibleItemsInfo.find { item ->
                 middleOffset.toInt() in item.offset..item.offset + item.size &&
-                        currentDraggingItem.index != item.index &&
-                        item.contentType is DraggableItem
+                    currentDraggingItem.index != item.index &&
+                    item.contentType is DraggableItem
             }
 
         if (targetItem != null) {

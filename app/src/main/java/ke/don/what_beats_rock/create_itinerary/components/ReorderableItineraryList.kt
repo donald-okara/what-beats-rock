@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.create_itinerary.components
 
 import androidx.compose.animation.animateContentSize
@@ -37,9 +52,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ke.don.core_datasource.domain.ItineraryItem
+import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
+import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.what_beats_rock.create_itinerary.model.ItineraryFormUiState
 import ke.don.what_beats_rock.create_itinerary.model.ItineraryIntentHandler
-
 
 @Composable
 fun ItineraryList(
@@ -63,7 +79,7 @@ fun ItineraryList(
             draggableItemsNum = draggableItinerary,
             onMove = { fromIndex, toIndex ->
                 handleIntent(ItineraryIntentHandler.MoveItem(fromIndex, toIndex))
-            }
+            },
         )
 
     LazyColumn(
@@ -73,7 +89,7 @@ fun ItineraryList(
             .dragContainer(dragDropState),
         state = stateList,
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         item {
             Text(text = "Itinerary", fontSize = 30.sp)
@@ -85,8 +101,8 @@ fun ItineraryList(
                 modifier = itemModifier,
                 item = item,
                 isSelected = isSelected || state.itineraryItem?.id == item.id,
-                onRemoveItem = {handleIntent(ItineraryIntentHandler.RemoveItem(it))},
-                onEditItem = {handleIntent(ItineraryIntentHandler.EditItem(it))}
+                onRemoveItem = { handleIntent(ItineraryIntentHandler.RemoveItem(it)) },
+                onEditItem = { handleIntent(ItineraryIntentHandler.EditItem(it)) },
             )
         }
     }
@@ -98,17 +114,18 @@ private fun Item(
     item: ItineraryItem,
     isSelected: Boolean,
     onRemoveItem: (ItineraryItem) -> Unit,
-    onEditItem: (ItineraryItem) -> Unit
+    onEditItem: (ItineraryItem) -> Unit,
 ) {
     val enabled = !isSelected
-    val backgroundColor = if (isSelected)
+    val backgroundColor = if (isSelected) {
         MaterialTheme.colorScheme.surfaceVariant
-    else
+    } else {
         MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)
+    }
 
     val animatedScale by animateFloatAsState(
         targetValue = if (isSelected) 1.05f else 1f,
-        label = "itemScale"
+        label = "itemScale",
     )
 
     Card(
@@ -116,42 +133,42 @@ private fun Item(
             .fillMaxWidth()
             .scale(animatedScale)
             .animateContentSize(),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
+        colors = CardDefaults.cardColors(containerColor = backgroundColor),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(4.dp),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Icon(
                 imageVector = Icons.Outlined.DragIndicator,
                 contentDescription = "Drag handle",
                 tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                modifier = Modifier.size(32.dp)
+                modifier = Modifier.size(32.dp),
             )
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         text = item.title,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     IconButton(enabled = enabled, onClick = { onEditItem(item) }) {
                         Icon(
                             imageVector = Icons.Outlined.Edit,
                             contentDescription = "Edit item",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = MaterialTheme.colorScheme.primary,
                         )
                     }
                     IconButton(enabled = enabled, onClick = { onRemoveItem(item) }) {
                         Icon(
                             imageVector = Icons.Outlined.Delete,
                             contentDescription = "Remove item",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = MaterialTheme.colorScheme.error,
                         )
                     }
                 }
@@ -159,19 +176,19 @@ private fun Item(
                 if (item.isGenerated) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Lightbulb,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.tertiary,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = "Generated by AI",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.tertiary
+                            color = MaterialTheme.colorScheme.tertiary,
                         )
                     }
                 }
@@ -180,11 +197,10 @@ private fun Item(
     }
 }
 
-
 @Preview
 @Composable
 fun ItemPreview(
-    @PreviewParameter(ThemeModeProvider::class)isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class)isDark: Boolean,
 ) {
     ThemedPreviewTemplate(isDark) {
         Item(
@@ -196,8 +212,7 @@ fun ItemPreview(
             ),
             isSelected = false,
             onRemoveItem = {},
-            onEditItem = {}
+            onEditItem = {},
         )
     }
-
 }

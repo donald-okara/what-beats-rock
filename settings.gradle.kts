@@ -14,6 +14,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven(url = "https://jitpack.io") // ✅ Add this line
         google()
         mavenCentral()
     }
@@ -22,3 +23,5 @@ dependencyResolutionManagement {
 rootProject.name = "What beats rock"
 include(":app")
 include(":core-datasource")
+include(":feature-chat")
+include(":core-designsystem")

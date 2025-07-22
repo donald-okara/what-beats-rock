@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.create_itinerary.model
 
 import androidx.lifecycle.ViewModel
@@ -15,8 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ItineraryViewModel @Inject constructor(
-    private val vertexProvider: VertexProvider
-): ViewModel() {
+    private val vertexProvider: VertexProvider,
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ItineraryFormUiState())
     val uiState: StateFlow<ItineraryFormUiState> = _uiState
 
@@ -50,34 +65,36 @@ class ItineraryViewModel @Inject constructor(
         updateUiState(_uiState.value.copy(description = description, descriptionIsError = description.length > 500, descriptionErrorMessage = if (description.length > 500) "Description is too long" else null))
     }
 
-    fun editItem(item: ItineraryItem){
+    fun editItem(item: ItineraryItem) {
         updateUiState(_uiState.value.copy(itineraryItem = item))
     }
 
     fun updateItineraryText(text: String) {
         val currentItem = uiState.value.itineraryItem
-        val itineraryItem = if(currentItem == null) ItineraryItem() else currentItem
+        val itineraryItem = if (currentItem == null) ItineraryItem() else currentItem
         updateUiState(_uiState.value.copy(itineraryItem = itineraryItem.copy(title = text, isGenerated = false)))
     }
 
-    fun addItineraryItem(){
+    fun addItineraryItem() {
         val updatedList = _uiState.value.itinerary.toMutableList().apply {
-            add(ItineraryItem(
-                id = _uiState.value.itinerary.size.toString(),
-                title = _uiState.value.itineraryItem?.title.orEmpty(),
-                isLocked = true,
-            ))
+            add(
+                ItineraryItem(
+                    id = _uiState.value.itinerary.size.toString(),
+                    title = _uiState.value.itineraryItem?.title.orEmpty(),
+                    isLocked = true,
+                ),
+            )
         }
 
         updateUiState(
             _uiState.value.copy(
                 itinerary = updatedList,
-                itineraryItem = null
-            )
+                itineraryItem = null,
+            ),
         )
     }
 
-    fun updateItineraryItem(){
+    fun updateItineraryItem() {
         val itineraryItem = uiState.value.itineraryItem
         val itineraryList = uiState.value.itinerary
 
@@ -89,21 +106,20 @@ class ItineraryViewModel @Inject constructor(
             updateUiState(
                 _uiState.value.copy(
                     itineraryItem = null,
-                    itinerary = updatedList
-                )
+                    itinerary = updatedList,
+                ),
             )
         }
-
     }
 
-    fun removeItineraryItem(item: ItineraryItem){
+    fun removeItineraryItem(item: ItineraryItem) {
         val updatedList = uiState.value.itinerary - item
 
         updateUiState(
             _uiState.value.copy(
                 itinerary = updatedList,
-                itineraryItem = null
-            )
+                itineraryItem = null,
+            ),
         )
     }
 
@@ -114,8 +130,8 @@ class ItineraryViewModel @Inject constructor(
                     isGeneratingDescription = true,
                     descriptionIsError = false,
                     descriptionErrorMessage = null,
-                    description = "" // optionally clear
-                )
+                    description = "", // optionally clear
+                ),
             )
 
             uiState.value.title?.let {
@@ -136,8 +152,8 @@ class ItineraryViewModel @Inject constructor(
                                 _uiState.value.copy(
                                     isGeneratingDescription = false,
                                     descriptionIsError = true,
-                                    descriptionErrorMessage = "🔥 Failed to generate content"
-                                )
+                                    descriptionErrorMessage = "🔥 Failed to generate content",
+                                ),
                             )
                         }
                     }
@@ -149,7 +165,7 @@ class ItineraryViewModel @Inject constructor(
         }
     }
 
-    fun generateItinerary(){
+    fun generateItinerary() {
         viewModelScope.launch {
             updateUiState(
                 _uiState.value.copy(
@@ -157,7 +173,7 @@ class ItineraryViewModel @Inject constructor(
                     isGeneratingItinerary = true,
                     itineraryIsError = false,
                     itineraryErrorMessage = null,
-                )
+                ),
             )
             uiState.value.title?.let {
                 uiState.value.description?.let { it1 ->
@@ -171,10 +187,12 @@ class ItineraryViewModel @Inject constructor(
                         is GeminiResult.Success -> {
                             // Append if you want streaming effect
                             val updated = _uiState.value.itinerary + result.data
-                            updateUiState(_uiState.value.copy(
-                                itinerary = updated,
-                                isGeneratingItinerary = false
-                            ))
+                            updateUiState(
+                                _uiState.value.copy(
+                                    itinerary = updated,
+                                    isGeneratingItinerary = false,
+                                ),
+                            )
                         }
 
                         is GeminiResult.Error -> {
@@ -182,25 +200,24 @@ class ItineraryViewModel @Inject constructor(
                                 _uiState.value.copy(
                                     isGeneratingItinerary = false,
                                     itineraryIsError = true,
-                                    itineraryErrorMessage = "🔥 Failed to generate content"
-                                )
+                                    itineraryErrorMessage = "🔥 Failed to generate content",
+                                ),
                             )
                         }
                     }
-
                 }
             }
         }
     }
 
-    fun suggestItineraryItems(){
+    fun suggestItineraryItems() {
         viewModelScope.launch {
             updateUiState(
                 _uiState.value.copy(
                     isGeneratingItinerary = true,
                     itineraryIsError = false,
-                    itineraryErrorMessage = null
-                    )
+                    itineraryErrorMessage = null,
+                ),
             )
 
             val itinerary = uiState.value.itinerary
@@ -211,35 +228,33 @@ class ItineraryViewModel @Inject constructor(
                 val result = vertexProvider.insertItineraryItems(
                     title = title,
                     description = description,
-                    itineraryList = itinerary
+                    itineraryList = itinerary,
                 )
 
                 result.collect {
                     when (it) {
                         is GeminiResult.Loading -> {
-
                         }
                         is GeminiResult.Error -> {
                             updateUiState(
                                 _uiState.value.copy(
                                     isGeneratingItinerary = false,
                                     itineraryIsError = true,
-                                    itineraryErrorMessage = "🔥 Failed to generate content"
-                                )
+                                    itineraryErrorMessage = "🔥 Failed to generate content",
+                                ),
                             )
                         }
                         is GeminiResult.Success -> {
                             updateUiState(
                                 _uiState.value.copy(
-                                    isGeneratingItinerary = false
-                                )
+                                    isGeneratingItinerary = false,
+                                ),
                             )
 
                             insertSuggestedItems(it.data)
                         }
                     }
                 }
-
             }
         }
     }
@@ -282,10 +297,9 @@ class ItineraryViewModel @Inject constructor(
             id = id,
             title = title,
             isGenerated = isGenerated,
-            isLocked = isLocked
+            isLocked = isLocked,
         )
     }
-
 
     fun moveItem(fromIndex: Int, toIndex: Int) {
         val updatedList = _uiState.value.itinerary.toMutableList().apply {
@@ -293,8 +307,7 @@ class ItineraryViewModel @Inject constructor(
         }
 
         updateUiState(
-            _uiState.value.copy(itinerary = updatedList)
+            _uiState.value.copy(itinerary = updatedList),
         )
     }
-
 }
