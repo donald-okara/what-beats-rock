@@ -33,6 +33,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -52,7 +53,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
-import org.w3c.dom.Text
 
 @Composable
 fun ChatBubble(
@@ -61,6 +61,7 @@ fun ChatBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
+    onClick: () -> Unit = {},
     bubbleColor: Color = if (isSent) MaterialTheme.colorScheme.surfaceVariant else if (isError) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
     content: @Composable () -> Unit,
 ) {
@@ -68,30 +69,35 @@ fun ChatBubble(
         horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
         modifier = modifier.fillMaxWidth(),
     ) {
-        Box(
-            modifier = Modifier
-                .padding(8.dp)
-                .drawBehind {
-                    val hornPath = Path().apply {
-                        if (isSent) {
-                            moveTo(size.width - 20f, 0f)
-                            lineTo(size.width + 4f, -10f)
-                            lineTo(size.width - 5f, 10f)
-                            close()
-                        } else {
-                            moveTo(20f, 0f)
-                            lineTo(-4f, -10f)
-                            lineTo(5f, 10f)
-                            close()
-                        }
-                    }
-                    drawPath(path = hornPath, color = bubbleColor)
-                }
-                .background(bubbleColor, RoundedCornerShape(16.dp))
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+        Surface(
+            onClick = onClick
         ) {
-            content()
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .drawBehind {
+                        val hornPath = Path().apply {
+                            if (isSent) {
+                                moveTo(size.width - 20f, 0f)
+                                lineTo(size.width + 4f, -10f)
+                                lineTo(size.width - 5f, 10f)
+                                close()
+                            } else {
+                                moveTo(20f, 0f)
+                                lineTo(-4f, -10f)
+                                lineTo(5f, 10f)
+                                close()
+                            }
+                        }
+                        drawPath(path = hornPath, color = bubbleColor)
+                    }
+                    .background(bubbleColor, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+            ) {
+                content()
+            }
         }
+
 
         Text(
             text = buildAnnotatedString {
@@ -115,6 +121,7 @@ fun ChatBubble(
             modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
         )
     }
+
 }
 
 @Composable
