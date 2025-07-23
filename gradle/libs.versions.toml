@@ -23,6 +23,11 @@ firebaseAppcheckDebug = "18.0.0"
 appcompat = "1.7.1"
 material = "1.12.0"
 uiTextGoogleFonts = "1.8.3"
+voyager = "1.0.0-rc06"
+firebaseAuth = "24.0.0"
+credentials = "1.5.0"
+credentialsPlayServicesAuth = "1.5.0"
+googleid = "1.1.1"
 
 
 [libraries]
@@ -55,12 +60,31 @@ firebase-appcheck-debug = { group = "com.google.firebase", name = "firebase-appc
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-ui-text-google-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "uiTextGoogleFonts" }
+voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
+voyager-androidx = { module = "cafe.adriel.voyager:voyager-androidx", version.ref = "voyager" }
+voyager-bottom-sheet = { module = "cafe.adriel.voyager:voyager-bottom-sheet-navigator", version.ref = "voyager" }
+voyager-tab = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager" }
+voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
+voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
 
 [bundles]
 hilt = [
     "hilt-android",
     "androidx-runtime-livedata",
     "androidx-hilt-navigation-compose"
+]
+
+voyager = [
+    "voyager-navigator",
+    "voyager-bottom-sheet",
+    "voyager-androidx",
+    "voyager-tab",
+    "voyager-transitions",
+    "voyager-koin"
 ]
 
 

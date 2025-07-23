@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -20,6 +21,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
@@ -34,45 +37,17 @@ import ke.don.feature_onboarding.models.OnboardingStep
 
 @Composable
 fun ChatOnboardingList(
-    steps: List<OnboardingStep>,
     uiState: OnBoardingUiState,
     handleIntent: (OnBoardingIntentHandler) -> Unit,
 ) {
-    val visibleSteps by remember { derivedStateOf { uiState.visibleSteps } }
+    val visibleSteps = uiState.visibleSteps
 
-    LaunchedEffect(Unit) {
-        handleIntent(OnBoardingIntentHandler.Start(steps))
-    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.Bottom
     ) {
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(12.dp),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
-                    onClick = { handleIntent(OnBoardingIntentHandler.ShowNextStep(steps)) },
-                    enabled = !uiState.skipRequested
-                ) {
-                    Text("Next")
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                TextButton(
-                    onClick = { handleIntent(OnBoardingIntentHandler.SkipToLast(steps)) }
-                ) {
-                    Text("Skip")
-                }
-            }
-        }
         items(visibleSteps, key = { it.id }) { step ->
             AnimatedVisibility(
                 visible = true,
@@ -83,15 +58,41 @@ fun ChatOnboardingList(
                 } else if (step.isFinal){
                     ChatBubble(
                         isSent = false,
-                        onClick = {}
+                        onClick = {},
+                        bubbleColor = MaterialTheme.colorScheme.primaryContainer
                     ) {
                         ContinueWithGoogle()
                     }
                 } else {
                     TextBubble(
                         isSent = false,
-                        text = step.render()
+                        annotatedText = step.render()
                     )
+                }
+            }
+        }
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                TextButton(
+                    onClick = { handleIntent(OnBoardingIntentHandler.ShowNextStep) },
+                    enabled = !uiState.skipRequested
+                ) {
+                    Text("Next")
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                TextButton(
+                    enabled = !uiState.skipRequested,
+                    onClick = { handleIntent(OnBoardingIntentHandler.SkipToLast) }
+                ) {
+                    Text("Skip")
                 }
             }
         }
@@ -106,11 +107,11 @@ fun ChatOnboardingScreenPreview(
     val sampleSteps = listOf(
         OnboardingStep(
             delayMillis = 0,
-            fullText = "Welcome to \"What beats rock\""
+            fullText = AnnotatedString("Welcome to \"What beats rock\"")
         ),
         OnboardingStep(
             delayMillis = 0,
-            fullText ="Here's how to get started."
+            fullText = AnnotatedString("Here's how to get started.")
         ),
         OnboardingStep(
             delayMillis = 0,
@@ -126,7 +127,6 @@ fun ChatOnboardingScreenPreview(
 
     ThemedPreviewTemplate(isDark){
         ChatOnboardingList(
-            steps = sampleSteps,
             uiState = sampleState,
             handleIntent = {}
         )

@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.firebase.appcheck.ktx)
     implementation(libs.firebase.appcheck.playintegrity)
     implementation(libs.firebase.appcheck.debug)
+    implementation(libs.bundles.voyager)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)
