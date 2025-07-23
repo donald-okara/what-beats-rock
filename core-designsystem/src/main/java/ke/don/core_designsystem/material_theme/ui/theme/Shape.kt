@@ -13,20 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.what_beats_rock.create_itinerary.model
+package ke.don.core_designsystem.material_theme.ui.theme
 
-import ke.don.core_datasource.domain.ItineraryItem
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Shapes
+import androidx.compose.ui.unit.dp
 
-data class ItineraryFormUiState(
-    val posterUrl: String? = null,
-    val title: String? = null,
-    val description: String? = null,
-    val isGeneratingDescription: Boolean = false,
-    val descriptionIsError: Boolean = false,
-    val descriptionErrorMessage: String? = null,
-    val itinerary: List<ItineraryItem> = emptyList(),
-    val itineraryItem: ItineraryItem? = null,
-    val isGeneratingItinerary: Boolean = false,
-    val itineraryIsError: Boolean = false,
-    val itineraryErrorMessage: String? = null,
+val AppShape = Shapes(
+    extraSmall = RoundedCornerShape(16.dp),
+    small = RoundedCornerShape(32.dp),
+    medium = RoundedCornerShape(16.dp),
+    large = RoundedCornerShape(8.dp),
+    extraLarge = RoundedCornerShape(4.dp),
 )

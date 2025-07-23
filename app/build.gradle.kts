@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.firebase.ai)
     implementation(libs.material.icons.extended)
     implementation(project(":core-datasource"))
+    implementation(project(":feature-chat"))
     implementation(project(":core-designsystem"))
 
     testImplementation(libs.junit)

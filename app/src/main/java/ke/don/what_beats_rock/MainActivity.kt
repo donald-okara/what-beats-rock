@@ -28,8 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import dagger.hilt.android.AndroidEntryPoint
 import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
-import ke.don.what_beats_rock.create_itinerary.screen.ItineraryApp
-import ke.don.what_beats_rock.ui.theme.ItinerarAITheme
+import ke.don.feature_chat.screens.ChatScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -37,11 +36,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            ItinerarAITheme {
+            AppTheme(
+                darkTheme = true,
+            ) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ItineraryApp(
-                        modifier = Modifier.padding(innerPadding),
-                    )
+                    ChatScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
