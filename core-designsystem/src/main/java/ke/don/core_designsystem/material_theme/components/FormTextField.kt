@@ -147,7 +147,6 @@ fun FormTextField(
             },
         )
 
-
         if (!comment.isNullOrEmpty()) {
             Text(
                 text = comment,

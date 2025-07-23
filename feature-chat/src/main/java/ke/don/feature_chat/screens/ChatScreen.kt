@@ -1,21 +1,30 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_chat.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
@@ -43,12 +52,11 @@ import ke.don.feature_chat.models.ChatIntentHandler
 import ke.don.feature_chat.models.ChatMessage
 import ke.don.feature_chat.models.ChatUiState
 import ke.don.feature_chat.models.ChatViewModel
-import androidx.compose.foundation.layout.navigationBarsPadding
 
 @Composable
 fun ChatScreen(
-    modifier: Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+) {
     val viewModel: ChatViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
     val handleIntent = viewModel::handleIntent
@@ -56,47 +64,43 @@ fun ChatScreen(
     ChatScreenContent(
         modifier = modifier,
         uiState = state,
-        handleIntent = handleIntent
+        handleIntent = handleIntent,
     )
-
 }
 
 @Composable
 fun ChatScreenContent(
     modifier: Modifier = Modifier,
     uiState: ChatUiState,
-    handleIntent: (ChatIntentHandler) -> Unit
+    handleIntent: (ChatIntentHandler) -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Bottom,
         modifier = modifier
             .padding(8.dp)
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         ChatList(
             modifier = Modifier
                 .fillMaxWidth(),
             uiState = uiState,
-            handleIntent = handleIntent
+            handleIntent = handleIntent,
         )
     }
-
 }
-
-
 
 @Composable
 fun ChatList(
     uiState: ChatUiState,
     modifier: Modifier = Modifier,
-    handleIntent: (ChatIntentHandler) -> Unit
+    handleIntent: (ChatIntentHandler) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
         reverseLayout = true,
         contentPadding = PaddingValues(bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
             UserInputBar(
@@ -106,14 +110,14 @@ fun ChatList(
                 enabled = !uiState.isGenerating && !uiState.gameOver,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .navigationBarsPadding() // optional if you want to account for system nav bar
+                    .navigationBarsPadding(), // optional if you want to account for system nav bar
 
             )
         }
         item {
             AnimatedVisibility(visible = uiState.isGenerating) {
                 TypingBubble(
-                    modifier = Modifier.animateItem()
+                    modifier = Modifier.animateItem(),
                 )
             }
         }
@@ -128,7 +132,7 @@ fun ChatList(
                             append("${uiState.score}")
                         }
                         append(" points. Fancy another round?")
-                    }
+                    },
                 )
             }
         }
@@ -152,7 +156,7 @@ fun ChatList(
                     is ChatMessage.User -> "user:${message.answer}_${message.timestamp}"
                     is ChatMessage.Bot -> "bot:${message.message}_${message.timestamp}"
                 }
-            }
+            },
         ) { _, message ->
             AnimatedVisibility(visible = true) {
                 when (message) {
@@ -161,7 +165,7 @@ fun ChatList(
                             isSent = true,
                             text = message.answer,
                             timestamp = message.timestamp.toRelativeTime(),
-                            modifier = Modifier.animateItem()
+                            modifier = Modifier.animateItem(),
                         )
                     }
 
@@ -171,7 +175,7 @@ fun ChatList(
                             text = message.message,
                             timestamp = message.timestamp.toRelativeTime(),
                             pointsEarned = message.awardedPoints,
-                            modifier = Modifier.animateItem()
+                            modifier = Modifier.animateItem(),
                         )
                     }
                 }
@@ -189,9 +193,7 @@ fun ChatList(
             }
         }
     }
-
 }
-
 
 @Composable
 fun UserInputBar(
@@ -199,8 +201,8 @@ fun UserInputBar(
     onMessageSent: () -> Unit,
     value: String,
     enabled: Boolean = true,
-    onValueChange: (String) -> Unit
-){
+    onValueChange: (String) -> Unit,
+) {
     val length = value.length
     val limit = 15
     val isError = length > limit
@@ -221,45 +223,44 @@ fun UserInputBar(
         isError = value.length > 15,
         enabled = enabled,
         showLength = true,
-        errorMessage = errorMessage
+        errorMessage = errorMessage,
     )
 }
 
 @Preview
 @Composable
 fun ChatScreenPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     val previewUiState = ChatUiState(
         messages = listOf(
             ChatMessage.Bot(
                 message = "What beats rock? 🤔",
-                timestamp = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis(),
             ),
             ChatMessage.User(
                 answer = "Paper",
-                timestamp = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis(),
             ),
             ChatMessage.Bot(
                 message = "Correct! Paper can wrap around rock.",
                 timestamp = System.currentTimeMillis(),
-                awardedPoints = 3
+                awardedPoints = 3,
             ),
             ChatMessage.Bot(
                 message = "What beats paper? 🤔",
-                timestamp = System.currentTimeMillis()
-            )
+                timestamp = System.currentTimeMillis(),
+            ),
         ),
         lastAnswer = "paper",
         score = 3,
         isGenerating = false,
         isGenetateError = true,
         generateError = "Something went wrong",
-        gameOver = false
+        gameOver = false,
     )
 
-    ThemedPreviewTemplate (isDark) {
+    ThemedPreviewTemplate(isDark) {
         ChatScreenContent(uiState = previewUiState, handleIntent = {})
     }
-
 }

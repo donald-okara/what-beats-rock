@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_chat.models
 
 import androidx.lifecycle.ViewModel
@@ -17,7 +32,7 @@ import javax.inject.Inject
 class ChatViewModel @Inject constructor(
     private val vertexProvider: VertexProvider,
 ) : ViewModel() {
-    private val  _uiState = MutableStateFlow(ChatUiState())
+    private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState
 
     fun updateUiState(newUiState: ChatUiState) {
@@ -27,15 +42,14 @@ class ChatViewModel @Inject constructor(
     }
 
     fun handleIntent(intent: ChatIntentHandler) {
-        when(intent){
+        when (intent) {
             is ChatIntentHandler.UpdateAnswer -> {
                 updateAnswer(intent.answer)
             }
-            is ChatIntentHandler.SendAnswer ->{
+            is ChatIntentHandler.SendAnswer -> {
                 sendAnswer()
             }
         }
-
     }
 
     fun updateAnswer(answer: String) {
@@ -48,12 +62,11 @@ class ChatViewModel @Inject constructor(
                 .filterIsInstance<ChatMessage.User>()
                 .map { it.answer }
 
-
             val answer = _uiState.value.answer
 
             val newMessage = ChatMessage.User(
                 answer = answer,
-                timestamp = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis(),
             )
 
             updateUiState(
@@ -62,12 +75,11 @@ class ChatViewModel @Inject constructor(
                     isGenetateError = false,
                     generateError = null,
                     lastAnswer = answer,
-                    messages = _uiState.value.messages + newMessage
-                )
+                    messages = _uiState.value.messages + newMessage,
+                ),
             )
 
-
-            if (uiState.value.answer.isNotBlank()){
+            if (uiState.value.answer.isNotBlank()) {
                 val result = vertexProvider.generateChatResponse(userResponses, _uiState.value.answer)
 
                 when (result) {
@@ -78,7 +90,7 @@ class ChatViewModel @Inject constructor(
                         updateUiState(
                             _uiState.value.copy(
                                 isGenerating = false,
-                            )
+                            ),
                         )
                         updateBotMessages(result.data)
                     }
@@ -88,16 +100,14 @@ class ChatViewModel @Inject constructor(
                                 isGenerating = false,
                                 isGenetateError = true,
                                 messages = _uiState.value.messages - newMessage,
-                                generateError = "🔥 We had trouble generating that one, please retry"
-                            )
+                                generateError = "🔥 We had trouble generating that one, please retry",
+                            ),
                         )
                     }
                 }
-
             }
         }
     }
-
 
     fun updateBotMessages(response: ChatBotResponse) {
         viewModelScope.launch {
@@ -107,7 +117,7 @@ class ChatViewModel @Inject constructor(
             val updatedMessages = currentMessages + ChatMessage.Bot(
                 message = response.message,
                 timestamp = System.currentTimeMillis(),
-                awardedPoints = response.awardedPoints
+                awardedPoints = response.awardedPoints,
             )
 
             // If the response is invalid, show game over immediately
@@ -116,8 +126,8 @@ class ChatViewModel @Inject constructor(
                     _uiState.value.copy(
                         messages = updatedMessages,
                         answer = "",
-                        gameOver = true
-                    )
+                        gameOver = true,
+                    ),
                 )
                 return@launch
             }
@@ -127,8 +137,8 @@ class ChatViewModel @Inject constructor(
                 _uiState.value.copy(
                     messages = updatedMessages,
                     answer = "",
-                    score = _uiState.value.score + response.awardedPoints
-                )
+                    score = _uiState.value.score + response.awardedPoints,
+                ),
             )
 
             // 2. Delay before follow-up prompt
@@ -136,16 +146,14 @@ class ChatViewModel @Inject constructor(
 
             val followUpMessage = ChatMessage.Bot(
                 message = "What beats ${_uiState.value.lastAnswer}? 🤔",
-                timestamp = System.currentTimeMillis()
+                timestamp = System.currentTimeMillis(),
             )
 
             updateUiState(
                 _uiState.value.copy(
-                    messages = _uiState.value.messages + followUpMessage
-                )
+                    messages = _uiState.value.messages + followUpMessage,
+                ),
             )
         }
     }
-
-
 }

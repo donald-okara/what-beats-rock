@@ -52,7 +52,7 @@ object Prompts {
 
     fun buildMediumStrictPrompt(
         pastResponses: List<String>,
-        newResponse: String
+        newResponse: String,
     ): String {
         return buildString {
             appendLine("You're an evaluator in the game 'What beats what?'.")
@@ -61,13 +61,15 @@ object Prompts {
             appendLine()
             appendLine("Evaluate the new answer and return a valid JSON object **only**, no extra text.")
             appendLine("Use this exact schema:")
-            appendLine("""
+            appendLine(
+                """
 {
   "message": String,         // short playful justification (or "Game over" if offensive)
   "awardedPoints": Integer,  // 1 to 5 (or 0 if rejected or game ends)
   "isValid": Boolean         // true if accepted, false if rejected
 }
-        """.trimIndent())
+                """.trimIndent(),
+            )
             appendLine()
             appendLine("✅ Accept if:")
             appendLine(" - It's clever, funny, or adds novelty")
@@ -78,13 +80,15 @@ object Prompts {
             appendLine(" - It's nonsensical or unrelated")
             appendLine()
             appendLine("If the response is offensive or inappropriate, return:")
-            appendLine("""
+            appendLine(
+                """
 {
   "message": "Game over",
   "awardedPoints": 0,
   "isValid": false
 }
-        """.trimIndent())
+                """.trimIndent(),
+            )
             appendLine()
             appendLine("🔒 Always return valid JSON. Do not include markdown, explanations, or commentary. No text before or after the JSON.")
         }
@@ -119,8 +123,6 @@ object Prompts {
             appendLine("❗ Do NOT include any extra text, disclaimers, or formatting outside the JSON.")
         }
     }
-
-
 
     const val GEMINI_MODEL = "gemini-2.5-flash"
 }

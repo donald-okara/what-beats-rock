@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AppTheme(
-                darkTheme = true
+                darkTheme = true,
             ) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     ChatScreen(modifier = Modifier.padding(innerPadding))

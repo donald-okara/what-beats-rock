@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_designsystem.material_theme.components
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
@@ -46,12 +61,12 @@ fun ChatBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
-    bubbleColor: Color = if (isSent) MaterialTheme.colorScheme.surfaceVariant else if(isError) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
-    content: @Composable () -> Unit
+    bubbleColor: Color = if (isSent) MaterialTheme.colorScheme.surfaceVariant else if (isError) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
+    content: @Composable () -> Unit,
 ) {
     Column(
         horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Box(
             modifier = Modifier
@@ -73,7 +88,7 @@ fun ChatBubble(
                     drawPath(path = hornPath, color = bubbleColor)
                 }
                 .background(bubbleColor, RoundedCornerShape(16.dp))
-                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .padding(horizontal = 12.dp, vertical = 8.dp),
         ) {
             content()
         }
@@ -85,19 +100,20 @@ fun ChatBubble(
                 }
                 if (pointsEarned != null) {
                     if (timestamp != null) append(" • ")
-                    withStyle(SpanStyle(
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.ExtraBold
-                    )) {
+                    withStyle(
+                        SpanStyle(
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = FontWeight.ExtraBold,
+                        ),
+                    ) {
                         append("+$pointsEarned pts")
                     }
                 }
             },
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
         )
-
     }
 }
 
@@ -109,7 +125,7 @@ fun TextBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
-    textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if(isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface
+    textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface,
 ) {
     TextBubble(
         isSent = isSent,
@@ -118,10 +134,9 @@ fun TextBubble(
         timestamp = timestamp,
         pointsEarned = pointsEarned,
         textColor = textColor,
-        isError = isError
+        isError = isError,
     )
 }
-
 
 @Composable
 fun TextBubble(
@@ -131,18 +146,18 @@ fun TextBubble(
     timestamp: String? = null,
     pointsEarned: Int? = null,
     annotatedText: AnnotatedString,
-    textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if(isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface
-){
+    textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface,
+) {
     ChatBubble(
         modifier = modifier,
         isSent = isSent,
         timestamp = timestamp,
         pointsEarned = pointsEarned,
-        isError = isError
+        isError = isError,
     ) {
         Text(
             text = annotatedText,
-            color = textColor
+            color = textColor,
         )
     }
 }
@@ -154,7 +169,7 @@ fun TypingDots() {
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(6.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(3) { index ->
             val offsetY by transition.animateFloat(
@@ -164,11 +179,11 @@ fun TypingDots() {
                     animation = tween(
                         durationMillis = 500,
                         delayMillis = index * 150,
-                        easing = LinearOutSlowInEasing
+                        easing = LinearOutSlowInEasing,
                     ),
-                    repeatMode = RepeatMode.Reverse
+                    repeatMode = RepeatMode.Reverse,
                 ),
-                label = "dot-offset-$index"
+                label = "dot-offset-$index",
             )
 
             Box(
@@ -176,7 +191,7 @@ fun TypingDots() {
                     .offset(y = offsetY.dp)
                     .size(8.dp)
                     .clip(CircleShape)
-                    .background(bubbleColor)
+                    .background(bubbleColor),
             )
         }
     }
@@ -185,10 +200,10 @@ fun TypingDots() {
 @Composable
 fun TypingBubble(
     modifier: Modifier = Modifier,
-){
+) {
     ChatBubble(
         modifier = modifier,
-        isSent = false
+        isSent = false,
     ) {
         TypingDots()
     }
@@ -197,7 +212,7 @@ fun TypingBubble(
 @Preview
 @Composable
 fun ChatBubblePreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     ThemedPreviewTemplate(isDark) {
         Column {
@@ -205,6 +220,5 @@ fun ChatBubblePreview(
             TextBubble(text = "Doing great", isSent = true, timestamp = "10:30 AM", pointsEarned = 2)
             TypingBubble()
         }
-
     }
 }

@@ -19,7 +19,6 @@ import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
 import ke.don.core_datasource.ai.Prompts.GEMINI_MODEL
-import ke.don.core_datasource.ai.Prompts.buildMediumStrictPrompt
 import ke.don.core_datasource.ai.Prompts.buildStrictChatAnswerPrompt
 import ke.don.core_datasource.domain.ChatBotResponse
 import kotlinx.serialization.json.Json
@@ -37,7 +36,7 @@ class VertexProviderImpl : VertexProvider {
 
     override suspend fun generateChatResponse(
         pastResponses: List<String>,
-        newResponse: String
+        newResponse: String,
     ): GeminiResult<ChatBotResponse> {
         val prompt = buildStrictChatAnswerPrompt(pastResponses, newResponse)
 
@@ -126,20 +125,18 @@ class VertexProviderImpl : VertexProvider {
         val result = ChatBotResponse(
             message = stringValues.first(),
             awardedPoints = intValues.first(),
-            isValid = boolValues.first()
+            isValid = boolValues.first(),
         )
 
         Log.d("JsonRepair", "✅ Successfully repaired JSON into: $result")
         return result
     }
-
-
 }
 
 interface VertexProvider {
     suspend fun generateChatResponse(
         pastResponses: List<String>,
-        newResponse: String
+        newResponse: String,
     ): GeminiResult<ChatBotResponse>
 }
 

@@ -292,6 +292,6 @@ fun AppTheme(
         colorScheme = colorScheme,
         typography = AppTypography,
         content = content,
-        shapes = AppShape
+        shapes = AppShape,
     )
 }
