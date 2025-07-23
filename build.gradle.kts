@@ -12,6 +12,11 @@ plugins {
     id("com.diffplug.spotless") version "6.25.0" // Use latest version
 }
 
+// 👇 Add this block here:
+val localProps = java.util.Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
+
 subprojects {
     apply(plugin = "com.diffplug.spotless")
     configure<SpotlessExtension> {

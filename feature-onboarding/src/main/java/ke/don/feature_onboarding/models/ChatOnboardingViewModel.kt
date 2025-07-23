@@ -1,14 +1,15 @@
 package ke.don.feature_onboarding.models
 
+import android.app.Activity
+import android.content.Intent
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.compose.ui.text.AnnotatedString
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.core_designsystem.material_theme.components.TypingDots
+import ke.don.core_datasource.remote.auth.GoogleAuthClient
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,17 +26,149 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
     private var onboardingJob: Job? = null
     private var currentAutoStepIndex: Int = 0
     private var stepList: List<OnboardingStep> = emptyList()
+    private lateinit var authClient: GoogleAuthClient
 
     fun handleIntent(intent: OnBoardingIntentHandler) {
         when (intent) {
+            is OnBoardingIntentHandler.FetchActivity -> fetchAuthClient(intent.activity)
             is OnBoardingIntentHandler.Start -> {
                 Log.d("ChatOnboardingViewModel", "Starting onboarding with ${intent.steps.size} steps")
                 start(intent.steps)
             }
+            is OnBoardingIntentHandler.HandleActivityResult -> handleActivityResult(intent.intent)
+            is OnBoardingIntentHandler.LaunchSignIn -> launchSignInAndHandleResult(intent.launcher)
             is OnBoardingIntentHandler.ShowNextStep -> showNextStep()
             is OnBoardingIntentHandler.SkipToLast -> skipToFinal()
         }
     }
+
+    fun fetchAuthClient(context: Activity){
+        authClient = GoogleAuthClient(context)
+    }
+
+    fun launchSignInAndHandleResult(
+        launcher: ActivityResultLauncher<IntentSenderRequest>?
+    ) {
+        viewModelScope.launch {
+            updateState { it.copy(authUiState = AuthUiState.Loading) }
+
+            val signInIntentResult = authClient.signIn()
+            signInIntentResult.fold(
+                onSuccess = { intentSender ->
+                    launcher?.launch(intentSender)
+                },
+                onFailure = { throwable ->
+                    val isCancelled = throwable.message?.contains("13:", ignoreCase = true) == true ||
+                            throwable.message?.contains("cancelled", ignoreCase = true) == true
+
+                    val newState = if (isCancelled) {
+                        showFailureAndRestoreFinal("Seems like you cancelled sign in")
+
+                        AuthUiState.Cancelled
+                    } else {
+                        showFailureAndRestoreFinal("Something went wrong, please try again")
+
+                        AuthUiState.Error(throwable.message)
+                    }
+
+                    updateState { it.copy(authUiState = newState) }
+                }
+            )
+        }
+    }
+
+    fun handleActivityResult(intent: Intent?) {
+        viewModelScope.launch {
+            if (intent == null) {
+                showFailureAndRestoreFinal("You dismissed the sign-in dialog")
+                updateState { it.copy(authUiState = AuthUiState.Cancelled) }
+                return@launch
+            }
+
+            val result = authClient.handleSignInResult(intent)
+
+            result.fold(
+                onSuccess = { user ->
+                    showSuccessAndRestoreFinal()
+                    updateState { it.copy(authUiState = AuthUiState.Success(user)) }
+                },
+                onFailure = { throwable ->
+                    val isCancelled = throwable.message?.contains("13:", ignoreCase = true) == true ||
+                            throwable.message?.contains("cancelled", ignoreCase = true) == true
+
+                    val newState = if (isCancelled) {
+                        showFailureAndRestoreFinal("Seems like you cancelled sign in")
+                        AuthUiState.Cancelled
+                    } else {
+                        showFailureAndRestoreFinal("Something went wrong, please try again")
+                        AuthUiState.Error(throwable.message)
+                    }
+
+                    updateState { it.copy(authUiState = newState) }
+                }
+            )
+        }
+    }
+
+    fun showSuccessAndRestoreFinal(message: String = "Welcome!") {
+        onboardingJob?.cancel()
+
+        val nonTypingSteps = stepList.filterNot { it.isTypingIndicator }
+        if (nonTypingSteps.isEmpty()) return
+
+        val stepsWithoutFinal = nonTypingSteps.filterNot { it.isFinal }
+
+        val successStep = OnboardingStep(
+            id = "success-${System.currentTimeMillis()}",
+            fullText = AnnotatedString(message),
+            isFinal = false
+        )
+
+        val updatedSteps = stepsWithoutFinal + successStep
+
+        currentAutoStepIndex = updatedSteps.size // Prevent resumption
+
+        updateState {
+            it.copy(
+                visibleSteps = updatedSteps,
+                skipRequested = true,
+                currentStep = updatedSteps.size
+            )
+        }
+    }
+
+
+    fun showFailureAndRestoreFinal(message: String) {
+        onboardingJob?.cancel()
+
+        val nonTypingSteps = stepList.filterNot { it.isTypingIndicator }
+        if (nonTypingSteps.isEmpty()) return
+
+        val stepsWithoutFinal = nonTypingSteps.filterNot { it.isFinal }
+
+        val failureStep = OnboardingStep(
+            isError = true,
+            id = "error-${System.currentTimeMillis()}",
+            fullText = AnnotatedString(message),
+            isFinal = false
+        )
+
+        val finalStep = nonTypingSteps.lastOrNull { it.isFinal }
+            ?: return // If there's no final step, we can't restore it
+
+        val updatedSteps = stepsWithoutFinal + failureStep + finalStep
+
+        currentAutoStepIndex = updatedSteps.size // Prevent resumption
+
+        updateState {
+            it.copy(
+                visibleSteps = updatedSteps,
+                skipRequested = true,
+                currentStep = updatedSteps.size
+            )
+        }
+    }
+
 
     private fun start(initialSteps: List<OnboardingStep>) {
         onboardingJob?.cancel()
@@ -128,3 +261,5 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
         _uiState.update(transform)
     }
 }
+
+

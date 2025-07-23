@@ -18,8 +18,8 @@ package ke.don.feature_chat.models
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.core_datasource.ai.GeminiResult
-import ke.don.core_datasource.ai.VertexProvider
+import ke.don.core_datasource.remote.ai.GeminiResult
+import ke.don.core_datasource.remote.ai.VertexProvider
 import ke.don.core_datasource.domain.ChatBotResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

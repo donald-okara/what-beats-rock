@@ -36,7 +36,9 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
+
 }
 
 dependencies {
@@ -58,6 +60,10 @@ dependencies {
     implementation(libs.firebase.appcheck.playintegrity)
     implementation(libs.firebase.appcheck.debug)
     implementation(libs.bundles.voyager)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.firebase.auth)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)

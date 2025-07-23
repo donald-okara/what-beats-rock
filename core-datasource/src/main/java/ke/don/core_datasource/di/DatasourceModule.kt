@@ -19,8 +19,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ke.don.core_datasource.ai.VertexProvider
-import ke.don.core_datasource.ai.VertexProviderImpl
+import ke.don.core_datasource.remote.ai.VertexProvider
+import ke.don.core_datasource.remote.ai.VertexProviderImpl
 import javax.inject.Singleton
 
 @Module

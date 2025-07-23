@@ -5,17 +5,20 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import com.google.firebase.auth.FirebaseUser
 import java.util.UUID
 
 data class OnBoardingUiState(
     val visibleSteps: List<OnboardingStep> = emptyList(),
     val skipRequested: Boolean = false,
+    val authUiState: AuthUiState = AuthUiState.Idle,
     val currentStep: Int = 0
 )
 
 data class OnboardingStep(
     val id: String = UUID.randomUUID().toString(),
     val delayMillis: Long = 1000L,
+    val isError: Boolean = false,
     val isFinal: Boolean = false,
     val isTypingIndicator: Boolean = false,
     val fullText: AnnotatedString = AnnotatedString(""),
@@ -33,6 +36,13 @@ data class OnboardingStep(
 
 }
 
+sealed class AuthUiState {
+    object Idle : AuthUiState()
+    object Loading : AuthUiState()
+    data class Success(val user: FirebaseUser) : AuthUiState()
+    data class Error(val message: String?) : AuthUiState()
+    object Cancelled : AuthUiState()
+}
 
 val onboardingSteps = listOf(
     OnboardingStep(
@@ -47,7 +57,7 @@ val onboardingSteps = listOf(
     OnboardingStep(
         delayMillis = 0,
         fullText = buildAnnotatedString {
-            append("Here's how to get started.")
+            append("Before you sign up, here are the rules.")
         }
     ),
     OnboardingStep(
@@ -64,7 +74,7 @@ val onboardingSteps = listOf(
             append("➤ It repeats or rephrases an earlier response.\n")
             append("➤ It's too generic (e.g. 'air', 'everything', 'nothingness').\n")
             append("➤ It's lazy (e.g. 'stronger', 'hotter').\n")
-            append("➤ We're unsure? REJECTED. No mercy here.\n\n")
+            append("➤ We're unsure? REJECTED.\n\n")
 
             append("❌ Inappropriate? Game Over.\n")
             append("➤ You’ll get 0 points and the game ends.\n\n")
