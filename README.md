@@ -22,6 +22,7 @@ The game continues until the user repeats an answer or gives an invalid one.
 - 🧠 AI justifications for every response
 - 🎯 Points awarded based on creativity or logic
 - 🔄 Endless chain until an answer is repeated
+- 👑 Leaderboard and highscores for more gamation
 
 
 ---
