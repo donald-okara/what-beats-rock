@@ -44,6 +44,7 @@ class ProfileViewModel @Inject constructor(
             is ProfileIntentHandler.FetchMyProfile -> fetchMyProfile()
             is ProfileIntentHandler.DeleteProfile -> deleteProfile(intent.onSignOut)
             is ProfileIntentHandler.SignOut -> signOut(intent.onSignOut)
+            is ProfileIntentHandler.ClearState -> updateState { ProfileUiState() }
             is ProfileIntentHandler.ToggleSignOutDialog -> {
                 updateState {
                     it.copy(

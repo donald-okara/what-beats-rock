@@ -35,6 +35,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -73,6 +74,12 @@ class ProfileScreen() : Screen {
 
         LaunchedEffect(viewModel) {
             handleIntent(ProfileIntentHandler.FetchMyProfile)
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                handleIntent(ProfileIntentHandler.ClearState)
+            }
         }
 
         Scaffold(

@@ -22,4 +22,5 @@ sealed class ProfileIntentHandler {
     data object ToggleBottomSheet : ProfileIntentHandler()
     data object ToggleDeleteDialog : ProfileIntentHandler()
     data object FetchMyProfile : ProfileIntentHandler()
+    data object ClearState: ProfileIntentHandler()
 }

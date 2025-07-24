@@ -19,6 +19,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
+import androidx.compose.animation.with
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -45,7 +53,19 @@ class MainActivity : ComponentActivity() {
                 val isLoggedIn = auth.currentUser != null
                 val initialScreen = if (isLoggedIn) ProfileScreen() else OnboardingScreen()
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Navigator(initialScreen)
+                    Navigator(screen = initialScreen) { navigator ->
+                        AnimatedContent(
+                            targetState = navigator.lastItem,
+                            transitionSpec = {
+                                (scaleIn(initialScale = 0.9f) + fadeIn()) togetherWith
+                                        (scaleOut(targetScale = 1.1f) + fadeOut())
+                            },
+                            contentKey = { it.key }
+                        ) { screen ->
+                            screen.Content()
+                        }
+
+                    }
                 }
             }
         }
