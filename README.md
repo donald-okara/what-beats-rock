@@ -13,12 +13,18 @@ They respond (e.g., "Paper"), the AI justifies the answer, awards points, and co
 The game continues until the user repeats an answer or gives an invalid one.
 
 
+---
+
+
 ## ✨ Features
 
 - 🎮 Conversational, turn-based gameplay
 - 🧠 AI justifications for every response
 - 🎯 Points awarded based on creativity or logic
 - 🔄 Endless chain until an answer is repeated
+
+
+---
 
 
 ## 🔁 Forked From Itinerar-AI
@@ -33,6 +39,9 @@ We reused:
 and repurposed it into a game setting for creative fun!
 
 
+---
+
+
 ## 🧩 Tech Stack
 
 - **Jetpack Compose** for UI
@@ -40,6 +49,9 @@ and repurposed it into a game setting for creative fun!
 - **Kotlin Coroutines + StateFlow** for state handling
 - **Vertex AI** for AI logic
 - **Firebase** for persistence
+
+
+---
 
 
 ## 🚀 Getting Started
