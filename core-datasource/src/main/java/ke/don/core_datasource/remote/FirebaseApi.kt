@@ -8,8 +8,8 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class FirebaseApi {
-    val firestore = FirebaseFirestore.getInstance()
-    val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     suspend fun fetchProfile(id: String): Result<Profile> = withContext(Dispatchers.IO) {
         try {
@@ -23,14 +23,8 @@ class FirebaseApi {
                 return@withContext Result.failure(Exception("Profile not found"))
             }
 
-            val profile = Profile(
-                displayName = snapshot.getString("name") ?: "",
-                email = snapshot.getString("email") ?: "",
-                photoUrl = snapshot.getString("photoURL") ?: "",
-                highScore = snapshot.getLong("highScore")?.toInt() ?: 0,
-                createdAt = snapshot.getString("createdAt") ?: "",
-                lastPlayed = snapshot.getLong("lastPlayed") // may be null
-            )
+            val profile = snapshot.toObject(Profile::class.java) ?: Profile()
+
 
             Result.success(profile)
         } catch (e: Exception) {
@@ -40,7 +34,7 @@ class FirebaseApi {
 
     suspend fun fetchMyProfile(): Result<Profile> = withContext(Dispatchers.IO) {
         try {
-            val id = FirebaseAuth.getInstance().currentUser?.uid
+            val id = auth.currentUser?.uid
 
             if(id == null) {
                 Result.failure(Exception("User not authenticated"))
@@ -55,14 +49,7 @@ class FirebaseApi {
                     return@withContext Result.failure(Exception("Profile not found"))
                 }
 
-                val profile = Profile(
-                    displayName = snapshot.getString("name") ?: "",
-                    email = snapshot.getString("email") ?: "",
-                    photoUrl = snapshot.getString("photoURL") ?: "",
-                    highScore = snapshot.getLong("highScore")?.toInt() ?: 0,
-                    createdAt = snapshot.getString("createdAt") ?: "",
-                    lastPlayed = snapshot.getLong("lastPlayed") // may be null
-                )
+                val profile = snapshot.toObject(Profile::class.java) ?: Profile()
 
                 Result.success(profile)
             }
@@ -71,5 +58,29 @@ class FirebaseApi {
             Result.failure(e)
         }
     }
+
+    fun signOut(): Result<Unit> {
+        return try {
+            auth.signOut()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteOwnProfile(): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val uid = auth.currentUser?.uid ?: return@withContext Result.failure(Exception("User not authenticated"))
+            firestore
+                .collection("profiles")
+                .document(uid)
+                .delete()
+                .await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
 }

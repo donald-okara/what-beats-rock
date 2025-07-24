@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    implementation(libs.firebase.auth)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)
@@ -72,6 +73,7 @@ dependencies {
     implementation(project(":feature-chat"))
     implementation(project(":core-designsystem"))
     implementation(project(":feature-onboarding"))
+    implementation(project(":feature-profile"))
 
     testImplementation(libs.junit)
 

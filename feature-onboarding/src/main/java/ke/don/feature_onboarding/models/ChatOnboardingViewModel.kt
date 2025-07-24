@@ -35,10 +35,11 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
                 Log.d("ChatOnboardingViewModel", "Starting onboarding with ${intent.steps.size} steps")
                 start(intent.steps)
             }
-            is OnBoardingIntentHandler.HandleActivityResult -> handleActivityResult(intent.intent)
+            is OnBoardingIntentHandler.HandleActivityResult -> handleActivityResult(intent.intent, intent.navigateToMain)
             is OnBoardingIntentHandler.LaunchSignIn -> launchSignInAndHandleResult(intent.launcher)
             is OnBoardingIntentHandler.ShowNextStep -> showNextStep()
             is OnBoardingIntentHandler.SkipToLast -> skipToFinal()
+            is OnBoardingIntentHandler.NavigateToMain -> {}
         }
     }
 
@@ -77,7 +78,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun handleActivityResult(intent: Intent?) {
+    fun handleActivityResult(intent: Intent?, navigateToMain:() -> Unit) {
         viewModelScope.launch {
             if (intent == null) {
                 showFailureAndRestoreFinal("You dismissed the sign-in dialog")
@@ -91,6 +92,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
                 onSuccess = { user ->
                     showSuccessAndRestoreFinal()
                     updateState { it.copy(authUiState = AuthUiState.Success(user)) }
+                    navigateToMain()
                 },
                 onFailure = { throwable ->
                     val isCancelled = throwable.message?.contains("13:", ignoreCase = true) == true ||

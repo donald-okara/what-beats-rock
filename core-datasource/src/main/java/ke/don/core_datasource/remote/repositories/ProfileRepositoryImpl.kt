@@ -8,7 +8,7 @@ class ProfileRepositoryImpl(
     private val api: FirebaseApi
 ): ProfileRepository {
     override suspend fun fetchProfile(id: String): Result<Profile> = api.fetchProfile(id)
-
     override suspend fun fetchMyProfile(): Result<Profile> = api.fetchMyProfile()
-
+    override suspend fun signOut(): Result<Unit> = api.signOut()
+    override suspend fun deleteOwnProfile(): Result<Unit> = api.deleteOwnProfile()
 }

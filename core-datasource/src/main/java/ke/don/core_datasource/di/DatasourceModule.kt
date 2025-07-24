@@ -19,8 +19,11 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ke.don.core_datasource.domain.repositories.ProfileRepository
+import ke.don.core_datasource.remote.FirebaseApi
 import ke.don.core_datasource.remote.ai.VertexProvider
 import ke.don.core_datasource.remote.ai.VertexProviderImpl
+import ke.don.core_datasource.remote.repositories.ProfileRepositoryImpl
 import javax.inject.Singleton
 
 @Module
@@ -32,4 +35,16 @@ object DatasourceModule {
     fun provideVertexProvider(): VertexProvider {
         return VertexProviderImpl()
     }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseApi(): FirebaseApi = FirebaseApi()
+
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(
+        api: FirebaseApi
+    ): ProfileRepository = ProfileRepositoryImpl(api = api)
+
 }

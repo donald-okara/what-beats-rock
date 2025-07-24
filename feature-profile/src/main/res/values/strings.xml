@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="share">Share</string>
+    <string name="delete_profile">Delete profile</string>
+    <string name="delete_profile_confirmation">Are you sure you want to delete your profile?</string>
+    <string name="logout">Logout</string>
+</resources>

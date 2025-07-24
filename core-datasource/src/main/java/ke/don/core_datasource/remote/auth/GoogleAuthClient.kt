@@ -9,10 +9,14 @@ import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.*
 import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
+import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.firestore
 import ke.don.core_datasource.BuildConfig
+import ke.don.core_datasource.domain.models.Profile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -25,7 +29,6 @@ class GoogleAuthClient(
 
     suspend fun signIn(): Result<IntentSenderRequest> = withContext(Dispatchers.IO) {
         try {
-            Log.d("AuthDebug:signIn", "Building sign-in request")
             val signInRequest = builder()
                 .setGoogleIdTokenRequestOptions(
                     GoogleIdTokenRequestOptions.builder()
@@ -37,36 +40,44 @@ class GoogleAuthClient(
                 .setAutoSelectEnabled(false)
                 .build()
 
-            Log.d("AuthDebug:signIn", "Starting one tap sign-in")
             val result = oneTapClient.beginSignIn(signInRequest).await()
-            Log.d("AuthDebug:signIn", "IntentSender obtained: ${result.pendingIntent}")
 
             Result.success(IntentSenderRequest.Builder(result.pendingIntent.intentSender).build())
         } catch (e: Exception) {
-            Log.e("AuthDebug:signIn", "Error during sign-in", e)
             Result.failure(e)
         }
     }
 
     suspend fun handleSignInResult(intent: Intent?): Result<FirebaseUser> = withContext(Dispatchers.IO) {
         try {
-            Log.d("AuthDebug:handleResult", "Extracting credential from intent")
             val credential = oneTapClient.getSignInCredentialFromIntent(intent)
             val googleIdToken = credential.googleIdToken
+                ?: return@withContext Result.failure(Exception("No ID token"))
 
-            if (googleIdToken == null) {
-                Log.e("AuthDebug:handleResult", "No ID token found")
-                return@withContext Result.failure(Exception("No ID token"))
-            }
-
-            Log.d("AuthDebug:handleResult", "Signing in with Firebase")
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdToken, null)
             val authResult = auth.signInWithCredential(firebaseCredential).await()
+            val user = authResult.user ?: return@withContext Result.failure(Exception("No user returned"))
 
-            Log.d("AuthDebug:handleResult", "Firebase user signed in: ${authResult.user?.uid}")
-            Result.success(authResult.user!!)
+            val uid = user.uid
+            val profileRef = Firebase.firestore.collection("profiles").document(uid)
+
+            val snapshot = profileRef.get().await()
+            if (!snapshot.exists()) {
+                val profile = Profile(
+                    uid = uid,
+                    displayName = user.displayName,
+                    email = user.email,
+                    photoUrl = user.photoUrl?.toString(),
+                    createdAt = Timestamp.now().toDate().toInstant().toString(),
+                    highScore = 0,
+                    onboarded = false,
+                    lastPlayed = null
+                )
+                profileRef.set(profile).await()
+            }
+
+            Result.success(user)
         } catch (e: Exception) {
-            Log.e("AuthDebug:handleResult", "Error handling sign-in result", e)
             Result.failure(e)
         }
     }
