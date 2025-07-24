@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.navigation
 
 import androidx.compose.animation.AnimatedContent
@@ -11,7 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,11 +48,10 @@ import ke.don.core_designsystem.material_theme.components.EmptyScreen
 import ke.don.core_designsystem.material_theme.components.SnackManager
 import ke.don.core_designsystem.material_theme.components.StarLoadingIndicator
 import ke.don.feature_profile.model.ProfileIntentHandler
-import ke.don.feature_profile.model.ProfileUiState
 import ke.don.feature_profile.model.ProfileViewModel
 import ke.don.feature_profile.screens.ProfileScreenContent
 
-class ProfileScreen() :Screen{
+class ProfileScreen() : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -70,16 +83,17 @@ class ProfileScreen() :Screen{
                         Text("Profile")
                     },
                     actions = {
-                        if (uiState.isMyProfile)
+                        if (uiState.isMyProfile) {
                             IconButton(
-                                onClick = { handleIntent(ProfileIntentHandler.ToggleBottomSheet) }
+                                onClick = { handleIntent(ProfileIntentHandler.ToggleBottomSheet) },
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.MoreVert,
-                                    contentDescription = "More"
+                                    contentDescription = "More",
                                 )
                             }
-                    }
+                        }
+                    },
                 )
             },
         ) { innerPadding ->
@@ -90,14 +104,14 @@ class ProfileScreen() :Screen{
                     .padding(innerPadding)
                     .fillMaxSize(),
                 transitionSpec = {
-                    fadeIn(tween(300)) togetherWith  fadeOut(tween(300))
-                }
+                    fadeIn(tween(300)) togetherWith fadeOut(tween(300))
+                },
             ) { isLoading ->
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .fillMaxSize()
-                ){
+                        .fillMaxSize(),
+                ) {
                     if (isLoading) {
                         StarLoadingIndicator(scale = 3f)
                     } else if (uiState.isError) {
@@ -106,23 +120,17 @@ class ProfileScreen() :Screen{
                             title = "Something went wrong",
                             message = uiState.errorMessage ?: "Unknown error",
                             showRetry = true,
-                            onRetry = { handleIntent(ProfileIntentHandler.FetchMyProfile) }
+                            onRetry = { handleIntent(ProfileIntentHandler.FetchMyProfile) },
                         )
                     } else {
                         ProfileScreenContent(
                             uiState = uiState,
                             intentHandler = handleIntent,
-                            navigateToSignin = {navigator?.replaceAll(OnboardingScreen())}
+                            navigateToSignin = { navigator?.replaceAll(OnboardingScreen()) },
                         )
                     }
                 }
-
             }
-
-
         }
-
-
     }
 }
-

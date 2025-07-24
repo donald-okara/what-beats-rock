@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 
-
 @Composable
 fun BottomSheetItem(
     icon: ImageVector,
@@ -78,7 +77,7 @@ data class BottomSheetItemData(
 fun BottomSheetItemPreview(
     @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
-    ThemedPreviewTemplate(isDark){
+    ThemedPreviewTemplate(isDark) {
         BottomSheetItem(
             icon = Icons.Outlined.Home,
             text = "Go Home",

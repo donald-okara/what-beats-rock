@@ -35,7 +35,6 @@ import ke.don.what_beats_rock.navigation.ProfileScreen
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -44,7 +43,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 val auth = FirebaseAuth.getInstance()
                 val isLoggedIn = auth.currentUser != null
-                val initialScreen = if(isLoggedIn) ProfileScreen() else OnboardingScreen()
+                val initialScreen = if (isLoggedIn) ProfileScreen() else OnboardingScreen()
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Navigator(initialScreen)
                 }

@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_onboarding.models
 
 import androidx.compose.ui.text.AnnotatedString
@@ -12,7 +27,7 @@ data class OnBoardingUiState(
     val visibleSteps: List<OnboardingStep> = emptyList(),
     val skipRequested: Boolean = false,
     val authUiState: AuthUiState = AuthUiState.Idle,
-    val currentStep: Int = 0
+    val currentStep: Int = 0,
 )
 
 data class OnboardingStep(
@@ -22,8 +37,8 @@ data class OnboardingStep(
     val isFinal: Boolean = false,
     val isTypingIndicator: Boolean = false,
     val fullText: AnnotatedString = AnnotatedString(""),
-    val currentWordIndex: Int = -1 // -1 means not started
-){
+    val currentWordIndex: Int = -1, // -1 means not started
+) {
     fun render(): AnnotatedString {
         val words = fullText.split(" ")
         return if (currentWordIndex in words.indices) {
@@ -33,7 +48,6 @@ data class OnboardingStep(
             fullText // show full
         }
     }
-
 }
 
 sealed class AuthUiState {
@@ -52,13 +66,13 @@ val onboardingSteps = listOf(
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 append("\"What beats rock\"")
             }
-        }
+        },
     ),
     OnboardingStep(
         delayMillis = 0,
         fullText = buildAnnotatedString {
             append("Before you sign up, here are the rules.")
-        }
+        },
     ),
     OnboardingStep(
         delayMillis = 0,
@@ -81,11 +95,11 @@ val onboardingSteps = listOf(
 
             append("🎯 Points are awarded 1–5 for creativity.\n")
             append("5 = pure brilliance, 1 = barely passed.\n\n")
-        }
+        },
     ),
 
     OnboardingStep(
         delayMillis = 0,
-        isFinal = true
+        isFinal = true,
     ),
 )

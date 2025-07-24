@@ -4,7 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)}
+    alias(libs.plugins.ksp)
+}
 
 android {
     namespace = "ke.don.feature_profile"
@@ -22,7 +23,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -37,7 +38,6 @@ android {
         compose = true
         buildConfig = true
     }
-
 }
 
 dependencies {
@@ -53,7 +53,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.bundles.voyager)
-
 
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)

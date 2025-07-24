@@ -84,17 +84,16 @@ fun ChatBubble(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp),
         horizontalArrangement = if (isSent) Arrangement.End else Arrangement.Start,
-        verticalAlignment = Alignment.Top
+        verticalAlignment = Alignment.Top,
     ) {
         if (!isSent) {
             if (appLogo != null) {
                 AvatarImage(null, appLogo)
             }
             Spacer(Modifier.width(6.dp))
-
         }
         Surface(
-            onClick = onClick
+            onClick = onClick,
         ) {
             Column(
                 horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
@@ -125,8 +124,6 @@ fun ChatBubble(
                     content()
                 }
 
-
-
                 Text(
                     text = buildAnnotatedString {
                         if (timestamp != null) {
@@ -151,7 +148,7 @@ fun ChatBubble(
             }
         }
 
-        if (isSent){
+        if (isSent) {
             Spacer(Modifier.width(6.dp))
             if (appLogo != null) {
                 AvatarImage(profileUrl, appLogo)
@@ -159,7 +156,6 @@ fun ChatBubble(
         }
     }
 }
-
 
 @Composable
 fun AvatarImage(profileUrl: String?, fallback: Painter) {
@@ -173,7 +169,7 @@ fun AvatarImage(profileUrl: String?, fallback: Painter) {
         modifier = Modifier
             .size(28.dp)
             .clip(CircleShape),
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
     )
 }
 
@@ -224,7 +220,7 @@ fun TextBubble(
 
 @Composable
 fun TypingDots(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val transition = rememberInfiniteTransition(label = "typing-dots")
     val bubbleColor = MaterialTheme.colorScheme.inverseOnSurface
@@ -288,6 +284,7 @@ fun Long.toRelativeTime(): String {
         }
     }
 }
+
 @Preview
 @Composable
 fun ChatBubblePreview(

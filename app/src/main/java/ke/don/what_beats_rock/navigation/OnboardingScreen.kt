@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.navigation
 
 import android.app.Activity
@@ -6,7 +21,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +35,7 @@ import ke.don.feature_onboarding.models.ChatOnboardingViewModel
 import ke.don.feature_onboarding.models.OnBoardingIntentHandler
 import ke.don.feature_onboarding.models.onboardingSteps
 
-class OnboardingScreen: Screen{
+class OnboardingScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel: ChatOnboardingViewModel = hiltViewModel()
@@ -31,7 +45,7 @@ class OnboardingScreen: Screen{
         val navigator = LocalNavigator.current
 
         LaunchedEffect(viewModel, activity) {
-            if(activity != null){
+            if (activity != null) {
                 handleIntent(OnBoardingIntentHandler.Start(onboardingSteps))
                 handleIntent(OnBoardingIntentHandler.FetchActivity(activity))
             }
@@ -41,7 +55,7 @@ class OnboardingScreen: Screen{
             if (result.resultCode == Activity.RESULT_OK) {
                 viewModel.handleActivityResult(result.data) { navigator?.replaceAll(ProfileScreen()) }
             } else {
-                viewModel.handleActivityResult(null){}
+                viewModel.handleActivityResult(null) {}
             }
         }
 
@@ -55,18 +69,15 @@ class OnboardingScreen: Screen{
             }
         }
 
-
         Scaffold(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) { innerPadding ->
             ChatOnboardingList(
                 modifier = Modifier.padding(innerPadding),
                 uiState = uiState,
                 handleIntent = ::handleIntentLocal,
-                launcher = launcher
+                launcher = launcher,
             )
         }
-
-
     }
 }

@@ -16,10 +16,6 @@
 package ke.don.core_datasource.domain
 
 import kotlinx.serialization.Serializable
-import java.time.Duration
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @Serializable
 data class ChatBotResponse(
@@ -27,5 +23,3 @@ data class ChatBotResponse(
     val awardedPoints: Int,
     val isValid: Boolean,
 )
-
-

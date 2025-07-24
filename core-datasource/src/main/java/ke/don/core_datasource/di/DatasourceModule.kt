@@ -40,11 +40,9 @@ object DatasourceModule {
     @Singleton
     fun provideFirebaseApi(): FirebaseApi = FirebaseApi()
 
-
     @Provides
     @Singleton
     fun provideProfileRepository(
-        api: FirebaseApi
+        api: FirebaseApi,
     ): ProfileRepository = ProfileRepositoryImpl(api = api)
-
 }

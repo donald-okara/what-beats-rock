@@ -1,11 +1,24 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_onboarding.components
 
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -50,7 +63,6 @@ fun ChatOnboardingList(
     launcher: ActivityResultLauncher<IntentSenderRequest>?,
     handleIntent: (OnBoardingIntentHandler) -> Unit,
 ) {
-
     val visibleSteps = uiState.visibleSteps
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -65,7 +77,7 @@ fun ChatOnboardingList(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp, alignment = Alignment.Bottom)
+            verticalArrangement = Arrangement.spacedBy(12.dp, alignment = Alignment.Bottom),
         ) {
             items(visibleSteps, key = { it.id }) { step ->
                 ChatStepItem(
@@ -73,7 +85,7 @@ fun ChatOnboardingList(
                     uiState = uiState,
                     launcher = launcher,
                     handleIntent = handleIntent,
-                    modifier = Modifier.animateItem()
+                    modifier = Modifier.animateItem(),
                 )
             }
 
@@ -81,7 +93,6 @@ fun ChatOnboardingList(
                 ActionButtons(uiState = uiState, handleIntent = handleIntent)
             }
         }
-
 
         if (uiState.authUiState == AuthUiState.Loading) {
             LoadingOverlay()
@@ -95,7 +106,7 @@ private fun ChatStepItem(
     step: OnboardingStep,
     uiState: OnBoardingUiState,
     launcher: ActivityResultLauncher<IntentSenderRequest>?,
-    handleIntent: (OnBoardingIntentHandler) -> Unit
+    handleIntent: (OnBoardingIntentHandler) -> Unit,
 ) {
     AnimatedVisibility(
         visible = true,
@@ -113,7 +124,7 @@ private fun ChatStepItem(
                         handleIntent(OnBoardingIntentHandler.LaunchSignIn(launcher))
                     }
                 },
-                bubbleColor = MaterialTheme.colorScheme.primaryContainer
+                bubbleColor = MaterialTheme.colorScheme.primaryContainer,
             ) {
                 ContinueWithGoogle()
             }
@@ -132,10 +143,10 @@ private fun ChatStepItem(
 @Composable
 private fun ActionButtons(
     uiState: OnBoardingUiState,
-    handleIntent: (OnBoardingIntentHandler) -> Unit
+    handleIntent: (OnBoardingIntentHandler) -> Unit,
 ) {
     val isLastAndFinal = uiState.visibleSteps.isNotEmpty() &&
-            uiState.visibleSteps.last().isFinal
+        uiState.visibleSteps.last().isFinal
 
     val canClick = !uiState.skipRequested && !isLastAndFinal
 
@@ -144,11 +155,11 @@ private fun ActionButtons(
             .fillMaxWidth()
             .padding(12.dp),
         horizontalArrangement = Arrangement.End,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         TextButton(
             onClick = { handleIntent(OnBoardingIntentHandler.ShowNextStep) },
-            enabled = canClick
+            enabled = canClick,
         ) {
             Text("Next")
         }
@@ -157,7 +168,7 @@ private fun ActionButtons(
 
         TextButton(
             onClick = { handleIntent(OnBoardingIntentHandler.SkipToLast) },
-            enabled = canClick
+            enabled = canClick,
         ) {
             Text("Skip")
         }
@@ -176,45 +187,43 @@ private fun LoadingOverlay() {
                         awaitPointerEvent() // consume all touch input
                     }
                 }
-            }
+            },
     ) {
         CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 
-
-
 @Preview
 @Composable
 fun ChatOnboardingScreenPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     val sampleSteps = listOf(
         OnboardingStep(
             delayMillis = 0,
-            fullText = AnnotatedString("Welcome to \"What beats rock\"")
+            fullText = AnnotatedString("Welcome to \"What beats rock\""),
         ),
         OnboardingStep(
             delayMillis = 0,
-            fullText = AnnotatedString("Here's how to get started.")
+            fullText = AnnotatedString("Here's how to get started."),
         ),
         OnboardingStep(
             delayMillis = 0,
             isFinal = true,
-        )
+        ),
     )
 
     val sampleState = OnBoardingUiState(
         visibleSteps = sampleSteps,
         skipRequested = false,
-        currentStep = 1
+        currentStep = 1,
     )
 
-    ThemedPreviewTemplate(isDark){
+    ThemedPreviewTemplate(isDark) {
         ChatOnboardingList(
             uiState = sampleState,
             handleIntent = {},
-            launcher = null
+            launcher = null,
         )
     }
 }

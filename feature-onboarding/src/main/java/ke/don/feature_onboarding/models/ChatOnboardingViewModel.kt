@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_onboarding.models
 
 import android.app.Activity
@@ -43,12 +58,12 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun fetchAuthClient(context: Activity){
+    fun fetchAuthClient(context: Activity) {
         authClient = GoogleAuthClient(context)
     }
 
     fun launchSignInAndHandleResult(
-        launcher: ActivityResultLauncher<IntentSenderRequest>?
+        launcher: ActivityResultLauncher<IntentSenderRequest>?,
     ) {
         viewModelScope.launch {
             updateState { it.copy(authUiState = AuthUiState.Loading) }
@@ -60,7 +75,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
                 },
                 onFailure = { throwable ->
                     val isCancelled = throwable.message?.contains("13:", ignoreCase = true) == true ||
-                            throwable.message?.contains("cancelled", ignoreCase = true) == true
+                        throwable.message?.contains("cancelled", ignoreCase = true) == true
 
                     val newState = if (isCancelled) {
                         showFailureAndRestoreFinal("Seems like you cancelled sign in")
@@ -73,12 +88,12 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
                     }
 
                     updateState { it.copy(authUiState = newState) }
-                }
+                },
             )
         }
     }
 
-    fun handleActivityResult(intent: Intent?, navigateToMain:() -> Unit) {
+    fun handleActivityResult(intent: Intent?, navigateToMain: () -> Unit) {
         viewModelScope.launch {
             if (intent == null) {
                 showFailureAndRestoreFinal("You dismissed the sign-in dialog")
@@ -96,7 +111,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
                 },
                 onFailure = { throwable ->
                     val isCancelled = throwable.message?.contains("13:", ignoreCase = true) == true ||
-                            throwable.message?.contains("cancelled", ignoreCase = true) == true
+                        throwable.message?.contains("cancelled", ignoreCase = true) == true
 
                     val newState = if (isCancelled) {
                         showFailureAndRestoreFinal("Seems like you cancelled sign in")
@@ -107,7 +122,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
                     }
 
                     updateState { it.copy(authUiState = newState) }
-                }
+                },
             )
         }
     }
@@ -123,7 +138,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
         val successStep = OnboardingStep(
             id = "success-${System.currentTimeMillis()}",
             fullText = AnnotatedString(message),
-            isFinal = false
+            isFinal = false,
         )
 
         val updatedSteps = stepsWithoutFinal + successStep
@@ -134,11 +149,10 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
             it.copy(
                 visibleSteps = updatedSteps,
                 skipRequested = true,
-                currentStep = updatedSteps.size
+                currentStep = updatedSteps.size,
             )
         }
     }
-
 
     fun showFailureAndRestoreFinal(message: String) {
         onboardingJob?.cancel()
@@ -152,7 +166,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
             isError = true,
             id = "error-${System.currentTimeMillis()}",
             fullText = AnnotatedString(message),
-            isFinal = false
+            isFinal = false,
         )
 
         val finalStep = nonTypingSteps.lastOrNull { it.isFinal }
@@ -166,11 +180,10 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
             it.copy(
                 visibleSteps = updatedSteps,
                 skipRequested = true,
-                currentStep = updatedSteps.size
+                currentStep = updatedSteps.size,
             )
         }
     }
-
 
     private fun start(initialSteps: List<OnboardingStep>) {
         onboardingJob?.cancel()
@@ -228,7 +241,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
             it.copy(
                 visibleSteps = finalSteps,
                 skipRequested = true,
-                currentStep = finalSteps.size
+                currentStep = finalSteps.size,
             )
         }
     }
@@ -254,7 +267,7 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
             val cleanSteps = state.visibleSteps.filterNot { it.isTypingIndicator }
             state.copy(
                 visibleSteps = cleanSteps + step,
-                currentStep = nextIndex
+                currentStep = nextIndex,
             )
         }
     }
@@ -263,5 +276,3 @@ class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
         _uiState.update(transform)
     }
 }
-
-

@@ -54,7 +54,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.bundles.voyager)
 
-
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.appcheck.ktx)

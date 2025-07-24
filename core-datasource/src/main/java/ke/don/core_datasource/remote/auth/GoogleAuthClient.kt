@@ -1,14 +1,25 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_datasource.remote.auth
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.activity.result.IntentSenderRequest
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest.*
 import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -24,7 +35,7 @@ import kotlinx.coroutines.withContext
 class GoogleAuthClient(
     private val context: Activity,
 ) {
-    private val auth= FirebaseAuth.getInstance()
+    private val auth = FirebaseAuth.getInstance()
     private val oneTapClient = Identity.getSignInClient(context)
 
     suspend fun signIn(): Result<IntentSenderRequest> = withContext(Dispatchers.IO) {
@@ -35,7 +46,7 @@ class GoogleAuthClient(
                         .setSupported(true)
                         .setServerClientId(BuildConfig.GOOGLE_CLIENT_ID)
                         .setFilterByAuthorizedAccounts(false)
-                        .build()
+                        .build(),
                 )
                 .setAutoSelectEnabled(false)
                 .build()
@@ -71,7 +82,7 @@ class GoogleAuthClient(
                     createdAt = Timestamp.now().toDate().toInstant().toString(),
                     highScore = 0,
                     onboarded = false,
-                    lastPlayed = null
+                    lastPlayed = null,
                 )
                 profileRef.set(profile).await()
             }

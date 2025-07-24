@@ -21,7 +21,7 @@ android {
         buildConfigField(
             "String",
             "GOOGLE_CLIENT_ID",
-            "\"${localProps["google.client.id"]}\""
+            "\"${localProps["google.client.id"]}\"",
         )
         minSdk = 26
 

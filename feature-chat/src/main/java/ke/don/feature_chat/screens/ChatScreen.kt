@@ -52,10 +52,6 @@ import ke.don.feature_chat.models.ChatIntentHandler
 import ke.don.feature_chat.models.ChatMessage
 import ke.don.feature_chat.models.ChatUiState
 import ke.don.feature_chat.models.ChatViewModel
-import java.time.Duration
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun ChatScreen(
@@ -268,4 +264,3 @@ fun ChatScreenPreview(
         ChatScreenContent(uiState = previewUiState, handleIntent = {})
     }
 }
-

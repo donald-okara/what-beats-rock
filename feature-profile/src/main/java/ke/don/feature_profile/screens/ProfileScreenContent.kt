@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_profile.screens
 
 import androidx.compose.foundation.background
@@ -50,7 +65,7 @@ fun ProfileScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .fillMaxSize()
-            .padding(32.dp)
+            .padding(32.dp),
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -63,13 +78,13 @@ fun ProfileScreenContent(
                 .size(128.dp)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-                .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+                .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape),
 
         )
 
         Text(
             text = profile.displayName ?: "Anonymous",
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -79,7 +94,7 @@ fun ProfileScreenContent(
             AssistChip(
                 onClick = {},
                 label = { Text("Last Played: $formatted") },
-                leadingIcon = { Icon(Icons.Default.History, contentDescription = null) }
+                leadingIcon = { Icon(Icons.Default.History, contentDescription = null) },
             )
         }
 
@@ -87,7 +102,7 @@ fun ProfileScreenContent(
             AssistChip(
                 onClick = {},
                 label = { Text("Joined: ${it.take(10)}") },
-                leadingIcon = { Icon(Icons.Default.CalendarToday, contentDescription = null) }
+                leadingIcon = { Icon(Icons.Default.CalendarToday, contentDescription = null) },
             )
         }
 
@@ -95,17 +110,16 @@ fun ProfileScreenContent(
             AssistChip(
                 onClick = {},
                 label = { Text("High Score: $it") },
-                leadingIcon = { Icon(Icons.Outlined.Star, contentDescription = null) }
+                leadingIcon = { Icon(Icons.Outlined.Star, contentDescription = null) },
             )
         }
-
     }
 
     ProfileBottomSheet(
         modifier = modifier,
         state = uiState,
         intentHandler = intentHandler,
-        navigateToSignin = navigateToSignin
+        navigateToSignin = navigateToSignin,
     )
 
     if (uiState.showDeleteDialog) {
@@ -122,16 +136,15 @@ fun ProfileScreenContent(
             icon = Icons.Outlined.PersonOff,
             checklistItems = listOf(
                 "This would delete all your progress",
-                "This cannot be undone"
-            )
+                "This cannot be undone",
+            ),
         )
     }
 
-
-    if (uiState.showSignOutDialog){
+    if (uiState.showSignOutDialog) {
         ConfirmationDialog(
             modifier = modifier,
-            onDismissRequest = {intentHandler(ProfileIntentHandler.ToggleSignOutDialog)},
+            onDismissRequest = { intentHandler(ProfileIntentHandler.ToggleSignOutDialog) },
             onConfirmation = { intentHandler(ProfileIntentHandler.SignOut(navigateToSignin)) },
             dialogTitle = "Sign out",
             dialogText = "Are you sure you want to sign out?",
@@ -144,8 +157,8 @@ fun ProfileScreenContent(
 @Preview
 @Composable
 fun ProfileScreenPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
-){
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
+) {
     val fakeProfile = Profile(
         uid = "user_12345",
         displayName = "Donald Isoe",
@@ -154,16 +167,16 @@ fun ProfileScreenPreview(
         createdAt = "2024-12-01T12:34:56Z",
         highScore = 4200,
         onboarded = true,
-        lastPlayed = System.currentTimeMillis() - 86400000L // 1 day ago
+        lastPlayed = System.currentTimeMillis() - 86400000L, // 1 day ago
     )
 
     ThemedPreviewTemplate(isDark) {
         ProfileScreenContent(
             uiState = ProfileUiState(
-                profile = fakeProfile
+                profile = fakeProfile,
             ),
             intentHandler = {},
-            navigateToSignin = {}
+            navigateToSignin = {},
         )
     }
 }
