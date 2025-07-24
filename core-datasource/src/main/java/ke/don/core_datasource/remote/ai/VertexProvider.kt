@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.core_datasource.ai
+package ke.don.core_datasource.remote.ai
 
 import android.util.Log
 import com.google.firebase.Firebase
 import com.google.firebase.ai.ai
-import ke.don.core_datasource.ai.Prompts.GEMINI_MODEL
-import ke.don.core_datasource.ai.Prompts.buildStrictChatAnswerPrompt
 import ke.don.core_datasource.domain.ChatBotResponse
+import ke.don.core_datasource.remote.ai.Prompts.GEMINI_MODEL
+import ke.don.core_datasource.remote.ai.Prompts.buildStrictChatAnswerPrompt
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive

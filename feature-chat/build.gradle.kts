@@ -36,6 +36,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -51,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.bundles.voyager)
 
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)

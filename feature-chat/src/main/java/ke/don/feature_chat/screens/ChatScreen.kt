@@ -42,10 +42,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import ke.don.core_datasource.domain.toRelativeTime
 import ke.don.core_designsystem.material_theme.components.FormTextField
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
+import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.feature_chat.models.ChatIntentHandler

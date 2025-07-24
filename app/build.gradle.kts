@@ -40,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -49,6 +50,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
+    implementation(libs.bundles.voyager)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
@@ -58,6 +60,10 @@ dependencies {
     implementation(libs.firebase.appcheck.ktx)
     implementation(libs.firebase.appcheck.playintegrity)
     implementation(libs.firebase.appcheck.debug)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.firebase.auth)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)
@@ -66,6 +72,8 @@ dependencies {
     implementation(project(":core-datasource"))
     implementation(project(":feature-chat"))
     implementation(project(":core-designsystem"))
+    implementation(project(":feature-onboarding"))
+    implementation(project(":feature-profile"))
 
     testImplementation(libs.junit)
 

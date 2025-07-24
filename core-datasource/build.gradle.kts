@@ -1,9 +1,16 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.google.gms.google.services)
+}
+
+val localProps = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
 }
 
 android {
@@ -11,6 +18,11 @@ android {
     compileSdk = 35
 
     defaultConfig {
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            "\"${localProps["google.client.id"]}\"",
+        )
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -33,6 +45,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -45,6 +60,12 @@ dependencies {
     implementation(libs.firebase.appcheck.ktx)
     implementation(libs.firebase.appcheck.playintegrity)
     implementation(libs.firebase.appcheck.debug)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.play.services.auth)
+    implementation(libs.firebase.firestore)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)
