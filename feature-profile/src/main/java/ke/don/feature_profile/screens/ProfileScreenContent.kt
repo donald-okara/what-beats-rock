@@ -19,6 +19,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.History
@@ -42,6 +43,7 @@ import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_designsystem.material_theme.components.ConfirmationDialog
 import ke.don.core_designsystem.material_theme.components.ConfirmationDialogWithChecklist
 import ke.don.core_designsystem.material_theme.components.DialogType
+import ke.don.core_designsystem.material_theme.components.shimmerBackground
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.feature_profile.R
@@ -59,6 +61,7 @@ fun ProfileScreenContent(
     intentHandler: (ProfileIntentHandler) -> Unit,
 ) {
     val profile = uiState.profile
+    val isLoading = uiState.isLoading
 
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
@@ -67,60 +70,87 @@ fun ProfileScreenContent(
             .fillMaxSize()
             .padding(32.dp),
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(profile.photoUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = "Profile Photo",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(128.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-                .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape),
-
-        )
-
-        Text(
-            text = profile.displayName ?: "Anonymous",
-            style = MaterialTheme.typography.headlineSmall,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        profile.lastPlayed?.let {
-            val formatted = DateFormat.getDateInstance().format(Date(it))
-            AssistChip(
-                onClick = {},
-                label = { Text("Last Played: $formatted") },
-                leadingIcon = { Icon(Icons.Default.History, contentDescription = null) },
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .size(128.dp)
+                    .clip(CircleShape)
+                    .shimmerBackground(shape = CircleShape)
             )
-        }
-
-        profile.createdAt?.let {
-            AssistChip(
-                onClick = {},
-                label = { Text("Joined: ${it.take(10)}") },
-                leadingIcon = { Icon(Icons.Default.CalendarToday, contentDescription = null) },
+            Box(
+                modifier = Modifier
+                    .height(28.dp)
+                    .width(160.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .shimmerBackground()
             )
-        }
-
-        profile.highScore?.let {
-            AssistChip(
-                onClick = {},
-                label = { Text("High Score: $it") },
-                leadingIcon = { Icon(Icons.Outlined.Star, contentDescription = null) },
+            Spacer(modifier = Modifier.height(16.dp))
+            repeat(2) {
+                Box(
+                    modifier = Modifier
+                        .height(32.dp)
+                        .width(220.dp)
+                        .clip(RoundedCornerShape(50))
+                        .shimmerBackground()
+                )
+            }
+        } else {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(profile.photoUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Profile Photo",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(128.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
+                    .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
             )
+
+            Text(
+                text = profile.displayName ?: "Anonymous",
+                style = MaterialTheme.typography.headlineSmall,
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            profile.lastPlayed?.let {
+                val formatted = DateFormat.getDateInstance().format(Date(it))
+                AssistChip(
+                    onClick = {},
+                    label = { Text("Last Played: $formatted") },
+                    leadingIcon = { Icon(Icons.Default.History, contentDescription = null) },
+                )
+            }
+
+            profile.createdAt?.let {
+                AssistChip(
+                    onClick = {},
+                    label = { Text("Joined: ${it.take(10)}") },
+                    leadingIcon = { Icon(Icons.Default.CalendarToday, contentDescription = null) },
+                )
+            }
+
+            profile.highScore?.let {
+                AssistChip(
+                    onClick = {},
+                    label = { Text("High Score: $it") },
+                    leadingIcon = { Icon(Icons.Outlined.Star, contentDescription = null) },
+                )
+            }
         }
     }
 
-    ProfileBottomSheet(
-        modifier = modifier,
-        state = uiState,
-        intentHandler = intentHandler,
-        navigateToSignin = navigateToSignin,
-    )
+    if (!isLoading) {
+        ProfileBottomSheet(
+            modifier = modifier,
+            state = uiState,
+            intentHandler = intentHandler,
+            navigateToSignin = navigateToSignin,
+        )
+    }
 
     if (uiState.showDeleteDialog) {
         ConfirmationDialogWithChecklist(
@@ -129,9 +159,7 @@ fun ProfileScreenContent(
                 intentHandler(ProfileIntentHandler.DeleteProfile(navigateToSignin))
             },
             dialogTitle = stringResource(R.string.delete_profile),
-            dialogText = stringResource(
-                R.string.delete_profile_confirmation,
-            ),
+            dialogText = stringResource(R.string.delete_profile_confirmation),
             dialogType = DialogType.DANGER,
             icon = Icons.Outlined.PersonOff,
             checklistItems = listOf(
@@ -154,6 +182,7 @@ fun ProfileScreenContent(
     }
 }
 
+
 @Preview
 @Composable
 fun ProfileScreenPreview(
@@ -174,6 +203,7 @@ fun ProfileScreenPreview(
         ProfileScreenContent(
             uiState = ProfileUiState(
                 profile = fakeProfile,
+                isLoading = true
             ),
             intentHandler = {},
             navigateToSignin = {},

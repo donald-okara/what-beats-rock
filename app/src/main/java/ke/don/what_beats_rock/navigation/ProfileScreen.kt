@@ -105,7 +105,7 @@ class ProfileScreen() : Screen {
             },
         ) { innerPadding ->
             AnimatedContent(
-                targetState = uiState.isLoading,
+                targetState = uiState.isError,
                 label = "LoadingTransition",
                 modifier = Modifier
                     .padding(innerPadding)
@@ -113,15 +113,13 @@ class ProfileScreen() : Screen {
                 transitionSpec = {
                     fadeIn(tween(300)) togetherWith fadeOut(tween(300))
                 },
-            ) { isLoading ->
+            ) { isError ->
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    if (isLoading) {
-                        StarLoadingIndicator(scale = 3f)
-                    } else if (uiState.isError) {
+                     if (isError) {
                         EmptyScreen(
                             icon = Icons.Outlined.Warning,
                             title = "Something went wrong",
