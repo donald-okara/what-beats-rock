@@ -15,9 +15,11 @@
  */
 package ke.don.core_datasource.remote
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import ke.don.core_datasource.domain.models.Profile
+import ke.don.core_datasource.domain.models.Session
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -72,6 +74,129 @@ class FirebaseApi {
             Result.failure(e)
         }
     }
+
+    suspend fun updateHighScore(newScore: Int): Result<Unit> = withContext(Dispatchers.IO) {
+        try {
+            val uid = auth.currentUser?.uid
+            if (uid == null) {
+                return@withContext Result.failure(Exception("User not authenticated"))
+            }
+
+            val profileRef = firestore.collection("profiles").document(uid)
+
+            // Only update if newScore is higher
+            firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(profileRef)
+                val currentHigh = snapshot.getLong("highScore") ?: 0L
+                if (newScore > currentHigh) {
+                    transaction.update(profileRef, "highScore", newScore)
+                }
+            }.await()
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
+    suspend fun fetchOrInitializeUserSessions(): Result<List<Session>> {
+        val uid = auth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+
+        val sessionsRef = firestore.collection("profiles").document(uid).collection("sessions")
+
+        return try {
+            val snapshot = sessionsRef.get().await()
+            val sessions = snapshot.documents.mapNotNull { it.toObject(Session::class.java) }
+
+            val allStarted = sessions.all { it.started == true }
+
+            val updatedSessions = if (allStarted) {
+                val newSession = Session()
+                newSession.id?.let {
+                    sessionsRef.document(it).set(newSession).await()
+                    sessions + newSession
+                } ?: return Result.failure(Exception("New session ID is null"))
+            } else {
+                sessions
+            }
+
+            Result.success(updatedSessions)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun resetUserSessions(): Result<List<Session>> {
+        val uid = auth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+        val sessionsRef = firestore.collection("profiles").document(uid).collection("sessions")
+
+        return try {
+            // Delete existing sessions
+            val snapshot = sessionsRef.get().await()
+            val batch = firestore.batch()
+            snapshot.documents.forEach { doc ->
+                batch.delete(doc.reference)
+            }
+            batch.commit().await()
+
+            // Create a new session with assigned ID
+            val newSession = Session()
+            newSession.id?.let { sessionsRef.document(it).set(newSession).await() } ?: return Result.failure(Exception("Session Id is null"))
+
+            // Return the updated list
+            Result.success(listOf(newSession))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun fetchUserSessions(uid: String): Result<List<Session>> {
+        val sessionsRef = firestore.collection("profiles").document(uid).collection("sessions")
+
+        return try {
+            val snapshot = sessionsRef.get().await()
+            val sessions = snapshot.documents.mapNotNull { it.toObject(Session::class.java) }
+            Result.success(sessions) // success even if list is empty
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun fetchMySessions(): Result<List<Session>> {
+        val uid = auth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+        val sessionsRef = firestore.collection("profiles").document(uid).collection("sessions")
+
+        return try {
+            val snapshot = sessionsRef.get().await()
+            val sessions = snapshot.documents.mapNotNull { it.toObject(Session::class.java) }
+            Result.success(sessions) // success even if list is empty
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+
+    suspend fun updateUserSession(
+        sessionId: String,
+        updatedSession: Session
+    ): Result<Unit> {
+        val uid = auth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
+
+        Log.d("FirebaseApi", "updateUserSession: $updatedSession")
+        val sessionRef = firestore.collection("profiles")
+            .document(uid)
+            .collection("sessions")
+            .document(sessionId)
+
+        return try {
+            sessionRef.set(updatedSession).await()
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
 
     fun signOut(): Result<Unit> {
         return try {

@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "ke.don.feature_chat"
+    namespace = "ke.don.feature_leaderboard"
     compileSdk = 35
 
     defaultConfig {
@@ -23,7 +23,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -34,13 +34,10 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
 }
 
 dependencies {
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -53,7 +50,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.bundles.voyager)
-    implementation(libs.firebase.auth) //Here temporarily
 
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)

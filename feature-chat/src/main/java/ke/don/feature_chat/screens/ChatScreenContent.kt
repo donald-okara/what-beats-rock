@@ -42,31 +42,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import ke.don.core_designsystem.material_theme.components.FormTextField
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_chat.components.ShimmerChatPlaceholder
 import ke.don.feature_chat.models.ChatIntentHandler
 import ke.don.feature_chat.models.ChatMessage
 import ke.don.feature_chat.models.ChatUiState
 import ke.don.feature_chat.models.ChatViewModel
-
-@Composable
-fun ChatScreen(
-    modifier: Modifier = Modifier,
-) {
-    val viewModel: ChatViewModel = hiltViewModel()
-    val state by viewModel.uiState.collectAsState()
-    val handleIntent = viewModel::handleIntent
-
-    ChatScreenContent(
-        modifier = modifier,
-        uiState = state,
-        handleIntent = handleIntent,
-    )
-}
 
 @Composable
 fun ChatScreenContent(
@@ -96,6 +84,7 @@ fun ChatList(
     modifier: Modifier = Modifier,
     handleIntent: (ChatIntentHandler) -> Unit,
 ) {
+    val enabled = !uiState.isGenerating && !uiState.gameOver && uiState.gamesPlayed < 5
     LazyColumn(
         modifier = modifier,
         reverseLayout = true,
@@ -103,16 +92,17 @@ fun ChatList(
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item {
-            UserInputBar(
-                onMessageSent = { handleIntent(ChatIntentHandler.SendAnswer) },
-                value = uiState.answer,
-                onValueChange = { handleIntent(ChatIntentHandler.UpdateAnswer(it)) },
-                enabled = !uiState.isGenerating && !uiState.gameOver,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding(), // optional if you want to account for system nav bar
+            AnimatedVisibility(visible = uiState.gamesPlayed < 5 && !uiState.gameOver && !uiState.isFetchingSession) {
+                UserInputBar(
+                    onMessageSent = { handleIntent(ChatIntentHandler.SendAnswer) },
+                    value = uiState.answer,
+                    onValueChange = { handleIntent(ChatIntentHandler.UpdateAnswer(it)) },
+                    enabled = enabled,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                )
+            }
 
-            )
         }
         item {
             AnimatedVisibility(visible = uiState.isGenerating) {
@@ -124,19 +114,47 @@ fun ChatList(
 
         item {
             AnimatedVisibility(visible = uiState.gameOver) {
-                TextBubble(
-                    isSent = false,
-                    annotatedText = buildAnnotatedString {
-                        append("And that's a wrap! You racked up ")
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("${uiState.score}")
+                Column(modifier = Modifier.animateItem()) {
+                    TextBubble(
+                        isSent = false,
+                        annotatedText = buildAnnotatedString {
+                            append("And that's a wrap! You racked up")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold)) {
+                                append(" ${uiState.score}")
+                            }
+                            append(" points. Fancy another round?")
+                        },
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    TextBubble(
+                        isSent = false,
+                        annotatedText = buildAnnotatedString {
+                            append("Tap me to start again")
+                        },
+                        onClick ={
+                            handleIntent(ChatIntentHandler.ResetState)
+                            handleIntent(ChatIntentHandler.FetchSession)
                         }
-                        append(" points. Fancy another round?")
-                    },
-                )
+                    )
+                }
+
+
+
             }
         }
 
+        item {
+            AnimatedVisibility(visible = uiState.highScoreError) {
+                TextBubble(
+                    isSent = false,
+                    text = "We had trouble saving your highscore. Tap my to try again",
+                    isError = true,
+                    onClick = {handleIntent(ChatIntentHandler.SaveHighScore)}
+                )
+            }
+        }
         item {
             AnimatedVisibility(visible = uiState.isGenetateError) {
                 uiState.generateError?.let {
@@ -162,6 +180,7 @@ fun ChatList(
                 when (message) {
                     is ChatMessage.User -> {
                         TextBubble(
+                            profileUrl = uiState.profile.photoUrl,
                             isSent = true,
                             text = message.answer,
                             timestamp = message.timestamp.toRelativeTime(),
@@ -182,16 +201,47 @@ fun ChatList(
             }
         }
 
-        // Introduction message (appears last in data, first on screen)
-        item(key = "intro") {
-            Column(modifier = Modifier.animateItem()) {
-                TextBubble(isSent = false, text = "Nothing beats rock")
-                Spacer(modifier = Modifier.height(4.dp))
-                TextBubble(isSent = false, text = "Unless...")
-                Spacer(modifier = Modifier.height(4.dp))
-                TextBubble(isSent = false, text = "what beats rock 🤔?")
+        if (uiState.isFetchingSession){
+            item {
+                ShimmerChatPlaceholder(
+                    modifier = modifier.animateItem()
+                )
             }
         }
+        else if (uiState.fetchIsError){
+            item {
+                TextBubble(
+                    modifier = modifier.animateItem(),
+                    isSent = false,
+                    text = "Something went wrong, please confirm you have your internet on and tap to retry",
+                    isError = true,
+                    onClick = {handleIntent(ChatIntentHandler.FetchSession)}
+                )
+            }
+        }
+        else{
+            item(key = "intro") {
+                if (uiState.gamesPlayed < 5){
+                    Column(modifier = Modifier.animateItem()) {
+                        TextBubble(isSent = false, text = "You have ${5 - uiState.gamesPlayed} games left today.")
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        TextBubble(isSent = false, text = "Nothing beats rock")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        TextBubble(isSent = false, text = "Unless...")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        TextBubble(isSent = false, text = "what beats rock 🤔?")
+                    }
+                } else {
+                    TextBubble(
+                        isSent = false,
+                        text = "You've played all your games for today! 🎉 Come back tomorrow for more fun 😊"
+                    )
+                }
+
+            }
+        }
+
     }
 }
 

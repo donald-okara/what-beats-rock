@@ -37,6 +37,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
+import ke.don.what_beats_rock.navigation.LeaderboardScreen
 import ke.don.what_beats_rock.navigation.OnboardingScreen
 import ke.don.what_beats_rock.navigation.ProfileScreen
 
@@ -51,7 +52,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 val auth = FirebaseAuth.getInstance()
                 val isLoggedIn = auth.currentUser != null
-                val initialScreen = if (isLoggedIn) ProfileScreen() else OnboardingScreen()
+                val initialScreen = if (isLoggedIn) LeaderboardScreen() else OnboardingScreen()
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Navigator(screen = initialScreen) { navigator ->
                         AnimatedContent(

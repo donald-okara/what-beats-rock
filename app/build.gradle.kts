@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.bundles.hilt)
     implementation(libs.firebase.ai)
     implementation(libs.material.icons.extended)
+    implementation(libs.coil.compose)
     implementation(project(":core-datasource"))
     implementation(project(":feature-chat"))
     implementation(project(":core-designsystem"))

@@ -74,7 +74,7 @@ fun ChatBubble(
     timestamp: String? = null,
     pointsEarned: Int? = null,
     onClick: () -> Unit = {},
-    profileUrl: String? = null, // null if app logo
+    profileUrl: Any? = null, // null if app logo
     appLogo: Painter? = painterResource(R.drawable.rock_svgrepo_com),
     bubbleColor: Color = if (isSent) MaterialTheme.colorScheme.surfaceVariant else if (isError) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
     content: @Composable () -> Unit,
@@ -158,7 +158,7 @@ fun ChatBubble(
 }
 
 @Composable
-fun AvatarImage(profileUrl: String?, fallback: Painter) {
+fun AvatarImage(profileUrl: Any?, fallback: Painter) {
     val painter = profileUrl?.let {
         rememberAsyncImagePainter(model = it)
     } ?: fallback
@@ -181,6 +181,8 @@ fun TextBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
+    onClick: () -> Unit = {},
+    profileUrl: Any? = null, // null if app logo
     textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface,
 ) {
     TextBubble(
@@ -191,6 +193,8 @@ fun TextBubble(
         pointsEarned = pointsEarned,
         textColor = textColor,
         isError = isError,
+        onClick = onClick,
+        profileUrl = profileUrl
     )
 }
 
@@ -201,13 +205,17 @@ fun TextBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
+    onClick: () -> Unit = {},
+    profileUrl: Any? = null, // null if app logo
     annotatedText: AnnotatedString,
     textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface,
 ) {
     ChatBubble(
         modifier = modifier,
         isSent = isSent,
+        profileUrl = profileUrl,
         timestamp = timestamp,
+        onClick = onClick,
         pointsEarned = pointsEarned,
         isError = isError,
     ) {

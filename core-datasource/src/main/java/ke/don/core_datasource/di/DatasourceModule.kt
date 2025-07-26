@@ -20,6 +20,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ke.don.core_datasource.domain.repositories.ProfileRepository
+import ke.don.core_datasource.domain.use_cases.ChatUseCase
+import ke.don.core_datasource.domain.use_cases.ChatUseCaseImpl
 import ke.don.core_datasource.remote.FirebaseApi
 import ke.don.core_datasource.remote.ai.VertexProvider
 import ke.don.core_datasource.remote.ai.VertexProviderImpl
@@ -45,4 +47,11 @@ object DatasourceModule {
     fun provideProfileRepository(
         api: FirebaseApi,
     ): ProfileRepository = ProfileRepositoryImpl(api = api)
+
+    @Provides
+    @Singleton
+    fun provideChatUseCase(
+        api: FirebaseApi,
+        ai: VertexProvider
+    ): ChatUseCase = ChatUseCaseImpl(api = api, ai = ai)
 }

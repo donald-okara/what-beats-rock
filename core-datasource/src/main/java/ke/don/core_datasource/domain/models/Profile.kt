@@ -21,7 +21,7 @@ data class Profile(
     var email: String? = null,
     var photoUrl: String? = null,
     var createdAt: String? = null,
-    var highScore: Int? = null,
+    var highScore: Int? = 0,
     var onboarded: Boolean? = null,
     val lastPlayed: Long? = null,
 )

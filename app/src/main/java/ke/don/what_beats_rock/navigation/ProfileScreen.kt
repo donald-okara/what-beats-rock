@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -88,6 +90,16 @@ class ProfileScreen() : Screen {
                 TopAppBar(
                     title = {
                         Text("Profile")
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { navigator?.pop() },
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Go back",
+                            )
+                        }
                     },
                     actions = {
                         if (uiState.isMyProfile) {

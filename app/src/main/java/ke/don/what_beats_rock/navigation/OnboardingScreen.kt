@@ -53,7 +53,7 @@ class OnboardingScreen : Screen {
 
         val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                viewModel.handleActivityResult(result.data) { navigator?.replaceAll(ProfileScreen()) }
+                viewModel.handleActivityResult(result.data) { navigator?.replaceAll(LeaderboardScreen()) }
             } else {
                 viewModel.handleActivityResult(null) {}
             }
@@ -62,7 +62,7 @@ class OnboardingScreen : Screen {
         fun handleIntentLocal(intent: OnBoardingIntentHandler) {
             when (intent) {
                 is OnBoardingIntentHandler.NavigateToMain -> {
-                    navigator?.replaceAll(ProfileScreen())
+                    navigator?.replaceAll(LeaderboardScreen())
                 }
 
                 else -> handleIntent(intent) // Forward to ViewModel
