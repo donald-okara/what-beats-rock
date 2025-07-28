@@ -9,3 +9,15 @@ fun CrownColor.toColor(): Color = when (this) {
     CrownColor.SILVER -> Color(0xFFC0C0C0)
     CrownColor.BRONZE -> Color(0xFFCD7F32)
 }
+
+fun CrownColor.scale(): Float = when(this){
+    CrownColor.GOLD -> 1.2f
+    CrownColor.SILVER -> 1.0f
+    CrownColor.BRONZE -> 0.8f
+}
+
+fun CrownColor.rank(): Int = when(this){
+    CrownColor.GOLD -> 1
+    CrownColor.SILVER -> 2
+    CrownColor.BRONZE -> 3
+}

@@ -33,7 +33,7 @@ import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 fun Crown(
     modifier: Modifier = Modifier,
     crown: CrownColor,
-    scale: Float = 1f,
+    scale: Float = crown.scale(),
 ) {
     val crownHeight = when (crown) {
         CrownColor.BRONZE -> 24.dp
@@ -82,8 +82,6 @@ fun Crown(
         }
     }
 }
-
-
 
 
 @Preview

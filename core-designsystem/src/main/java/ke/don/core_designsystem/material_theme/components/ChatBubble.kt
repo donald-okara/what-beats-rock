@@ -56,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import ke.don.core_designsystem.R
@@ -158,7 +159,7 @@ fun ChatBubble(
 }
 
 @Composable
-fun AvatarImage(profileUrl: Any?, fallback: Painter) {
+fun AvatarImage(profileUrl: Any?, fallback: Painter, size: Dp = 28.dp) {
     val painter = profileUrl?.let {
         rememberAsyncImagePainter(model = it)
     } ?: fallback
@@ -167,7 +168,7 @@ fun AvatarImage(profileUrl: Any?, fallback: Painter) {
         painter = painter,
         contentDescription = "Avatar",
         modifier = Modifier
-            .size(28.dp)
+            .size(size)
             .clip(CircleShape),
         contentScale = ContentScale.Crop,
     )

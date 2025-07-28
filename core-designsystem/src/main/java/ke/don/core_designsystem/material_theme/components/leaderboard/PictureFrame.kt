@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import ke.don.core_designsystem.material_theme.components.Images
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 
@@ -33,12 +35,13 @@ import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 fun CircleFramedImage(
     modifier: Modifier = Modifier,
     imageUrl: String? = null,
-    number: Int,
     crownColor: CrownColor,
+    number: Int = crownColor.rank(),
     borderWidth: Dp = 2.dp,
-    scale: Float = 1f,
+    scale: Float = crownColor.scale()
 ) {
-    val scaledModifier = modifier.size(72.dp * scale)
+    val size = 72.dp * scale
+    val scaledModifier = modifier.size(size)
 
     Box(
         contentAlignment = Alignment.BottomCenter,
@@ -49,20 +52,21 @@ fun CircleFramedImage(
             model = imageUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(Images.appLogo),
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .border(borderWidth * scale, crownColor.toColor(), CircleShape)
+                .border(borderWidth, crownColor.toColor(), CircleShape)
         )
 
         // Number badge
         Box(
             modifier = Modifier
-                .offset(y = 10.dp * scale)
+                .offset(y = 10.dp)
                 .background(crownColor.toColor(), shape = CircleShape)
                 .padding(
-                    horizontal = 8.dp * scale,
-                    vertical = 2.dp * scale
+                    horizontal = 8.dp,
+                    vertical = 2.dp
                 )
         ) {
             Text(
@@ -70,7 +74,7 @@ fun CircleFramedImage(
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.labelSmall.fontSize * scale
+                    fontSize = MaterialTheme.typography.labelSmall.fontSize
                 )
             )
         }
@@ -95,14 +99,11 @@ fun CircleFramedImagePreview(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                val scale = 1f
                 Crown(
-                    scale = scale,
                     crown = CrownColor.SILVER
                 )
 
                 CircleFramedImage(
-                    scale = scale,
                     number = 2,
                     crownColor = CrownColor.SILVER
                 )
@@ -111,12 +112,10 @@ fun CircleFramedImagePreview(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                val scale = 1.2f
 
-                Crown(scale = scale, crown = CrownColor.GOLD)
+                Crown(crown = CrownColor.GOLD)
 
                 CircleFramedImage(
-                    scale = scale,
                     number = 1,
                     crownColor = CrownColor.GOLD
                 )
@@ -125,12 +124,10 @@ fun CircleFramedImagePreview(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                val scale = 0.8f
 
-                Crown(scale = scale, crown = CrownColor.BRONZE)
+                Crown(crown = CrownColor.BRONZE)
 
                 CircleFramedImage(
-                    scale = scale,
                     number = 3,
                     crownColor = CrownColor.BRONZE
                 )
