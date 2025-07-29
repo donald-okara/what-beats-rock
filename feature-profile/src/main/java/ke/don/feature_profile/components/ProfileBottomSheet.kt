@@ -46,6 +46,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_designsystem.material_theme.components.BottomSheetItem
 import ke.don.core_designsystem.material_theme.components.BottomSheetItemData
@@ -127,7 +128,7 @@ fun ProfileBottomSheet(
 @Composable
 fun ProfileSheetHeader(
     modifier: Modifier = Modifier,
-    profile: Profile,
+    profile: PodiumProfile,
 ) {
     val imageSize = 80.dp
 
@@ -142,7 +143,7 @@ fun ProfileSheetHeader(
             horizontalArrangement = Arrangement.Start,
         ) {
             AsyncImage(
-                model = profile.photoUrl,
+                model = profile.profileUrl,
                 contentDescription = "Profile Photo",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -159,7 +160,7 @@ fun ProfileSheetHeader(
                 modifier = modifier.weight(1f),
             ) {
                 Text(
-                    text = profile.displayName ?: "_",
+                    text = profile.userName,
                     style = MaterialTheme.typography.headlineMedium,
                     maxLines = 1,
                 )

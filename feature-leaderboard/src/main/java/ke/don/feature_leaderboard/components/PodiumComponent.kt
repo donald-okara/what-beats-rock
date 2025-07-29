@@ -28,11 +28,13 @@ import ke.don.core_designsystem.material_theme.components.shimmerBackground
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.core_datasource.domain.models.PodiumProfile
+import ke.don.feature_leaderboard.models.LeaderboardIntentHandler
 
 @Composable
 fun PodiumTopThree(
     profiles: List<PodiumProfile>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    handleIntent: (LeaderboardIntentHandler) -> Unit
 ) {
     // Get specific podium slots if present
     val first = profiles.firstOrNull { it.position == 1 }
@@ -48,7 +50,7 @@ fun PodiumTopThree(
 
     Row(
         modifier = modifier
-            .padding(vertical = 8.dp)
+            .padding(bottom = 8.dp)
             .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
@@ -57,7 +59,11 @@ fun PodiumTopThree(
                 modifier = Modifier.weight(1f),
                 contentAlignment = Alignment.BottomCenter
             ) {
-                PodiumItem(profile = profile, crownColor = crownColor)
+                PodiumItem(
+                    profile = profile,
+                    crownColor = crownColor,
+                    onClick = { handleIntent(LeaderboardIntentHandler.NavigateToProfile(it) ) }
+                )
             }
         }
     }
@@ -89,7 +95,7 @@ fun PodiumItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = profile.userName.toString(),
+            text = profile.userName,
             style = MaterialTheme.typography.labelLarge,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -116,7 +122,7 @@ fun PodiumTopThreeShimmer(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp),
+            .padding(bottom = 16.dp),
         verticalAlignment = Alignment.Bottom
     ) {
         shimmerScales.forEach { scale ->
@@ -198,6 +204,7 @@ fun PodiumTopThreePreview(
     ThemedPreviewTemplate(isDark) {
         PodiumTopThree(
             profiles = sampleProfiles,
+            handleIntent = {},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)

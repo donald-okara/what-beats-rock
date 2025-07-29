@@ -39,6 +39,7 @@ fun Crown(
         CrownColor.BRONZE -> 24.dp
         CrownColor.SILVER -> 36.dp
         CrownColor.GOLD -> 48.dp
+        CrownColor.BLACK -> 64.dp
     } * scale
 
     val crownWidth = 40.dp * scale

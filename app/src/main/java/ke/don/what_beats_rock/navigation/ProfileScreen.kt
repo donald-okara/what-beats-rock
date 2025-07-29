@@ -54,7 +54,9 @@ import ke.don.feature_profile.model.ProfileIntentHandler
 import ke.don.feature_profile.model.ProfileViewModel
 import ke.don.feature_profile.screens.ProfileScreenContent
 
-class ProfileScreen() : Screen {
+class ProfileScreen(
+    private val id: String? = null
+) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -75,7 +77,12 @@ class ProfileScreen() : Screen {
         }
 
         LaunchedEffect(viewModel) {
-            handleIntent(ProfileIntentHandler.FetchMyProfile)
+            if(id == null){
+                handleIntent(ProfileIntentHandler.FetchMyProfile)
+
+            }else{
+                handleIntent(ProfileIntentHandler.FetchProfile(id))
+            }
         }
 
         DisposableEffect(Unit) {
@@ -102,15 +109,13 @@ class ProfileScreen() : Screen {
                         }
                     },
                     actions = {
-                        if (uiState.isMyProfile) {
-                            IconButton(
-                                onClick = { handleIntent(ProfileIntentHandler.ToggleBottomSheet) },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.MoreVert,
-                                    contentDescription = "More",
-                                )
-                            }
+                        IconButton(
+                            onClick = { handleIntent(ProfileIntentHandler.ToggleBottomSheet) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.MoreVert,
+                                contentDescription = "More",
+                            )
                         }
                     },
                 )

@@ -77,6 +77,87 @@ class FirebaseApi {
         }
     }
 
+    suspend fun getPodiumProfileById(uid: String): Result<PodiumProfile> = withContext(Dispatchers.IO) {
+        try {
+            val userSnapshot = firestore
+                .collection("profiles")
+                .document(uid)
+                .get()
+                .await()
+
+            if (!userSnapshot.exists()) {
+                return@withContext Result.failure(Exception("Profile not found"))
+            }
+
+            val profile = userSnapshot.toObject(Profile::class.java)?.copy(uid = uid)
+                ?: return@withContext Result.failure(Exception("Invalid profile data"))
+
+            val userScore = profile.highScore ?: 0
+
+            // Count how many profiles have a higher score
+            val higherScoreCount = firestore
+                .collection("profiles")
+                .whereGreaterThan("highScore", userScore)
+                .get()
+                .await()
+                .size()
+
+            val rank = higherScoreCount + 1
+
+            val podiumProfile = profile.toPodiumProfile().copy(
+                position = rank,
+                isCurrentUser = auth.currentUser?.uid == uid
+            )
+
+            Result.success(podiumProfile)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getMyPodiumProfile(): Result<PodiumProfile> = withContext(Dispatchers.IO) {
+        try {
+            val uid= auth.currentUser?.uid
+            if (uid == null) {
+                return@withContext Result.failure(Exception("User not authenticated"))
+            }
+
+            val userSnapshot = firestore
+                .collection("profiles")
+                .document(uid)
+                .get()
+                .await()
+
+            if (!userSnapshot.exists()) {
+                return@withContext Result.failure(Exception("Profile not found"))
+            }
+
+            val profile = userSnapshot.toObject(Profile::class.java)?.copy(uid = uid)
+                ?: return@withContext Result.failure(Exception("Invalid profile data"))
+
+            val userScore = profile.highScore ?: 0
+
+            // Count how many profiles have a higher score
+            val higherScoreCount = firestore
+                .collection("profiles")
+                .whereGreaterThan("highScore", userScore)
+                .get()
+                .await()
+                .size()
+
+            val rank = higherScoreCount + 1
+
+            val podiumProfile = profile.toPodiumProfile().copy(
+                position = rank,
+                isCurrentUser = auth.currentUser?.uid == uid
+            )
+
+            Result.success(podiumProfile)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     suspend fun fetchLeaderboard(): Result<List<PodiumProfile>> = withContext(Dispatchers.IO) {
         try {
             val currentUid = auth.currentUser?.uid

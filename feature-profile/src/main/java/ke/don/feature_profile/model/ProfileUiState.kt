@@ -15,10 +15,11 @@
  */
 package ke.don.feature_profile.model
 
+import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.Profile
 
 data class ProfileUiState(
-    val profile: Profile = Profile(),
+    val profile: PodiumProfile = PodiumProfile(),
     val isMyProfile: Boolean = false,
     val showSheet: Boolean = false,
     val showSignOutDialog: Boolean = false,

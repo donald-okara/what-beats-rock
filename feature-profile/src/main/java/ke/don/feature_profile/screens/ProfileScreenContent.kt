@@ -39,10 +39,14 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_designsystem.material_theme.components.ConfirmationDialog
 import ke.don.core_designsystem.material_theme.components.ConfirmationDialogWithChecklist
 import ke.don.core_designsystem.material_theme.components.DialogType
+import ke.don.core_designsystem.material_theme.components.leaderboard.CircleFramedImage
+import ke.don.core_designsystem.material_theme.components.leaderboard.Crown
+import ke.don.core_designsystem.material_theme.components.leaderboard.CrownColor
 import ke.don.core_designsystem.material_theme.components.shimmerBackground
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
@@ -62,7 +66,12 @@ fun ProfileScreenContent(
 ) {
     val profile = uiState.profile
     val isLoading = uiState.isLoading
-
+    val crownColor = when(profile.position){
+        1 -> CrownColor.GOLD
+        2 -> CrownColor.SILVER
+        3 -> CrownColor.BRONZE
+        else -> CrownColor.BLACK
+    }
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,22 +104,18 @@ fun ProfileScreenContent(
                 )
             }
         } else {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(profile.photoUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Profile Photo",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(128.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-                    .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+            if(crownColor != CrownColor.BLACK){
+                Crown(crown = crownColor)
+            }
+            CircleFramedImage(
+                imageUrl = profile.profileUrl,
+                scale = 2f,
+                number = profile.position,
+                crownColor = crownColor
             )
 
             Text(
-                text = profile.displayName ?: "Anonymous",
+                text = profile.userName,
                 style = MaterialTheme.typography.headlineSmall,
             )
 
@@ -133,7 +138,7 @@ fun ProfileScreenContent(
                 )
             }
 
-            profile.highScore?.let {
+            profile.score.let {
                 AssistChip(
                     onClick = {},
                     label = { Text("High Score: $it") },
@@ -188,14 +193,12 @@ fun ProfileScreenContent(
 fun ProfileScreenPreview(
     @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
-    val fakeProfile = Profile(
-        uid = "user_12345",
-        displayName = "Donald Isoe",
-        email = "donald@example.com",
-        photoUrl = "https://i.pravatar.cc/150?img=3", // random avatar
+    val fakeProfile = PodiumProfile(
+        id = "user_12345",
+        userName = "Donald Isoe",
+        profileUrl = "https://i.pravatar.cc/150?img=3", // random avatar
         createdAt = "2024-12-01T12:34:56Z",
-        highScore = 4200,
-        onboarded = true,
+        score = 4200,
         lastPlayed = System.currentTimeMillis() - 86400000L, // 1 day ago
     )
 

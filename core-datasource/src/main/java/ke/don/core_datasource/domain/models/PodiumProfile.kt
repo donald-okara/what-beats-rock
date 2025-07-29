@@ -4,6 +4,8 @@ data class PodiumProfile(
     val position: Int = 0, // 1, 2, 3 (not necessarily in order)
     val score: Int = 0,
     val profileUrl: String? = null,
+    val lastPlayed: Long? = null,
+    val createdAt: String? = null,
     val userName: String = "",
     val id: String = "",
     val isCurrentUser: Boolean = false

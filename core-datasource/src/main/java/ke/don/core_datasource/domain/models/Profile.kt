@@ -27,6 +27,8 @@ data class Profile(
 ){
     fun toPodiumProfile(): PodiumProfile {
         return PodiumProfile(
+            lastPlayed = lastPlayed,
+            createdAt = createdAt,
             score = highScore ?: 0,
             profileUrl = photoUrl,
             userName = displayName ?: "",

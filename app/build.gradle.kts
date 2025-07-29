@@ -75,6 +75,7 @@ dependencies {
     implementation(project(":core-designsystem"))
     implementation(project(":feature-onboarding"))
     implementation(project(":feature-profile"))
+    implementation(project(":feature-leaderboard"))
 
     testImplementation(libs.junit)
 
