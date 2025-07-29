@@ -16,7 +16,6 @@
 package ke.don.core_datasource.remote.repositories
 
 import ke.don.core_datasource.domain.models.PodiumProfile
-import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_datasource.domain.repositories.ProfileRepository
 import ke.don.core_datasource.remote.FirebaseApi
 

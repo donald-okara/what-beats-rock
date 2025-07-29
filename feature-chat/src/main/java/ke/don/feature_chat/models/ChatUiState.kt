@@ -17,7 +17,6 @@ package ke.don.feature_chat.models
 
 import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_datasource.domain.models.Session
-import java.lang.Error
 
 data class ChatUiState(
     val messages: List<ChatMessage> = emptyList(),
@@ -31,7 +30,7 @@ data class ChatUiState(
     val lastAnswer: String = "rock",
     val answer: String = "",
     val isGenerating: Boolean = false,
-    val startIsSuccessful: Boolean= false,
+    val startIsSuccessful: Boolean = false,
     val generateError: String? = null,
     val isGenetateError: Boolean = false,
     val score: Int = 0,

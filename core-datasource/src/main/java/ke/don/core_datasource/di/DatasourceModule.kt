@@ -54,12 +54,12 @@ object DatasourceModule {
     @Singleton
     fun provideChatUseCase(
         api: FirebaseApi,
-        ai: VertexProvider
+        ai: VertexProvider,
     ): ChatUseCase = ChatUseCaseImpl(api = api, ai = ai)
 
     @Provides
     @Singleton
     fun provideLeaderboardRepository(
-        api: FirebaseApi
+        api: FirebaseApi,
     ): LeaderboardRepository = LeaderboardRepositoryImpl(api = api)
 }

@@ -195,7 +195,7 @@ fun TextBubble(
         textColor = textColor,
         isError = isError,
         onClick = onClick,
-        profileUrl = profileUrl
+        profileUrl = profileUrl,
     )
 }
 

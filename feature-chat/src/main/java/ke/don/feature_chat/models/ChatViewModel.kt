@@ -18,12 +18,10 @@ package ke.don.feature_chat.models
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_datasource.domain.ChatBotResponse
 import ke.don.core_datasource.domain.use_cases.ChatUseCase
 import ke.don.core_datasource.remote.ai.GeminiResult
-import ke.don.core_datasource.remote.ai.VertexProvider
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -77,13 +75,11 @@ class ChatViewModel @Inject constructor(
             updateUiState(
                 _uiState.value.copy(
                     isFetchingSession = false,
-                    fetchIsError = isError
-                )
+                    fetchIsError = isError,
+                ),
             )
-
         }
     }
-
 
     suspend fun fetchSession(): Boolean {
         val result = useCase.fetchChatSession()
@@ -92,15 +88,15 @@ class ChatViewModel @Inject constructor(
             updateUiState(
                 _uiState.value.copy(
                     session = session,
-                    gamesPlayed = completedCount
-                )
+                    gamesPlayed = completedCount,
+                ),
             )
             true
         } else {
             updateUiState(
                 _uiState.value.copy(
                     fetchIsError = true,
-                )
+                ),
             )
             false
         }
@@ -114,32 +110,31 @@ class ChatViewModel @Inject constructor(
             updateUiState(
                 _uiState.value.copy(
                     profile = result.getOrThrow(),
-                )
+                ),
             )
             true
         } else {
             updateUiState(
                 _uiState.value.copy(
                     fetchIsError = true,
-                )
+                ),
             )
             false
         }
     }
 
-    fun updateHighScore(highScore: Int){
-        viewModelScope.launch{
+    fun updateHighScore(highScore: Int) {
+        viewModelScope.launch {
             val result = useCase.updateHighScore(highScore)
 
-            when{
-                result.isFailure ->{
+            when {
+                result.isFailure -> {
                     updateUiState(
                         _uiState.value.copy(
-                            highScoreError = true
-                        )
+                            highScoreError = true,
+                        ),
                     )
                 }
-
             }
         }
     }
@@ -210,15 +205,14 @@ class ChatViewModel @Inject constructor(
             val isHighScore = currentState.profile.highScore!! < newScore
             val alreadySent = currentState.highScoreMessageSent
 
-
             // Start session if first bot message
             if (!currentState.startIsSuccessful) {
                 val result = currentState.session.id?.let {
                     useCase.startSession(
                         currentState.session.copy(
                             started = true,
-                            score = newScore
-                        )
+                            score = newScore,
+                        ),
                     )
                 }
                 Log.d("ChatViewModel", "fetchSessionAndProfile: ${currentState.profile}")
@@ -230,8 +224,8 @@ class ChatViewModel @Inject constructor(
                     updateUiState(
                         currentState.copy(
                             startIsSuccessful = true,
-                            session = currentState.session.copy(started = true)
-                        )
+                            session = currentState.session.copy(started = true),
+                        ),
                     )
                 }
             }
@@ -239,8 +233,8 @@ class ChatViewModel @Inject constructor(
             if (isHighScore && !alreadySent) {
                 updateUiState(
                     _uiState.value.copy(
-                        highScoreMessageSent = true
-                    )
+                        highScoreMessageSent = true,
+                    ),
                 )
             }
 
@@ -250,7 +244,6 @@ class ChatViewModel @Inject constructor(
                     append("\n\nWhoa! You just hit a new high score: $newScore 🎉🔥")
                 }
             }
-
 
             // Add bot response
             val botMessage = ChatMessage.Bot(
@@ -268,8 +261,8 @@ class ChatViewModel @Inject constructor(
                         messages = updatedMessages,
                         answer = "",
                         gameOver = true,
-                        highScoreMessageSent = isHighScore
-                    )
+                        highScoreMessageSent = isHighScore,
+                    ),
                 )
                 if (isHighScore) updateHighScore(newScore)
                 useCase.saveChatSession(currentState.session.copy(score = newScore, started = true))
@@ -282,8 +275,8 @@ class ChatViewModel @Inject constructor(
                     messages = updatedMessages,
                     answer = "",
                     session = currentState.session.copy(score = newScore),
-                    score = newScore
-                )
+                    score = newScore,
+                ),
             )
 
             // Delay then send follow-up
@@ -294,13 +287,13 @@ class ChatViewModel @Inject constructor(
             )
             updateUiState(
                 _uiState.value.copy(
-                    messages = _uiState.value.messages + followUpMessage
-                )
+                    messages = _uiState.value.messages + followUpMessage,
+                ),
             )
         }
     }
 
-    fun resetState(){
+    fun resetState() {
         updateUiState(ChatUiState())
     }
 }

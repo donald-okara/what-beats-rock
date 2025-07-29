@@ -16,7 +16,6 @@
 package ke.don.feature_profile.model
 
 import ke.don.core_datasource.domain.models.PodiumProfile
-import ke.don.core_datasource.domain.models.Profile
 
 data class ProfileUiState(
     val profile: PodiumProfile = PodiumProfile(),

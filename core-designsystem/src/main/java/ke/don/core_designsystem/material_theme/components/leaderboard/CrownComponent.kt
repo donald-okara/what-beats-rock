@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_designsystem.material_theme.components.leaderboard
 
 import androidx.compose.animation.core.LinearEasing
@@ -52,15 +67,15 @@ fun Crown(
         targetValue = -10f * scale,
         animationSpec = infiniteRepeatable(
             animation = tween(1200, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
+            repeatMode = RepeatMode.Reverse,
         ),
-        label = "yOffset"
+        label = "yOffset",
     )
 
     Box(
         modifier = modifier
             .offset(y = yOffset.dp)
-            .size(width = crownWidth, height = crownHeight)
+            .size(width = crownWidth, height = crownHeight),
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val width = size.width
@@ -84,11 +99,10 @@ fun Crown(
     }
 }
 
-
 @Preview
 @Composable
 fun CrownPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     ThemedPreviewTemplate(isDark) {
         Row(
@@ -96,7 +110,7 @@ fun CrownPreview(
                 .fillMaxWidth()
                 .padding(24.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Crown(crown = CrownColor.SILVER)
@@ -112,6 +126,4 @@ fun CrownPreview(
             }
         }
     }
-
 }
-

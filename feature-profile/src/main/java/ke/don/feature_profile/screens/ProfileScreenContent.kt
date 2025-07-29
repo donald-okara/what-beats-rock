@@ -15,8 +15,6 @@
  */
 package ke.don.feature_profile.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,16 +29,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import ke.don.core_datasource.domain.models.PodiumProfile
-import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_designsystem.material_theme.components.ConfirmationDialog
 import ke.don.core_designsystem.material_theme.components.ConfirmationDialogWithChecklist
 import ke.don.core_designsystem.material_theme.components.DialogType
@@ -66,7 +59,7 @@ fun ProfileScreenContent(
 ) {
     val profile = uiState.profile
     val isLoading = uiState.isLoading
-    val crownColor = when(profile.position){
+    val crownColor = when (profile.position) {
         1 -> CrownColor.GOLD
         2 -> CrownColor.SILVER
         3 -> CrownColor.BRONZE
@@ -84,14 +77,14 @@ fun ProfileScreenContent(
                 modifier = Modifier
                     .size(128.dp)
                     .clip(CircleShape)
-                    .shimmerBackground(shape = CircleShape)
+                    .shimmerBackground(shape = CircleShape),
             )
             Box(
                 modifier = Modifier
                     .height(28.dp)
                     .width(160.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .shimmerBackground()
+                    .shimmerBackground(),
             )
             Spacer(modifier = Modifier.height(16.dp))
             repeat(2) {
@@ -100,18 +93,18 @@ fun ProfileScreenContent(
                         .height(32.dp)
                         .width(220.dp)
                         .clip(RoundedCornerShape(50))
-                        .shimmerBackground()
+                        .shimmerBackground(),
                 )
             }
         } else {
-            if(crownColor != CrownColor.BLACK){
+            if (crownColor != CrownColor.BLACK) {
                 Crown(crown = crownColor)
             }
             CircleFramedImage(
                 imageUrl = profile.profileUrl,
                 scale = 2f,
                 number = profile.position,
-                crownColor = crownColor
+                crownColor = crownColor,
             )
 
             Text(
@@ -187,7 +180,6 @@ fun ProfileScreenContent(
     }
 }
 
-
 @Preview
 @Composable
 fun ProfileScreenPreview(
@@ -206,7 +198,7 @@ fun ProfileScreenPreview(
         ProfileScreenContent(
             uiState = ProfileUiState(
                 profile = fakeProfile,
-                isLoading = true
+                isLoading = true,
             ),
             intentHandler = {},
             navigateToSignin = {},

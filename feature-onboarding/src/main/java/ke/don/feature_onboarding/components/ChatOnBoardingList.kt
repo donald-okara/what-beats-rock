@@ -135,12 +135,12 @@ private fun ChatStepItem(
                 isSent = false,
                 isError = step.isError,
                 annotatedText =
-                    (uiState.authUiState as AuthUiState.Error).message?.let {
-                        AnnotatedString(
-                            it
-                        )
-                    }
-                        ?: step.render(),
+                (uiState.authUiState as AuthUiState.Error).message?.let {
+                    AnnotatedString(
+                        it,
+                    )
+                }
+                    ?: step.render(),
             )
         }
     }

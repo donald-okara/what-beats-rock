@@ -1,6 +1,20 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_datasource.domain.use_cases
 
-import android.util.Log
 import ke.don.core_datasource.domain.ChatBotResponse
 import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_datasource.domain.models.Session
@@ -13,8 +27,8 @@ import java.time.ZoneId
 
 class ChatUseCaseImpl(
     private val api: FirebaseApi,
-    private val ai: VertexProvider
-): ChatUseCase{
+    private val ai: VertexProvider,
+) : ChatUseCase {
     override suspend fun generateChatResponse(
         pastResponses: List<String>,
         newResponse: String,
@@ -43,7 +57,6 @@ class ChatUseCaseImpl(
                 .toLocalDate()
         }
 
-
         if (lastSessionDate != today) {
             val resetResult = api.resetUserSessions()
             return if (resetResult.isSuccess) {
@@ -67,7 +80,6 @@ class ChatUseCaseImpl(
 
     override suspend fun saveChatSession(session: Session): Result<Unit> =
         session.id?.let { api.updateUserSession(it, session) } ?: Result.failure(Exception("Session Id is null"))
-
 
     override suspend fun startSession(session: Session): Result<Unit> {
         val updatedSession = session.copy(started = true)

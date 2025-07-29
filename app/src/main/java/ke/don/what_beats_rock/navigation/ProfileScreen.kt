@@ -49,13 +49,12 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.core_designsystem.material_theme.components.EmptyScreen
 import ke.don.core_designsystem.material_theme.components.SnackManager
-import ke.don.core_designsystem.material_theme.components.StarLoadingIndicator
 import ke.don.feature_profile.model.ProfileIntentHandler
 import ke.don.feature_profile.model.ProfileViewModel
 import ke.don.feature_profile.screens.ProfileScreenContent
 
 class ProfileScreen(
-    private val id: String? = null
+    private val id: String? = null,
 ) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -77,10 +76,9 @@ class ProfileScreen(
         }
 
         LaunchedEffect(viewModel) {
-            if(id == null){
+            if (id == null) {
                 handleIntent(ProfileIntentHandler.FetchMyProfile)
-
-            }else{
+            } else {
                 handleIntent(ProfileIntentHandler.FetchProfile(id))
             }
         }
@@ -136,7 +134,7 @@ class ProfileScreen(
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                     if (isError) {
+                    if (isError) {
                         EmptyScreen(
                             icon = Icons.Outlined.Warning,
                             title = "Something went wrong",

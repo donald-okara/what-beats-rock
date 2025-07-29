@@ -23,5 +23,5 @@ sealed class ProfileIntentHandler {
     data object ToggleDeleteDialog : ProfileIntentHandler()
     data object FetchMyProfile : ProfileIntentHandler()
     data class FetchProfile(val id: String) : ProfileIntentHandler()
-    data object ClearState: ProfileIntentHandler()
+    data object ClearState : ProfileIntentHandler()
 }

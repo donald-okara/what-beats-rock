@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.core_designsystem.material_theme.components.leaderboard
 
 import androidx.compose.foundation.background
@@ -38,14 +53,14 @@ fun CircleFramedImage(
     crownColor: CrownColor,
     number: Int = crownColor.rank(),
     borderWidth: Dp = 2.dp,
-    scale: Float = crownColor.scale()
+    scale: Float = crownColor.scale(),
 ) {
     val size = 72.dp * scale
     val scaledModifier = modifier.size(size)
 
     Box(
         contentAlignment = Alignment.BottomCenter,
-        modifier = scaledModifier
+        modifier = scaledModifier,
     ) {
         // Circular image with border
         AsyncImage(
@@ -56,7 +71,7 @@ fun CircleFramedImage(
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)
-                .border(borderWidth, crownColor.toColor(), CircleShape)
+                .border(borderWidth, crownColor.toColor(), CircleShape),
         )
 
         // Number badge
@@ -66,26 +81,25 @@ fun CircleFramedImage(
                 .background(crownColor.toColor(), shape = CircleShape)
                 .padding(
                     horizontal = 8.dp,
-                    vertical = 2.dp
-                )
+                    vertical = 2.dp,
+                ),
         ) {
             Text(
                 text = number.toString(),
                 style = MaterialTheme.typography.labelSmall.copy(
                     color = Color.White,
                     fontWeight = FontWeight.Bold,
-                    fontSize = MaterialTheme.typography.labelSmall.fontSize
-                )
+                    fontSize = MaterialTheme.typography.labelSmall.fontSize,
+                ),
             )
         }
     }
 }
 
-
 @Preview
 @Composable
 fun CircleFramedImagePreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     ThemedPreviewTemplate(isDark) {
         Row(
@@ -93,46 +107,43 @@ fun CircleFramedImagePreview(
                 .fillMaxWidth()
                 .padding(24.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Crown(
-                    crown = CrownColor.SILVER
+                    crown = CrownColor.SILVER,
                 )
 
                 CircleFramedImage(
                     number = 2,
-                    crownColor = CrownColor.SILVER
+                    crownColor = CrownColor.SILVER,
                 )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-
                 Crown(crown = CrownColor.GOLD)
 
                 CircleFramedImage(
                     number = 1,
-                    crownColor = CrownColor.GOLD
+                    crownColor = CrownColor.GOLD,
                 )
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-
                 Crown(crown = CrownColor.BRONZE)
 
                 CircleFramedImage(
                     number = 3,
-                    crownColor = CrownColor.BRONZE
+                    crownColor = CrownColor.BRONZE,
                 )
             }
         }
     }
-
 }

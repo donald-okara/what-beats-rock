@@ -20,5 +20,5 @@ sealed class ChatIntentHandler {
     data object SendAnswer : ChatIntentHandler()
     data object FetchSession : ChatIntentHandler()
     data object ResetState : ChatIntentHandler()
-    data object SaveHighScore: ChatIntentHandler()
+    data object SaveHighScore : ChatIntentHandler()
 }

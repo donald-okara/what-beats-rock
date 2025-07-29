@@ -56,8 +56,7 @@ class FirebaseApi {
 
             if (id == null) {
                 Result.failure(Exception("User not authenticated"))
-            } 
-            else {
+            } else {
                 val snapshot = firestore
                     .collection("profiles")
                     .document(id)
@@ -106,7 +105,7 @@ class FirebaseApi {
 
             val podiumProfile = profile.toPodiumProfile().copy(
                 position = rank,
-                isCurrentUser = auth.currentUser?.uid == uid
+                isCurrentUser = auth.currentUser?.uid == uid,
             )
 
             Result.success(podiumProfile)
@@ -117,7 +116,7 @@ class FirebaseApi {
 
     suspend fun getMyPodiumProfile(): Result<PodiumProfile> = withContext(Dispatchers.IO) {
         try {
-            val uid= auth.currentUser?.uid
+            val uid = auth.currentUser?.uid
             if (uid == null) {
                 return@withContext Result.failure(Exception("User not authenticated"))
             }
@@ -149,7 +148,7 @@ class FirebaseApi {
 
             val podiumProfile = profile.toPodiumProfile().copy(
                 position = rank,
-                isCurrentUser = auth.currentUser?.uid == uid
+                isCurrentUser = auth.currentUser?.uid == uid,
             )
 
             Result.success(podiumProfile)
@@ -219,7 +218,7 @@ class FirebaseApi {
 
                     profile.toPodiumProfile().copy(
                         position = position,
-                        isCurrentUser = isCurrent
+                        isCurrentUser = isCurrent,
                     )
                 }
 
@@ -252,7 +251,6 @@ class FirebaseApi {
             Result.failure(e)
         }
     }
-
 
     suspend fun fetchOrInitializeUserSessions(): Result<List<Session>> {
         val uid = auth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
@@ -330,10 +328,9 @@ class FirebaseApi {
         }
     }
 
-
     suspend fun updateUserSession(
         sessionId: String,
-        updatedSession: Session
+        updatedSession: Session,
     ): Result<Unit> {
         val uid = auth.currentUser?.uid ?: return Result.failure(Exception("User not authenticated"))
 
@@ -350,8 +347,6 @@ class FirebaseApi {
             Result.failure(e)
         }
     }
-
-
 
     fun signOut(): Result<Unit> {
         return try {
@@ -389,5 +384,4 @@ class FirebaseApi {
             Result.failure(e)
         }
     }
-
 }

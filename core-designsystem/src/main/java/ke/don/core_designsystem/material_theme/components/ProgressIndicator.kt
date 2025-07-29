@@ -43,27 +43,26 @@ fun StarLoadingIndicator(
         modifier = modifier
             .aspectRatio(1f) // force equal width and height
             .size((64 * scale).dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         // Outer layer ensures a square boundary
         Box(
             modifier = Modifier
                 .fillMaxSize(),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             CircularProgressIndicator(
                 strokeWidth = (4 * scale).dp,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             )
             Image(
                 painter = logo,
                 contentDescription = "App Logo",
-                modifier = Modifier.size((32 * scale).dp)
+                modifier = Modifier.size((32 * scale).dp),
             )
         }
     }
 }
-
 
 @Preview
 @Composable

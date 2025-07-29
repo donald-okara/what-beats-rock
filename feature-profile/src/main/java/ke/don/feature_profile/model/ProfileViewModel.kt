@@ -19,7 +19,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_datasource.domain.models.PodiumProfile
-import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_datasource.domain.repositories.ProfileRepository
 import ke.don.core_designsystem.material_theme.components.SnackManager
 import kotlinx.coroutines.channels.Channel

@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_leaderboard.models
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -5,10 +20,8 @@ import ke.don.core_datasource.domain.models.PodiumProfile
 
 data class LeaderboardData(
     val isDark: Boolean = false,
-    val uiState: LeaderboardUiState
+    val uiState: LeaderboardUiState,
 )
-
-
 
 class LeaderboardTemplateProvider : PreviewParameterProvider<LeaderboardData> {
     val fakeLeaderboardState = LeaderboardUiState(
@@ -26,26 +39,26 @@ class LeaderboardTemplateProvider : PreviewParameterProvider<LeaderboardData> {
             PodiumProfile(position = 11, score = 800, profileUrl = null, userName = "Jade Victoria"),
             PodiumProfile(position = 12, score = 800, profileUrl = null, userName = "Jade Victoria"),
             PodiumProfile(position = 13, score = 800, profileUrl = null, userName = "Jade Victoria"),
-        )
+        ),
     )
 
     override val values: Sequence<LeaderboardData> = sequenceOf(
         LeaderboardData(
             isDark = false,
-            uiState = fakeLeaderboardState
+            uiState = fakeLeaderboardState,
         ),
         LeaderboardData(
             isDark = true,
-            uiState = fakeLeaderboardState
+            uiState = fakeLeaderboardState,
         ),
         LeaderboardData(
             isDark = false,
-            uiState = fakeLeaderboardState.copy(isLoading = true)
+            uiState = fakeLeaderboardState.copy(isLoading = true),
         ),
         LeaderboardData(
             isDark = true,
-            uiState = fakeLeaderboardState.copy(isLoading = true)
-        )
+            uiState = fakeLeaderboardState.copy(isLoading = true),
+        ),
 
     )
 }

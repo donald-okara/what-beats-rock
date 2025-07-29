@@ -47,7 +47,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import ke.don.core_datasource.domain.models.PodiumProfile
-import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_designsystem.material_theme.components.BottomSheetItem
 import ke.don.core_designsystem.material_theme.components.BottomSheetItemData
 import ke.don.feature_profile.R

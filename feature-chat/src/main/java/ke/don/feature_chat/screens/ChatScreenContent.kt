@@ -23,14 +23,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,9 +39,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.firebase.Firebase
-import com.google.firebase.auth.FirebaseAuth
 import ke.don.core_designsystem.material_theme.components.FormTextField
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
@@ -54,7 +49,6 @@ import ke.don.feature_chat.components.ShimmerChatPlaceholder
 import ke.don.feature_chat.models.ChatIntentHandler
 import ke.don.feature_chat.models.ChatMessage
 import ke.don.feature_chat.models.ChatUiState
-import ke.don.feature_chat.models.ChatViewModel
 
 @Composable
 fun ChatScreenContent(
@@ -99,10 +93,9 @@ fun ChatList(
                     onValueChange = { handleIntent(ChatIntentHandler.UpdateAnswer(it)) },
                     enabled = enabled,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 )
             }
-
         }
         item {
             AnimatedVisibility(visible = uiState.isGenerating) {
@@ -133,15 +126,12 @@ fun ChatList(
                         annotatedText = buildAnnotatedString {
                             append("Tap me to start again")
                         },
-                        onClick ={
+                        onClick = {
                             handleIntent(ChatIntentHandler.ResetState)
                             handleIntent(ChatIntentHandler.FetchSession)
-                        }
+                        },
                     )
                 }
-
-
-
             }
         }
 
@@ -151,7 +141,7 @@ fun ChatList(
                     isSent = false,
                     text = "We had trouble saving your highscore. Tap my to try again",
                     isError = true,
-                    onClick = {handleIntent(ChatIntentHandler.SaveHighScore)}
+                    onClick = { handleIntent(ChatIntentHandler.SaveHighScore) },
                 )
             }
         }
@@ -201,27 +191,25 @@ fun ChatList(
             }
         }
 
-        if (uiState.isFetchingSession){
+        if (uiState.isFetchingSession) {
             item {
                 ShimmerChatPlaceholder(
-                    modifier = modifier.animateItem()
+                    modifier = modifier.animateItem(),
                 )
             }
-        }
-        else if (uiState.fetchIsError){
+        } else if (uiState.fetchIsError) {
             item {
                 TextBubble(
                     modifier = modifier.animateItem(),
                     isSent = false,
                     text = "Something went wrong, please confirm you have your internet on and tap to retry",
                     isError = true,
-                    onClick = {handleIntent(ChatIntentHandler.FetchSession)}
+                    onClick = { handleIntent(ChatIntentHandler.FetchSession) },
                 )
             }
-        }
-        else{
+        } else {
             item(key = "intro") {
-                if (uiState.gamesPlayed < 5){
+                if (uiState.gamesPlayed < 5) {
                     Column(modifier = Modifier.animateItem()) {
                         TextBubble(isSent = false, text = "You have ${5 - uiState.gamesPlayed} games left today.")
                         Spacer(modifier = Modifier.height(4.dp))
@@ -235,13 +223,11 @@ fun ChatList(
                 } else {
                     TextBubble(
                         isSent = false,
-                        text = "You've played all your games for today! 🎉 Come back tomorrow for more fun 😊"
+                        text = "You've played all your games for today! 🎉 Come back tomorrow for more fun 😊",
                     )
                 }
-
             }
         }
-
     }
 }
 

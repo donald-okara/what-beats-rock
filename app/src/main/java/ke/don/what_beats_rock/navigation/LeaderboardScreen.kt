@@ -1,15 +1,28 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.navigation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -41,11 +54,9 @@ import ke.don.core_designsystem.material_theme.components.Images
 import ke.don.feature_leaderboard.models.LeaderboardIntentHandler
 import ke.don.feature_leaderboard.models.LeaderboardViewModel
 import ke.don.feature_leaderboard.screens.LeaderboardScreenContent
-import ke.don.feature_profile.model.ProfileIntentHandler
-
 
 @OptIn(ExperimentalMaterial3Api::class)
-class LeaderboardScreen (): Screen {
+class LeaderboardScreen() : Screen {
     @Composable
     override fun Content() {
         val auth = FirebaseAuth.getInstance().currentUser
@@ -55,7 +66,7 @@ class LeaderboardScreen (): Screen {
 
         val navigator = LocalNavigator.current
 
-        fun handleIntentLocal(intent: LeaderboardIntentHandler){
+        fun handleIntentLocal(intent: LeaderboardIntentHandler) {
             when (intent) {
                 is LeaderboardIntentHandler.NavigateToChat -> {
                     navigator?.push(ChatScreen())
@@ -94,7 +105,7 @@ class LeaderboardScreen (): Screen {
                                     modifier = Modifier
                                         .clip(CircleShape)
                                         .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-                                        .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape)
+                                        .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape),
                                 )
                             }
                         }
@@ -107,15 +118,15 @@ class LeaderboardScreen (): Screen {
                     containerColor = MaterialTheme.colorScheme.surfaceVariant,
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
-                        .padding(16.dp) // keep padding outside the FAB
+                        .padding(16.dp), // keep padding outside the FAB
                 ) {
                     Image(
                         painter = painterResource(Images.appLogo),
                         contentDescription = "Go to chat",
-                        modifier = Modifier.size(48.dp) // recommended size for FAB icons
+                        modifier = Modifier.size(48.dp), // recommended size for FAB icons
                     )
                 }
-            }
+            },
         ) { innerPadding ->
             PullToRefreshBox(
                 contentAlignment = Alignment.Center,
@@ -125,7 +136,7 @@ class LeaderboardScreen (): Screen {
                     .padding(innerPadding)
                     .fillMaxSize(),
             ) {
-                if (state.isError){
+                if (state.isError) {
                     EmptyScreen(
                         icon = Icons.Outlined.Warning,
                         title = "Something went wrong",
@@ -133,7 +144,7 @@ class LeaderboardScreen (): Screen {
                         showRetry = true,
                         onRetry = { handleIntentLocal(LeaderboardIntentHandler.FetchLeaderboard) },
                     )
-                }else {
+                } else {
                     LeaderboardScreenContent(
                         uiState = state,
                         handleIntent = ::handleIntentLocal,
@@ -142,5 +153,4 @@ class LeaderboardScreen (): Screen {
             }
         }
     }
-
 }

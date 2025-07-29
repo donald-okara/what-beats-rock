@@ -1,15 +1,28 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.what_beats_rock.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -24,13 +37,11 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.feature_chat.models.ChatIntentHandler
 import ke.don.feature_chat.models.ChatViewModel
 import ke.don.feature_chat.screens.ChatScreenContent
-import ke.don.feature_profile.model.ProfileIntentHandler
 
 class ChatScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
-
         val viewModel: ChatViewModel = hiltViewModel()
         val state by viewModel.uiState.collectAsState()
         val handleIntent = viewModel::handleIntent
@@ -62,7 +73,7 @@ class ChatScreen : Screen {
                                 contentDescription = "More",
                             )
                         }
-                    }
+                    },
                 )
             },
         ) { innerPadding ->
@@ -72,6 +83,5 @@ class ChatScreen : Screen {
                 handleIntent = handleIntent,
             )
         }
-
     }
 }
