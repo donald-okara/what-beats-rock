@@ -18,4 +18,7 @@ package ke.don.feature_chat.models
 sealed class ChatIntentHandler {
     data class UpdateAnswer(val answer: String) : ChatIntentHandler()
     data object SendAnswer : ChatIntentHandler()
+    data object FetchSession : ChatIntentHandler()
+    data object ResetState : ChatIntentHandler()
+    data object SaveHighScore : ChatIntentHandler()
 }

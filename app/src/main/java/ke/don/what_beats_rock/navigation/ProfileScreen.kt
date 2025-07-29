@@ -24,6 +24,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +37,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -46,12 +49,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.core_designsystem.material_theme.components.EmptyScreen
 import ke.don.core_designsystem.material_theme.components.SnackManager
-import ke.don.core_designsystem.material_theme.components.StarLoadingIndicator
 import ke.don.feature_profile.model.ProfileIntentHandler
 import ke.don.feature_profile.model.ProfileViewModel
 import ke.don.feature_profile.screens.ProfileScreenContent
 
-class ProfileScreen() : Screen {
+class ProfileScreen(
+    private val id: String? = null,
+) : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
@@ -72,7 +76,17 @@ class ProfileScreen() : Screen {
         }
 
         LaunchedEffect(viewModel) {
-            handleIntent(ProfileIntentHandler.FetchMyProfile)
+            if (id == null) {
+                handleIntent(ProfileIntentHandler.FetchMyProfile)
+            } else {
+                handleIntent(ProfileIntentHandler.FetchProfile(id))
+            }
+        }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                handleIntent(ProfileIntentHandler.ClearState)
+            }
         }
 
         Scaffold(
@@ -82,23 +96,31 @@ class ProfileScreen() : Screen {
                     title = {
                         Text("Profile")
                     },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { navigator?.pop() },
+                        ) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Go back",
+                            )
+                        }
+                    },
                     actions = {
-                        if (uiState.isMyProfile) {
-                            IconButton(
-                                onClick = { handleIntent(ProfileIntentHandler.ToggleBottomSheet) },
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.MoreVert,
-                                    contentDescription = "More",
-                                )
-                            }
+                        IconButton(
+                            onClick = { handleIntent(ProfileIntentHandler.ToggleBottomSheet) },
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.MoreVert,
+                                contentDescription = "More",
+                            )
                         }
                     },
                 )
             },
         ) { innerPadding ->
             AnimatedContent(
-                targetState = uiState.isLoading,
+                targetState = uiState.isError,
                 label = "LoadingTransition",
                 modifier = Modifier
                     .padding(innerPadding)
@@ -106,15 +128,13 @@ class ProfileScreen() : Screen {
                 transitionSpec = {
                     fadeIn(tween(300)) togetherWith fadeOut(tween(300))
                 },
-            ) { isLoading ->
+            ) { isError ->
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .fillMaxSize(),
                 ) {
-                    if (isLoading) {
-                        StarLoadingIndicator(scale = 3f)
-                    } else if (uiState.isError) {
+                    if (isError) {
                         EmptyScreen(
                             icon = Icons.Outlined.Warning,
                             title = "Something went wrong",

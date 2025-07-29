@@ -15,11 +15,22 @@
  */
 package ke.don.feature_chat.models
 
+import ke.don.core_datasource.domain.models.Profile
+import ke.don.core_datasource.domain.models.Session
+
 data class ChatUiState(
     val messages: List<ChatMessage> = emptyList(),
+    val session: Session = Session(id = null),
+    val gamesPlayed: Int = 0,
+    val profile: Profile = Profile(),
+    val fetchIsError: Boolean = false,
+    val highScoreMessageSent: Boolean = false,
+    val highScoreError: Boolean = false,
+    val isFetchingSession: Boolean = true,
     val lastAnswer: String = "rock",
     val answer: String = "",
     val isGenerating: Boolean = false,
+    val startIsSuccessful: Boolean = false,
     val generateError: String? = null,
     val isGenetateError: Boolean = false,
     val score: Int = 0,

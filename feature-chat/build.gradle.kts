@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.bundles.voyager)
+    implementation(libs.firebase.auth) // Here temporarily
 
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)

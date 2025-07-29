@@ -134,7 +134,13 @@ private fun ChatStepItem(
                 timestamp = System.currentTimeMillis().toRelativeTime(),
                 isSent = false,
                 isError = step.isError,
-                annotatedText = step.render(),
+                annotatedText =
+                (uiState.authUiState as AuthUiState.Error).message?.let {
+                    AnnotatedString(
+                        it,
+                    )
+                }
+                    ?: step.render(),
             )
         }
     }

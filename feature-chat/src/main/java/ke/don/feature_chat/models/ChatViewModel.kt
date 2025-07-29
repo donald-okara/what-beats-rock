@@ -15,12 +15,14 @@
  */
 package ke.don.feature_chat.models
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_datasource.domain.ChatBotResponse
+import ke.don.core_datasource.domain.use_cases.ChatUseCase
 import ke.don.core_datasource.remote.ai.GeminiResult
-import ke.don.core_datasource.remote.ai.VertexProvider
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -30,7 +32,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
-    private val vertexProvider: VertexProvider,
+    private val useCase: ChatUseCase,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ChatUiState())
     val uiState: StateFlow<ChatUiState> = _uiState
@@ -43,11 +45,96 @@ class ChatViewModel @Inject constructor(
 
     fun handleIntent(intent: ChatIntentHandler) {
         when (intent) {
+            is ChatIntentHandler.FetchSession -> {
+                fetchSessionAndProfile()
+            }
             is ChatIntentHandler.UpdateAnswer -> {
                 updateAnswer(intent.answer)
             }
             is ChatIntentHandler.SendAnswer -> {
                 sendAnswer()
+            }
+            is ChatIntentHandler.ResetState -> {
+                resetState()
+            }
+            is ChatIntentHandler.SaveHighScore -> {
+                updateHighScore(uiState.value.score)
+            }
+        }
+    }
+
+    fun fetchSessionAndProfile() {
+        viewModelScope.launch {
+            val sessionDeferred = async { fetchSession() }
+            val profileDeferred = async { fetchProfile() }
+
+            val sessionResult = sessionDeferred.await()
+            val profileResult = profileDeferred.await()
+            val isError = !sessionResult || !profileResult
+
+            updateUiState(
+                _uiState.value.copy(
+                    isFetchingSession = false,
+                    fetchIsError = isError,
+                ),
+            )
+        }
+    }
+
+    suspend fun fetchSession(): Boolean {
+        val result = useCase.fetchChatSession()
+        return if (result.isSuccess) {
+            val (session, completedCount) = result.getOrThrow()
+            updateUiState(
+                _uiState.value.copy(
+                    session = session,
+                    gamesPlayed = completedCount,
+                ),
+            )
+            true
+        } else {
+            updateUiState(
+                _uiState.value.copy(
+                    fetchIsError = true,
+                ),
+            )
+            false
+        }
+    }
+
+    suspend fun fetchProfile(): Boolean {
+        val result = useCase.fetchMyProfile()
+        Log.d("ChatViewModel", "fetchSessionAndProfile: ${result.getOrNull()}")
+
+        return if (result.isSuccess) {
+            updateUiState(
+                _uiState.value.copy(
+                    profile = result.getOrThrow(),
+                ),
+            )
+            true
+        } else {
+            updateUiState(
+                _uiState.value.copy(
+                    fetchIsError = true,
+                ),
+            )
+            false
+        }
+    }
+
+    fun updateHighScore(highScore: Int) {
+        viewModelScope.launch {
+            val result = useCase.updateHighScore(highScore)
+
+            when {
+                result.isFailure -> {
+                    updateUiState(
+                        _uiState.value.copy(
+                            highScoreError = true,
+                        ),
+                    )
+                }
             }
         }
     }
@@ -80,7 +167,7 @@ class ChatViewModel @Inject constructor(
             )
 
             if (uiState.value.answer.isNotBlank()) {
-                val result = vertexProvider.generateChatResponse(userResponses, _uiState.value.answer)
+                val result = useCase.generateChatResponse(userResponses, _uiState.value.answer)
 
                 when (result) {
                     is GeminiResult.Loading -> {
@@ -111,49 +198,102 @@ class ChatViewModel @Inject constructor(
 
     fun updateBotMessages(response: ChatBotResponse) {
         viewModelScope.launch {
-            val currentMessages = uiState.value.messages
+            val currentState = _uiState.value
+            val currentMessages = currentState.messages
+            val currentScore = currentState.score
+            val newScore = currentScore + response.awardedPoints
+            val isHighScore = currentState.profile.highScore!! < newScore
+            val alreadySent = currentState.highScoreMessageSent
 
-            // 1. Add bot answer
-            val updatedMessages = currentMessages + ChatMessage.Bot(
-                message = response.message,
+            // Start session if first bot message
+            if (!currentState.startIsSuccessful) {
+                val result = currentState.session.id?.let {
+                    useCase.startSession(
+                        currentState.session.copy(
+                            started = true,
+                            score = newScore,
+                        ),
+                    )
+                }
+                Log.d("ChatViewModel", "fetchSessionAndProfile: ${currentState.profile}")
+
+                Log.d("ChatViewModel", "updateBotMessages: $result")
+                Log.d("ChatViewModel", "session: ${currentState.session}")
+
+                if (result?.isSuccess == true) {
+                    updateUiState(
+                        currentState.copy(
+                            startIsSuccessful = true,
+                            session = currentState.session.copy(started = true),
+                        ),
+                    )
+                }
+            }
+
+            if (isHighScore && !alreadySent) {
+                updateUiState(
+                    _uiState.value.copy(
+                        highScoreMessageSent = true,
+                    ),
+                )
+            }
+
+            val messageText = buildString {
+                append(response.message)
+                if (isHighScore && !alreadySent) {
+                    append("\n\nWhoa! You just hit a new high score: $newScore 🎉🔥")
+                }
+            }
+
+            // Add bot response
+            val botMessage = ChatMessage.Bot(
+                message = messageText,
                 timestamp = System.currentTimeMillis(),
                 awardedPoints = response.awardedPoints,
             )
 
-            // If the response is invalid, show game over immediately
+            val updatedMessages = currentMessages + botMessage
+
+            // End game if invalid
             if (!response.isValid || response.awardedPoints == 0) {
                 updateUiState(
-                    _uiState.value.copy(
+                    currentState.copy(
                         messages = updatedMessages,
                         answer = "",
                         gameOver = true,
+                        highScoreMessageSent = isHighScore,
                     ),
                 )
+                if (isHighScore) updateHighScore(newScore)
+                useCase.saveChatSession(currentState.session.copy(score = newScore, started = true))
                 return@launch
             }
 
-            // Update with bot answer first
+            // Update state with bot message and score
             updateUiState(
-                _uiState.value.copy(
+                currentState.copy(
                     messages = updatedMessages,
                     answer = "",
-                    score = _uiState.value.score + response.awardedPoints,
+                    session = currentState.session.copy(score = newScore),
+                    score = newScore,
                 ),
             )
 
-            // 2. Delay before follow-up prompt
+            // Delay then send follow-up
             delay(500L)
-
             val followUpMessage = ChatMessage.Bot(
                 message = "What beats ${_uiState.value.lastAnswer}? 🤔",
                 timestamp = System.currentTimeMillis(),
             )
-
             updateUiState(
                 _uiState.value.copy(
                     messages = _uiState.value.messages + followUpMessage,
                 ),
             )
         }
+    }
+
+    fun resetState() {
+        updateUiState(ChatUiState())
     }
 }

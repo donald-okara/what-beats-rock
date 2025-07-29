@@ -18,7 +18,7 @@ package ke.don.feature_profile.model
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import ke.don.core_datasource.domain.models.Profile
+import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.repositories.ProfileRepository
 import ke.don.core_designsystem.material_theme.components.SnackManager
 import kotlinx.coroutines.channels.Channel
@@ -42,8 +42,10 @@ class ProfileViewModel @Inject constructor(
     fun handleIntent(intent: ProfileIntentHandler) {
         when (intent) {
             is ProfileIntentHandler.FetchMyProfile -> fetchMyProfile()
+            is ProfileIntentHandler.FetchProfile -> fetchProfile(intent.id)
             is ProfileIntentHandler.DeleteProfile -> deleteProfile(intent.onSignOut)
             is ProfileIntentHandler.SignOut -> signOut(intent.onSignOut)
+            is ProfileIntentHandler.ClearState -> updateState { ProfileUiState() }
             is ProfileIntentHandler.ToggleSignOutDialog -> {
                 updateState {
                     it.copy(
@@ -93,7 +95,40 @@ class ProfileViewModel @Inject constructor(
                     updateState { state ->
                         state.copy(
                             isLoading = false,
-                            profile = result.getOrNull() ?: Profile(),
+                            profile = result.getOrNull() ?: PodiumProfile(),
+                        )
+                    }
+                }
+                result.isFailure -> {
+                    updateState { state ->
+                        state.copy(
+                            isLoading = false,
+                            isError = true,
+                            errorMessage = result.exceptionOrNull()?.message,
+                        )
+                    }
+                    showSnackbar(result.exceptionOrNull()?.message ?: "Something went wrong")
+                }
+            }
+        }
+    }
+
+    fun fetchProfile(id: String) {
+        viewModelScope.launch {
+            updateState { state ->
+                state.copy(
+                    isMyProfile = false,
+                    isLoading = true,
+                )
+            }
+            val result = profileRepository.fetchProfile(id)
+
+            when {
+                result.isSuccess -> {
+                    updateState { state ->
+                        state.copy(
+                            isLoading = false,
+                            profile = result.getOrNull() ?: PodiumProfile(),
                         )
                     }
                 }

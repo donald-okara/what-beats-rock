@@ -21,7 +21,18 @@ data class Profile(
     var email: String? = null,
     var photoUrl: String? = null,
     var createdAt: String? = null,
-    var highScore: Int? = null,
+    var highScore: Int? = 0,
     var onboarded: Boolean? = null,
     val lastPlayed: Long? = null,
-)
+) {
+    fun toPodiumProfile(): PodiumProfile {
+        return PodiumProfile(
+            lastPlayed = lastPlayed,
+            createdAt = createdAt,
+            score = highScore ?: 0,
+            profileUrl = photoUrl,
+            userName = displayName ?: "",
+            id = uid ?: "",
+        )
+    }
+}

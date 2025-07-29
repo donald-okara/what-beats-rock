@@ -13,23 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.core_datasource.domain
+package ke.don.core_designsystem.material_theme.components
 
-import kotlinx.serialization.Serializable
+import ke.don.core_designsystem.R
 
-@Serializable
-data class ItineraryItem(
-    val id: String? = null,
-    val title: String = "",
-    val isLocked: Boolean = false,
-    val isGenerated: Boolean = false,
-)
-
-@Serializable
-data class InsertionSuggestion(
-    val id: String,
-    val title: String,
-    val isLocked: Boolean,
-    val isGenerated: Boolean,
-    val position: Int,
-)
+object Images {
+    val appLogo = R.drawable.rock_svgrepo_com
+}

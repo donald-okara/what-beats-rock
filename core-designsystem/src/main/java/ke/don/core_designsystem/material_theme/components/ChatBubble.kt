@@ -56,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import ke.don.core_designsystem.R
@@ -74,7 +75,7 @@ fun ChatBubble(
     timestamp: String? = null,
     pointsEarned: Int? = null,
     onClick: () -> Unit = {},
-    profileUrl: String? = null, // null if app logo
+    profileUrl: Any? = null, // null if app logo
     appLogo: Painter? = painterResource(R.drawable.rock_svgrepo_com),
     bubbleColor: Color = if (isSent) MaterialTheme.colorScheme.surfaceVariant else if (isError) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.inverseSurface,
     content: @Composable () -> Unit,
@@ -158,7 +159,7 @@ fun ChatBubble(
 }
 
 @Composable
-fun AvatarImage(profileUrl: String?, fallback: Painter) {
+fun AvatarImage(profileUrl: Any?, fallback: Painter, size: Dp = 28.dp) {
     val painter = profileUrl?.let {
         rememberAsyncImagePainter(model = it)
     } ?: fallback
@@ -167,7 +168,7 @@ fun AvatarImage(profileUrl: String?, fallback: Painter) {
         painter = painter,
         contentDescription = "Avatar",
         modifier = Modifier
-            .size(28.dp)
+            .size(size)
             .clip(CircleShape),
         contentScale = ContentScale.Crop,
     )
@@ -181,6 +182,8 @@ fun TextBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
+    onClick: () -> Unit = {},
+    profileUrl: Any? = null, // null if app logo
     textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface,
 ) {
     TextBubble(
@@ -191,6 +194,8 @@ fun TextBubble(
         pointsEarned = pointsEarned,
         textColor = textColor,
         isError = isError,
+        onClick = onClick,
+        profileUrl = profileUrl,
     )
 }
 
@@ -201,13 +206,17 @@ fun TextBubble(
     isError: Boolean = false,
     timestamp: String? = null,
     pointsEarned: Int? = null,
+    onClick: () -> Unit = {},
+    profileUrl: Any? = null, // null if app logo
     annotatedText: AnnotatedString,
     textColor: Color = if (isSent) MaterialTheme.colorScheme.onSurface else if (isError) MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.inverseOnSurface,
 ) {
     ChatBubble(
         modifier = modifier,
         isSent = isSent,
+        profileUrl = profileUrl,
         timestamp = timestamp,
+        onClick = onClick,
         pointsEarned = pointsEarned,
         isError = isError,
     ) {

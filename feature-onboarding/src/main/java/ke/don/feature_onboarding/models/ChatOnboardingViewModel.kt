@@ -36,7 +36,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ChatOnboardingViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(OnBoardingUiState())
-    val uiState: StateFlow<OnBoardingUiState> get() = _uiState
+    val uiState: StateFlow<OnBoardingUiState> = _uiState
 
     private var onboardingJob: Job? = null
     private var currentAutoStepIndex: Int = 0

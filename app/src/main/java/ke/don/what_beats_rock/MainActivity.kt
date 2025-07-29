@@ -19,6 +19,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -29,8 +35,8 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
+import ke.don.what_beats_rock.navigation.LeaderboardScreen
 import ke.don.what_beats_rock.navigation.OnboardingScreen
-import ke.don.what_beats_rock.navigation.ProfileScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -43,9 +49,20 @@ class MainActivity : ComponentActivity() {
             ) {
                 val auth = FirebaseAuth.getInstance()
                 val isLoggedIn = auth.currentUser != null
-                val initialScreen = if (isLoggedIn) ProfileScreen() else OnboardingScreen()
+                val initialScreen = if (isLoggedIn) LeaderboardScreen() else OnboardingScreen()
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Navigator(initialScreen)
+                    Navigator(screen = initialScreen) { navigator ->
+                        AnimatedContent(
+                            targetState = navigator.lastItem,
+                            transitionSpec = {
+                                (scaleIn(initialScale = 0.9f) + fadeIn()) togetherWith
+                                    (scaleOut(targetScale = 1.1f) + fadeOut())
+                            },
+                            contentKey = { it.key },
+                        ) { screen ->
+                            screen.Content()
+                        }
+                    }
                 }
             }
         }
