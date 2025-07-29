@@ -18,6 +18,8 @@ package ke.don.core_datasource.remote
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_datasource.domain.models.Session
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +72,77 @@ class FirebaseApi {
 
                 Result.success(profile)
             }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun fetchLeaderboard(): Result<List<PodiumProfile>> = withContext(Dispatchers.IO) {
+        try {
+            val currentUid = auth.currentUser?.uid
+                ?: return@withContext Result.failure(Exception("User not authenticated"))
+
+            // Fetch top 10
+            val topSnapshots = firestore
+                .collection("profiles")
+                .orderBy("highScore", Query.Direction.DESCENDING)
+                .limit(10)
+                .get()
+                .await()
+
+            val topProfiles = topSnapshots.documents.mapNotNull { doc ->
+                doc.toObject(Profile::class.java)?.copy(uid = doc.id)
+            }.toMutableList()
+
+            val isCurrentUserInTop = topProfiles.any { it.uid == currentUid }
+
+            var currentUserProfile: Profile? = null
+            var currentUserRank: Int? = null
+
+            if (!isCurrentUserInTop) {
+                // Fetch current user's profile
+                val userSnapshot = firestore
+                    .collection("profiles")
+                    .document(currentUid)
+                    .get()
+                    .await()
+
+                if (userSnapshot.exists()) {
+                    currentUserProfile = userSnapshot.toObject(Profile::class.java)?.copy(uid = userSnapshot.id)
+                    val userScore = currentUserProfile?.highScore ?: 0
+
+                    // Count how many users have a higher score
+                    val higherScoreDocs = firestore
+                        .collection("profiles")
+                        .whereGreaterThan("highScore", userScore)
+                        .get()
+                        .await()
+
+                    currentUserRank = higherScoreDocs.size() + 1
+
+                    currentUserProfile?.let {
+                        topProfiles.add(currentUserProfile)
+                    }
+                }
+            }
+
+            val podium = topProfiles
+                .sortedByDescending { it.highScore ?: 0 }
+                .mapIndexed { index, profile ->
+                    val isCurrent = profile.uid == currentUid
+                    val position = if (isCurrent && currentUserRank != null) {
+                        currentUserRank
+                    } else {
+                        index + 1
+                    }
+
+                    profile.toPodiumProfile().copy(
+                        position = position,
+                        isCurrentUser = isCurrent
+                    )
+                }
+
+            Result.success(podium)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -198,6 +271,7 @@ class FirebaseApi {
     }
 
 
+
     fun signOut(): Result<Unit> {
         return try {
             auth.signOut()
@@ -209,15 +283,30 @@ class FirebaseApi {
 
     suspend fun deleteOwnProfile(): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            val uid = auth.currentUser?.uid ?: return@withContext Result.failure(Exception("User not authenticated"))
-            firestore
-                .collection("profiles")
-                .document(uid)
-                .delete()
-                .await()
+            val uid = auth.currentUser?.uid
+                ?: return@withContext Result.failure(Exception("User not authenticated"))
+
+            val userDocRef = firestore.collection("profiles").document(uid)
+            val sessionsRef = userDocRef.collection("sessions")
+
+            val sessionDocs = sessionsRef.get().await()
+            val batch = firestore.batch()
+
+            // Delete session documents
+            for (doc in sessionDocs.documents) {
+                batch.delete(doc.reference)
+            }
+
+            // Delete the user profile document
+            batch.delete(userDocRef)
+
+            // Commit batch
+            batch.commit().await()
+
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
+
 }

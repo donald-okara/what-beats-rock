@@ -5,5 +5,6 @@ data class PodiumProfile(
     val score: Int = 0,
     val profileUrl: String? = null,
     val userName: String = "",
-    val id: String = ""
+    val id: String = "",
+    val isCurrentUser: Boolean = false
 )

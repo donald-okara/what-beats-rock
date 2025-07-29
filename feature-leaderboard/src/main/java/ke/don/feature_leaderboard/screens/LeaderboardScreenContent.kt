@@ -52,7 +52,7 @@ fun LeaderboardList(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
     ) {
-        stickyHeader {
+        item {
             PodiumTopThree(profiles = topThree)
         }
         items(rest.size){ index ->

@@ -23,6 +23,9 @@ class LeaderboardTemplateProvider : PreviewParameterProvider<LeaderboardData> {
             PodiumProfile(position = 8, score = 900, profileUrl = null, userName = "Hannah Montana"),
             PodiumProfile(position = 9, score = 850, profileUrl = null, userName = "Isaac Abrahamson"),
             PodiumProfile(position = 10, score = 800, profileUrl = null, userName = "Jade Victoria"),
+            PodiumProfile(position = 11, score = 800, profileUrl = null, userName = "Jade Victoria"),
+            PodiumProfile(position = 12, score = 800, profileUrl = null, userName = "Jade Victoria"),
+            PodiumProfile(position = 13, score = 800, profileUrl = null, userName = "Jade Victoria"),
         )
     )
 

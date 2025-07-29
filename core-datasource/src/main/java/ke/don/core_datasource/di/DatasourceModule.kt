@@ -19,12 +19,14 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import ke.don.core_datasource.domain.repositories.LeaderboardRepository
 import ke.don.core_datasource.domain.repositories.ProfileRepository
 import ke.don.core_datasource.domain.use_cases.ChatUseCase
 import ke.don.core_datasource.domain.use_cases.ChatUseCaseImpl
 import ke.don.core_datasource.remote.FirebaseApi
 import ke.don.core_datasource.remote.ai.VertexProvider
 import ke.don.core_datasource.remote.ai.VertexProviderImpl
+import ke.don.core_datasource.remote.repositories.LeaderboardRepositoryImpl
 import ke.don.core_datasource.remote.repositories.ProfileRepositoryImpl
 import javax.inject.Singleton
 
@@ -54,4 +56,10 @@ object DatasourceModule {
         api: FirebaseApi,
         ai: VertexProvider
     ): ChatUseCase = ChatUseCaseImpl(api = api, ai = ai)
+
+    @Provides
+    @Singleton
+    fun provideLeaderboardRepository(
+        api: FirebaseApi
+    ): LeaderboardRepository = LeaderboardRepositoryImpl(api = api)
 }

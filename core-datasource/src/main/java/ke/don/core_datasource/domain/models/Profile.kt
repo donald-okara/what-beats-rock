@@ -24,4 +24,13 @@ data class Profile(
     var highScore: Int? = 0,
     var onboarded: Boolean? = null,
     val lastPlayed: Long? = null,
-)
+){
+    fun toPodiumProfile(): PodiumProfile {
+        return PodiumProfile(
+            score = highScore ?: 0,
+            profileUrl = photoUrl,
+            userName = displayName ?: "",
+            id = uid ?: ""
+        )
+    }
+}

@@ -1,5 +1,6 @@
 package ke.don.feature_leaderboard.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,7 +47,9 @@ fun PodiumTopThree(
     )
 
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
         podiumSlots.forEach { (profile, crownColor) ->
@@ -64,12 +67,15 @@ fun PodiumTopThree(
 
 @Composable
 fun PodiumItem(
+    modifier: Modifier = Modifier,
     profile: PodiumProfile,
-    crownColor: CrownColor
+    crownColor: CrownColor,
+    onClick: (String) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier.clickable( onClick = {onClick(profile.id)} )
     ) {
         Crown(
             crown = crownColor
