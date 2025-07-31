@@ -1,6 +1,20 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_share.models
 
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.createChooser
@@ -9,22 +23,12 @@ import android.graphics.Canvas
 import android.graphics.Picture
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
-import android.provider.MediaStore
-import android.view.View
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionContext
-import androidx.compose.ui.platform.ComposeView
 import androidx.core.content.ContextCompat.startActivity
-import androidx.core.content.FileProvider
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
-import kotlin.coroutines.resume
 import androidx.core.graphics.createBitmap
+import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.File
+import kotlin.coroutines.resume
 
 fun createBitmapFromPicture(picture: Picture): Bitmap {
     val bitmap = createBitmap(picture.width, picture.height)
@@ -38,7 +42,7 @@ fun createBitmapFromPicture(picture: Picture): Bitmap {
 suspend fun Bitmap.saveToDisk(context: Context): Uri {
     val file = File(
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-        "screenshot-${System.currentTimeMillis()}.png"
+        "screenshot-${System.currentTimeMillis()}.png",
     )
 
     file.writeBitmap(this, Bitmap.CompressFormat.PNG, 100)
@@ -46,13 +50,12 @@ suspend fun Bitmap.saveToDisk(context: Context): Uri {
     return scanFilePath(context, file.path) ?: throw Exception("File could not be saved")
 }
 
-
 suspend fun scanFilePath(context: Context, filePath: String): Uri? {
     return suspendCancellableCoroutine { continuation ->
         MediaScannerConnection.scanFile(
             context,
             arrayOf(filePath),
-            arrayOf("image/png")
+            arrayOf("image/png"),
         ) { _, scannedUri ->
             if (scannedUri == null) {
                 continuation.cancel(Exception("File $filePath could not be scanned"))

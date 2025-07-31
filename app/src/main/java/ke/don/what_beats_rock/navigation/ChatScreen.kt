@@ -32,7 +32,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.core_datasource.domain.models.SpotlightModel
@@ -52,7 +51,7 @@ class ChatScreen : Screen {
 
         val spotlightModel = SpotlightModel(
             profileUrl = state.profile.photoUrl,
-            spotlightPair = state.spotlightPair
+            spotlightPair = state.spotlightPair,
         )
 
         LaunchedEffect(viewModel) {
@@ -89,7 +88,7 @@ class ChatScreen : Screen {
                 modifier = Modifier.padding(innerPadding),
                 uiState = state,
                 handleIntent = handleIntent,
-                navigateToShare = {navigator?.push(ScreenshotScreen(SharableScreenModel.GameSpotlight(spotlightModel)))}
+                navigateToShare = { navigator?.push(ScreenshotScreen(SharableScreenModel.GameSpotlight(spotlightModel))) },
             )
         }
     }

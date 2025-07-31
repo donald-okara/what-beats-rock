@@ -263,7 +263,7 @@ class ChatViewModel @Inject constructor(
 
             // End game if invalid
             if (!response.isValid || response.awardedPoints == 0) {
-                val spotlight = findSpotlightPair(prompt = uiState.value.lastAnswer,score= uiState.value.score,isHighScore = uiState.value.highScoreMessageSent, updatedMessages)
+                val spotlight = findSpotlightPair(prompt = uiState.value.lastAnswer, score = uiState.value.score, isHighScore = uiState.value.highScoreMessageSent, updatedMessages)
 
                 updateUiState(
                     currentState.copy(
@@ -308,13 +308,15 @@ class ChatViewModel @Inject constructor(
         prompt: String,
         score: Int,
         isHighScore: Boolean,
-        messages: List<ChatMessage>
+        messages: List<ChatMessage>,
     ): SpotlightPair? {
         val botWithPoints = messages
             .mapIndexedNotNull { index, message ->
                 if (message is ChatMessage.Bot && message.awardedPoints != null) {
                     Pair(index, message)
-                } else null
+                } else {
+                    null
+                }
             }
             .maxByOrNull { it.second.awardedPoints ?: 0 } // first with highest score
 
@@ -324,7 +326,9 @@ class ChatViewModel @Inject constructor(
 
             if (userMessage != null) {
                 SpotlightPair(prompt = prompt, isHighScore = isHighScore, score = score, userMessage = userMessage, botMessage = botMessage)
-            } else null
+            } else {
+                null
+            }
         }
     }
 

@@ -167,7 +167,7 @@ fun AvatarImage(profileUrl: Any?, fallback: Painter = painterResource(Images.app
             model = ImageRequest.Builder(LocalContext.current)
                 .data(it)
                 .allowHardware(false)
-                .build()
+                .build(),
         )
     } ?: fallback
 
@@ -179,7 +179,6 @@ fun AvatarImage(profileUrl: Any?, fallback: Painter = painterResource(Images.app
             .clip(CircleShape),
         contentScale = ContentScale.Crop,
     )
-
 }
 
 @Composable

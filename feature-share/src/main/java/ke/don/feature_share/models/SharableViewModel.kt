@@ -1,16 +1,25 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_share.models
 
 import android.content.Context
 import android.graphics.Picture
 import android.net.Uri
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.MultiplePermissionsState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,8 +32,8 @@ class SharableViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(SharableUiState())
     val uiState: StateFlow<SharableUiState> = _uiState
 
-    fun handleIntent(intent: SharableIntentHandler){
-        when(intent){
+    fun handleIntent(intent: SharableIntentHandler) {
+        when (intent) {
             is SharableIntentHandler.CaptureScreen -> captureScreen(intent.picture, context = intent.context)
 
             is SharableIntentHandler.ShareImage -> {}
@@ -32,7 +41,7 @@ class SharableViewModel @Inject constructor() : ViewModel() {
     }
 
     fun updateState(transform: (SharableUiState) -> SharableUiState) {
-        _uiState.update ( transform )
+        _uiState.update(transform)
     }
 
     fun captureScreen(
@@ -52,10 +61,9 @@ class SharableViewModel @Inject constructor() : ViewModel() {
 
             updateState { it.copy(isLoading = false) }
 
-            shareScreen(uri,context)
+            shareScreen(uri, context)
         }
     }
-
 
     fun shareScreen(
         uri: Uri,
@@ -63,5 +71,4 @@ class SharableViewModel @Inject constructor() : ViewModel() {
     ) {
         shareBitmap(context, uri)
     }
-
 }

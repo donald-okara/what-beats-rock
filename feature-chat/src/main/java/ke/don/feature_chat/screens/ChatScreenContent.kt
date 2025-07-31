@@ -70,7 +70,7 @@ fun ChatScreenContent(
                 .fillMaxWidth(),
             uiState = uiState,
             handleIntent = handleIntent,
-            navigateToShare = navigateToShare
+            navigateToShare = navigateToShare,
         )
     }
 }
@@ -234,11 +234,11 @@ fun ChatList(
         }
     }
 
-    if(uiState.showGameOver){
+    if (uiState.showGameOver) {
         GameOverDialog(
             uiState = uiState,
             handleIntent = handleIntent,
-            navigateToShare = navigateToShare
+            navigateToShare = navigateToShare,
         )
     }
 }

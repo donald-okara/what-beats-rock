@@ -40,7 +40,5 @@ data class ChatUiState(
     val showGameOver: Boolean = false,
     // 👇 new field
 
-    val spotlightPair: SpotlightPair? = null
+    val spotlightPair: SpotlightPair? = null,
 )
-
-

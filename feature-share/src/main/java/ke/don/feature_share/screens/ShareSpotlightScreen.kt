@@ -1,16 +1,27 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_share.screens
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.core_datasource.domain.models.ChatMessage
-import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.SpotlightModel
 import ke.don.core_datasource.domain.models.SpotlightPair
 import ke.don.core_designsystem.material_theme.components.AvatarImage
@@ -33,13 +43,13 @@ import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 @Composable
 fun ShareSpotlightScreen(
     modifier: Modifier = Modifier,
-    spotlightModel: SpotlightModel
+    spotlightModel: SpotlightModel,
 ) {
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         SpotlightComponent(
             modifier = modifier,
@@ -60,11 +70,11 @@ fun SpotlightComponent(
             .padding(16.dp)
             .animateContentSize(), // smoother transition
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         AvatarImage(
             profileUrl = spotlightModel.profileUrl,
-            size = 56.dp
+            size = 56.dp,
         )
 
         Text(
@@ -108,21 +118,20 @@ fun SpotlightComponent(
     }
 }
 
-
 @Preview
 @Composable
 fun ShareSpotlightScreenPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     val spotlightPair = SpotlightPair(
         userMessage = ChatMessage.User(
             answer = "paper",
-            timestamp = System.currentTimeMillis() - 60_000
+            timestamp = System.currentTimeMillis() - 60_000,
         ),
         botMessage = ChatMessage.Bot(
             message = "Nice one! You beat rock.",
             timestamp = System.currentTimeMillis(),
-            awardedPoints = 10
+            awardedPoints = 10,
         ),
         prompt = "rock",
         score = 30,
@@ -131,7 +140,7 @@ fun ShareSpotlightScreenPreview(
 
     val spotlightModel = SpotlightModel(
         spotlightPair = spotlightPair,
-        profileUrl = null // or provide a fake URL if needed
+        profileUrl = null, // or provide a fake URL if needed
     )
 
     ThemedPreviewTemplate(isDark) {

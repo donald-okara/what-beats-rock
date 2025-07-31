@@ -59,7 +59,7 @@ fun ProfileBottomSheet(
     modifier: Modifier = Modifier,
     state: ProfileUiState,
     intentHandler: (ProfileIntentHandler) -> Unit,
-    navigateToShare: ()-> Unit
+    navigateToShare: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState()
 
@@ -68,7 +68,7 @@ fun ProfileBottomSheet(
             BottomSheetItemData(
                 icon = Icons.Outlined.Share,
                 text = stringResource(R.string.share),
-                onClick = {navigateToShare()},
+                onClick = { navigateToShare() },
             ),
         )
         if (state.isMyProfile) {

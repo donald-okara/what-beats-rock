@@ -1,3 +1,18 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_share.screens
 
 import android.Manifest
@@ -35,14 +50,13 @@ import ke.don.feature_share.models.SharableScreenModel
 import ke.don.feature_share.models.SharableUiState
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ScreenshotScreenContent(
     modifier: Modifier = Modifier,
     screenModel: SharableScreenModel,
     handleIntent: (SharableIntentHandler) -> Unit,
-    state: SharableUiState
+    state: SharableUiState,
 ) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -55,7 +69,7 @@ fun ScreenshotScreenContent(
             emptyList()
         } else {
             listOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
+        },
     )
 
     fun shareBitmap() {
@@ -65,7 +79,7 @@ fun ScreenshotScreenContent(
             } else if (writeStorageAccessState.shouldShowRationale) {
                 val result = snackbarHostState.showSnackbar(
                     message = "The storage permission is needed to save the image",
-                    actionLabel = "Grant Access"
+                    actionLabel = "Grant Access",
                 )
 
                 if (result == SnackbarResult.ActionPerformed) {
@@ -74,9 +88,7 @@ fun ScreenshotScreenContent(
             } else {
                 writeStorageAccessState.launchMultiplePermissionRequest()
             }
-
         }
-
     }
 
     Scaffold(
@@ -86,14 +98,14 @@ fun ScreenshotScreenContent(
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.medium,
                 onClick = {
-                    if(!state.isLoading){
+                    if (!state.isLoading) {
                         shareBitmap()
                     }
-                }
+                },
             ) {
                 Icon(Icons.Default.Share, "share")
             }
-        }
+        },
     ) { padding ->
         // [START android_compose_draw_into_bitmap]
         Column(
@@ -110,8 +122,8 @@ fun ScreenshotScreenContent(
                             Canvas(
                                 picture.beginRecording(
                                     width,
-                                    height
-                                )
+                                    height,
+                                ),
                             )
                         draw(this, this.layoutDirection, pictureCanvas, this.size) {
                             this@onDrawWithContent.drawContent()
@@ -120,25 +132,21 @@ fun ScreenshotScreenContent(
 
                         drawIntoCanvas { canvas -> canvas.nativeCanvas.drawPicture(picture) }
                     }
-                }
+                },
         ) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize(),
             ) {
-                when(screenModel){
+                when (screenModel) {
                     is SharableScreenModel.Profile -> ShareProfileScreen(profile = screenModel.profile)
                     is SharableScreenModel.GameSpotlight -> ShareSpotlightScreen(spotlightModel = screenModel.spotlight)
                 }
 
-                if(state.isLoading){
+                if (state.isLoading) {
                     CircularProgressIndicator()
                 }
             }
-
         }
     }
 }
-
-
-
