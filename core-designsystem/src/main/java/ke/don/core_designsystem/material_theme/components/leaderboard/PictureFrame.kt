@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +43,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import ke.don.core_designsystem.material_theme.components.Images
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
@@ -57,6 +59,7 @@ fun CircleFramedImage(
 ) {
     val size = 72.dp * scale
     val scaledModifier = modifier.size(size)
+    val context = LocalContext.current
 
     Box(
         contentAlignment = Alignment.BottomCenter,
@@ -64,7 +67,10 @@ fun CircleFramedImage(
     ) {
         // Circular image with border
         AsyncImage(
-            model = imageUrl,
+            model = ImageRequest.Builder(context)
+                .data(imageUrl)
+                .allowHardware(false) // <-- Important for saving/capturing
+                .build(),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(Images.appLogo),

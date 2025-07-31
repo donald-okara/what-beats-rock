@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.material.icons.extended)
     implementation(libs.coil.compose)
     implementation(project(":core-datasource"))
+    implementation(project(":feature-share"))
     implementation(project(":feature-chat"))
     implementation(project(":core-designsystem"))
     implementation(project(":feature-onboarding"))

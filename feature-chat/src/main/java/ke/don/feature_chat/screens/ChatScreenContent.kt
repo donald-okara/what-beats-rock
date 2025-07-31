@@ -29,7 +29,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -39,21 +38,24 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import ke.don.core_datasource.domain.models.ChatMessage
+import ke.don.core_datasource.domain.models.SpotlightModel
 import ke.don.core_designsystem.material_theme.components.FormTextField
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_chat.components.GameOverDialog
 import ke.don.feature_chat.components.ShimmerChatPlaceholder
 import ke.don.feature_chat.models.ChatIntentHandler
-import ke.don.feature_chat.models.ChatMessage
 import ke.don.feature_chat.models.ChatUiState
 
 @Composable
 fun ChatScreenContent(
     modifier: Modifier = Modifier,
     uiState: ChatUiState,
+    navigateToShare: (SpotlightModel) -> Unit,
     handleIntent: (ChatIntentHandler) -> Unit,
 ) {
     Column(
@@ -68,6 +70,7 @@ fun ChatScreenContent(
                 .fillMaxWidth(),
             uiState = uiState,
             handleIntent = handleIntent,
+            navigateToShare = navigateToShare
         )
     }
 }
@@ -76,6 +79,7 @@ fun ChatScreenContent(
 fun ChatList(
     uiState: ChatUiState,
     modifier: Modifier = Modifier,
+    navigateToShare: (SpotlightModel) -> Unit,
     handleIntent: (ChatIntentHandler) -> Unit,
 ) {
     val enabled = !uiState.isGenerating && !uiState.gameOver && uiState.gamesPlayed < 5
@@ -229,6 +233,14 @@ fun ChatList(
             }
         }
     }
+
+    if(uiState.showGameOver){
+        GameOverDialog(
+            uiState = uiState,
+            handleIntent = handleIntent,
+            navigateToShare = navigateToShare
+        )
+    }
 }
 
 @Composable
@@ -269,6 +281,7 @@ fun ChatScreenPreview(
     @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
 ) {
     val previewUiState = ChatUiState(
+        showGameOver = true,
         messages = listOf(
             ChatMessage.Bot(
                 message = "What beats rock? 🤔",
@@ -297,6 +310,6 @@ fun ChatScreenPreview(
     )
 
     ThemedPreviewTemplate(isDark) {
-        ChatScreenContent(uiState = previewUiState, handleIntent = {})
+        ChatScreenContent(uiState = previewUiState, navigateToShare = {}, handleIntent = {})
     }
 }

@@ -1,0 +1,140 @@
+package ke.don.feature_share.screens
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.dp
+import ke.don.core_datasource.domain.models.ChatMessage
+import ke.don.core_datasource.domain.models.PodiumProfile
+import ke.don.core_datasource.domain.models.SpotlightModel
+import ke.don.core_datasource.domain.models.SpotlightPair
+import ke.don.core_designsystem.material_theme.components.AvatarImage
+import ke.don.core_designsystem.material_theme.components.TextBubble
+import ke.don.core_designsystem.material_theme.components.toRelativeTime
+import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
+import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+
+@Composable
+fun ShareSpotlightScreen(
+    modifier: Modifier = Modifier,
+    spotlightModel: SpotlightModel
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.surface),
+        contentAlignment = Alignment.Center
+    ) {
+        SpotlightComponent(
+            modifier = modifier,
+            spotlightModel = spotlightModel,
+        )
+    }
+}
+
+@Composable
+fun SpotlightComponent(
+    modifier: Modifier = Modifier,
+    spotlightModel: SpotlightModel,
+) {
+    val spotlightPair = spotlightModel.spotlightPair ?: return
+
+    Column(
+        modifier = modifier
+            .padding(16.dp)
+            .animateContentSize(), // smoother transition
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        AvatarImage(
+            profileUrl = spotlightModel.profileUrl,
+            size = 56.dp
+        )
+
+        Text(
+            text = buildAnnotatedString {
+                if (spotlightPair.isHighScore) {
+                    append("🏆 New high score! ${spotlightPair.score} pts")
+                } else {
+                    append("Score: ${spotlightPair.score}")
+                }
+            },
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+        )
+
+        // Bot prompt
+        TextBubble(
+            isSent = false,
+            text = "What beats ${spotlightPair.prompt}",
+            isError = false,
+            pointsEarned = spotlightPair.botMessage.awardedPoints,
+            timestamp = spotlightPair.botMessage.timestamp.toRelativeTime(),
+        )
+
+        // User response
+        TextBubble(
+            isSent = true,
+            text = spotlightPair.userMessage.answer,
+            isError = false,
+            timestamp = spotlightPair.userMessage.timestamp.toRelativeTime(),
+            profileUrl = spotlightModel.profileUrl,
+        )
+
+        // Bot feedback
+        TextBubble(
+            isSent = false,
+            text = spotlightPair.botMessage.message,
+            isError = false,
+            pointsEarned = spotlightPair.botMessage.awardedPoints,
+            timestamp = spotlightPair.botMessage.timestamp.toRelativeTime(),
+        )
+    }
+}
+
+
+@Preview
+@Composable
+fun ShareSpotlightScreenPreview(
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean
+) {
+    val spotlightPair = SpotlightPair(
+        userMessage = ChatMessage.User(
+            answer = "paper",
+            timestamp = System.currentTimeMillis() - 60_000
+        ),
+        botMessage = ChatMessage.Bot(
+            message = "Nice one! You beat rock.",
+            timestamp = System.currentTimeMillis(),
+            awardedPoints = 10
+        ),
+        prompt = "rock",
+        score = 30,
+        isHighScore = true,
+    )
+
+    val spotlightModel = SpotlightModel(
+        spotlightPair = spotlightPair,
+        profileUrl = null // or provide a fake URL if needed
+    )
+
+    ThemedPreviewTemplate(isDark) {
+        ShareSpotlightScreen(spotlightModel = spotlightModel)
+    }
+}

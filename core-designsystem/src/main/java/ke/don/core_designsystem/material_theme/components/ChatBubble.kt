@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -59,6 +60,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import ke.don.core_designsystem.R
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
@@ -159,9 +161,14 @@ fun ChatBubble(
 }
 
 @Composable
-fun AvatarImage(profileUrl: Any?, fallback: Painter, size: Dp = 28.dp) {
+fun AvatarImage(profileUrl: Any?, fallback: Painter = painterResource(Images.appLogo), size: Dp = 28.dp) {
     val painter = profileUrl?.let {
-        rememberAsyncImagePainter(model = it)
+        rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(it)
+                .allowHardware(false)
+                .build()
+        )
     } ?: fallback
 
     Image(
@@ -172,6 +179,7 @@ fun AvatarImage(profileUrl: Any?, fallback: Painter, size: Dp = 28.dp) {
             .clip(CircleShape),
         contentScale = ContentScale.Crop,
     )
+
 }
 
 @Composable

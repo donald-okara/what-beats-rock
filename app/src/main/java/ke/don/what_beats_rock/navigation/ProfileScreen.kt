@@ -45,6 +45,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.core_designsystem.material_theme.components.EmptyScreen
@@ -52,6 +53,7 @@ import ke.don.core_designsystem.material_theme.components.SnackManager
 import ke.don.feature_profile.model.ProfileIntentHandler
 import ke.don.feature_profile.model.ProfileViewModel
 import ke.don.feature_profile.screens.ProfileScreenContent
+import ke.don.feature_share.models.SharableScreenModel
 
 class ProfileScreen(
     private val id: String? = null,
@@ -145,6 +147,9 @@ class ProfileScreen(
                     } else {
                         ProfileScreenContent(
                             uiState = uiState,
+                            navigateToShare = {
+                                navigator?.push(ScreenshotScreen(SharableScreenModel.Profile(uiState.profile)))
+                            },
                             intentHandler = handleIntent,
                             navigateToSignin = { navigator?.replaceAll(OnboardingScreen()) },
                         )
