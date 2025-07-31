@@ -54,6 +54,7 @@ import ke.don.core_designsystem.material_theme.components.leaderboard.Crown
 import ke.don.core_designsystem.material_theme.components.leaderboard.CrownColor
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_share.components.PolaroidFrame
 
 @Composable
 fun ShareProfileScreen(
@@ -61,11 +62,8 @@ fun ShareProfileScreen(
     profile: PodiumProfile,
     comment: String = "New personal best!",
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center,
+    PolaroidFrame(
+        title = "Spotlight"
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
@@ -115,6 +113,7 @@ fun ShareProfileScreen(
                 color = MaterialTheme.colorScheme.primary,
             )
         }
+        
     }
 }
 

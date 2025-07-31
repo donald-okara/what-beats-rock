@@ -23,6 +23,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -95,60 +96,58 @@ fun ChatBubble(
             }
             Spacer(Modifier.width(6.dp))
         }
-        Surface(
-            onClick = onClick,
+        Column(
+            horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
+            modifier = modifier
+                .clickable(onClick = onClick)
+                .weight(1f),
         ) {
-            Column(
-                horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
-                modifier = modifier.weight(1f),
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .drawBehind {
+                        val hornPath = Path().apply {
+                            if (isSent) {
+                                moveTo(size.width - 20f, 0f)
+                                lineTo(size.width + 4f, -10f)
+                                lineTo(size.width - 5f, 10f)
+                                close()
+                            } else {
+                                moveTo(20f, 0f)
+                                lineTo(-4f, -10f)
+                                lineTo(5f, 10f)
+                                close()
+                            }
+                        }
+                        drawPath(path = hornPath, color = bubbleColor)
+                    }
+                    .background(bubbleColor, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
             ) {
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .drawBehind {
-                            val hornPath = Path().apply {
-                                if (isSent) {
-                                    moveTo(size.width - 20f, 0f)
-                                    lineTo(size.width + 4f, -10f)
-                                    lineTo(size.width - 5f, 10f)
-                                    close()
-                                } else {
-                                    moveTo(20f, 0f)
-                                    lineTo(-4f, -10f)
-                                    lineTo(5f, 10f)
-                                    close()
-                                }
-                            }
-                            drawPath(path = hornPath, color = bubbleColor)
-                        }
-                        .background(bubbleColor, RoundedCornerShape(16.dp))
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                ) {
-                    content()
-                }
-
-                Text(
-                    text = buildAnnotatedString {
-                        if (timestamp != null) {
-                            append(timestamp)
-                        }
-                        if (pointsEarned != null) {
-                            if (timestamp != null) append(" • ")
-                            withStyle(
-                                SpanStyle(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.ExtraBold,
-                                ),
-                            ) {
-                                append("+$pointsEarned pts")
-                            }
-                        }
-                    },
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                )
+                content()
             }
+
+            Text(
+                text = buildAnnotatedString {
+                    if (timestamp != null) {
+                        append(timestamp)
+                    }
+                    if (pointsEarned != null) {
+                        if (timestamp != null) append(" • ")
+                        withStyle(
+                            SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.ExtraBold,
+                            ),
+                        ) {
+                            append("+$pointsEarned pts")
+                        }
+                    }
+                },
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            )
         }
 
         if (isSent) {

@@ -39,18 +39,16 @@ import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_share.components.PolaroidFrame
 
 @Composable
 fun ShareSpotlightScreen(
     modifier: Modifier = Modifier,
     spotlightModel: SpotlightModel,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center,
-    ) {
+    PolaroidFrame(
+        title = "Spotlight"
+    ){
         SpotlightComponent(
             modifier = modifier,
             spotlightModel = spotlightModel,
