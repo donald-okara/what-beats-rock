@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.play.services.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.config)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)

@@ -21,6 +21,7 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import ke.don.core_datasource.remote.RemoteConfigManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -69,6 +70,7 @@ class SharableViewModel @Inject constructor() : ViewModel() {
         uri: Uri,
         context: Context,
     ) {
-        shareBitmap(context, uri)
+        val caption = RemoteConfigManager.getString("store_link")
+        shareBitmap(context, uri, caption)
     }
 }

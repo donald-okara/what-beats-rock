@@ -24,6 +24,7 @@ import android.graphics.Picture
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.graphics.createBitmap
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -73,11 +74,12 @@ fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int
     }
 }
 
-fun shareBitmap(context: Context, uri: Uri) {
-    val intent = Intent(Intent.ACTION_SEND).apply {
-        type = "image/png"
-        putExtra(Intent.EXTRA_STREAM, uri)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }
-    startActivity(context, createChooser(intent, "Share your image"), null)
+fun shareBitmap(context: Context, uri: Uri, caption: String = "") {
+    ShareCompat.IntentBuilder(context)
+        .setType("image/png")
+        .setStream(uri)
+        .setText(caption)
+        .setChooserTitle("Share your image")
+        .startChooser()
 }
+
