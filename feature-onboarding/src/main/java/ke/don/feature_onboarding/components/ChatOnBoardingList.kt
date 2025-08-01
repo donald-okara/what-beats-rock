@@ -134,14 +134,12 @@ private fun ChatStepItem(
                 timestamp = System.currentTimeMillis().toRelativeTime(),
                 isSent = false,
                 isError = step.isError,
-                annotatedText =
-                (uiState.authUiState as AuthUiState.Error).message?.let {
-                    AnnotatedString(
-                        it,
-                    )
+                annotatedText = when (val state = uiState.authUiState) {
+                    is AuthUiState.Error -> AnnotatedString(state.message ?: "Something went wrong")
+                    else -> step.render()
                 }
-                    ?: step.render(),
             )
+
         }
     }
 }
