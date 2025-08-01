@@ -15,8 +15,10 @@
  */
 package ke.don.feature_chat.models
 
+import ke.don.core_datasource.domain.models.ChatMessage
 import ke.don.core_datasource.domain.models.Profile
 import ke.don.core_datasource.domain.models.Session
+import ke.don.core_datasource.domain.models.SpotlightPair
 
 data class ChatUiState(
     val messages: List<ChatMessage> = emptyList(),
@@ -35,17 +37,8 @@ data class ChatUiState(
     val isGenetateError: Boolean = false,
     val score: Int = 0,
     val gameOver: Boolean = false,
+    val showGameOver: Boolean = false,
+    // 👇 new field
+
+    val spotlightPair: SpotlightPair? = null,
 )
-
-sealed class ChatMessage {
-    data class Bot(
-        val message: String,
-        val timestamp: Long,
-        val awardedPoints: Int? = null, // null = regular message, else show score
-    ) : ChatMessage()
-
-    data class User(
-        val answer: String,
-        val timestamp: Long,
-    ) : ChatMessage()
-}

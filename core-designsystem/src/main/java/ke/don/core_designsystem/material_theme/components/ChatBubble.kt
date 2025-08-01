@@ -23,6 +23,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +37,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -59,6 +60,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import ke.don.core_designsystem.R
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
@@ -93,60 +95,58 @@ fun ChatBubble(
             }
             Spacer(Modifier.width(6.dp))
         }
-        Surface(
-            onClick = onClick,
+        Column(
+            horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
+            modifier = modifier
+                .clickable(onClick = onClick)
+                .weight(1f),
         ) {
-            Column(
-                horizontalAlignment = if (isSent) Alignment.End else Alignment.Start,
-                modifier = modifier.weight(1f),
+            Box(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .drawBehind {
+                        val hornPath = Path().apply {
+                            if (isSent) {
+                                moveTo(size.width - 20f, 0f)
+                                lineTo(size.width + 4f, -10f)
+                                lineTo(size.width - 5f, 10f)
+                                close()
+                            } else {
+                                moveTo(20f, 0f)
+                                lineTo(-4f, -10f)
+                                lineTo(5f, 10f)
+                                close()
+                            }
+                        }
+                        drawPath(path = hornPath, color = bubbleColor)
+                    }
+                    .background(bubbleColor, RoundedCornerShape(16.dp))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
             ) {
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .drawBehind {
-                            val hornPath = Path().apply {
-                                if (isSent) {
-                                    moveTo(size.width - 20f, 0f)
-                                    lineTo(size.width + 4f, -10f)
-                                    lineTo(size.width - 5f, 10f)
-                                    close()
-                                } else {
-                                    moveTo(20f, 0f)
-                                    lineTo(-4f, -10f)
-                                    lineTo(5f, 10f)
-                                    close()
-                                }
-                            }
-                            drawPath(path = hornPath, color = bubbleColor)
-                        }
-                        .background(bubbleColor, RoundedCornerShape(16.dp))
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                ) {
-                    content()
-                }
-
-                Text(
-                    text = buildAnnotatedString {
-                        if (timestamp != null) {
-                            append(timestamp)
-                        }
-                        if (pointsEarned != null) {
-                            if (timestamp != null) append(" • ")
-                            withStyle(
-                                SpanStyle(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.ExtraBold,
-                                ),
-                            ) {
-                                append("+$pointsEarned pts")
-                            }
-                        }
-                    },
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                )
+                content()
             }
+
+            Text(
+                text = buildAnnotatedString {
+                    if (timestamp != null) {
+                        append(timestamp)
+                    }
+                    if (pointsEarned != null) {
+                        if (timestamp != null) append(" • ")
+                        withStyle(
+                            SpanStyle(
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.ExtraBold,
+                            ),
+                        ) {
+                            append("+$pointsEarned pts")
+                        }
+                    }
+                },
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
+            )
         }
 
         if (isSent) {
@@ -159,9 +159,14 @@ fun ChatBubble(
 }
 
 @Composable
-fun AvatarImage(profileUrl: Any?, fallback: Painter, size: Dp = 28.dp) {
+fun AvatarImage(profileUrl: Any?, fallback: Painter = painterResource(Images.appLogo), size: Dp = 28.dp) {
     val painter = profileUrl?.let {
-        rememberAsyncImagePainter(model = it)
+        rememberAsyncImagePainter(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(it)
+                .allowHardware(false)
+                .build(),
+        )
     } ?: fallback
 
     Image(

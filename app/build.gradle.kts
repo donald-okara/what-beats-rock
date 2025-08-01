@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    id("kotlin-parcelize")
     alias(libs.plugins.google.gms.google.services)
 }
 
@@ -71,6 +72,7 @@ dependencies {
     implementation(libs.material.icons.extended)
     implementation(libs.coil.compose)
     implementation(project(":core-datasource"))
+    implementation(project(":feature-share"))
     implementation(project(":feature-chat"))
     implementation(project(":core-designsystem"))
     implementation(project(":feature-onboarding"))

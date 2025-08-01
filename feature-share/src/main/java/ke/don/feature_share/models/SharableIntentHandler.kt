@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.feature_chat.models
+package ke.don.feature_share.models
 
-sealed class ChatIntentHandler {
-    data class UpdateAnswer(val answer: String) : ChatIntentHandler()
-    data object SendAnswer : ChatIntentHandler()
-    data object FetchSession : ChatIntentHandler()
-    data object ResetState : ChatIntentHandler()
-    data object SaveHighScore : ChatIntentHandler()
-    data object ToggleGameOverDialog : ChatIntentHandler()
+import android.content.Context
+import android.graphics.Picture
+
+sealed class SharableIntentHandler {
+    class CaptureScreen(
+        val picture: Picture,
+        val context: Context,
+        val channel: Channel,
+    ) : SharableIntentHandler()
+
+    class ShareImage(
+        val context: Context,
+    ) : SharableIntentHandler()
 }

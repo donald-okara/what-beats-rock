@@ -54,6 +54,7 @@ import java.util.Date
 fun ProfileScreenContent(
     modifier: Modifier = Modifier,
     uiState: ProfileUiState,
+    navigateToShare: () -> Unit,
     navigateToSignin: () -> Unit,
     intentHandler: (ProfileIntentHandler) -> Unit,
 ) {
@@ -146,7 +147,7 @@ fun ProfileScreenContent(
             modifier = modifier,
             state = uiState,
             intentHandler = intentHandler,
-            navigateToSignin = navigateToSignin,
+            navigateToShare = navigateToShare,
         )
     }
 
@@ -198,10 +199,11 @@ fun ProfileScreenPreview(
         ProfileScreenContent(
             uiState = ProfileUiState(
                 profile = fakeProfile,
-                isLoading = true,
+                isLoading = false,
             ),
             intentHandler = {},
             navigateToSignin = {},
+            navigateToShare = {},
         )
     }
 }

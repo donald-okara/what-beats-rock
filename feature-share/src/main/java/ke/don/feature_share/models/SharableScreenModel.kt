@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.feature_chat.models
+package ke.don.feature_share.models
 
-sealed class ChatIntentHandler {
-    data class UpdateAnswer(val answer: String) : ChatIntentHandler()
-    data object SendAnswer : ChatIntentHandler()
-    data object FetchSession : ChatIntentHandler()
-    data object ResetState : ChatIntentHandler()
-    data object SaveHighScore : ChatIntentHandler()
-    data object ToggleGameOverDialog : ChatIntentHandler()
+import android.os.Parcelable
+import ke.don.core_datasource.domain.models.PodiumProfile
+import ke.don.core_datasource.domain.models.SpotlightModel
+import kotlinx.parcelize.Parcelize
+
+sealed class SharableScreenModel : Parcelable {
+    @Parcelize
+    class Profile(val profile: PodiumProfile) : SharableScreenModel()
+
+    @Parcelize
+    class GameSpotlight(val spotlight: SpotlightModel) : SharableScreenModel()
 }

@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.feature_chat.models
+package ke.don.feature_share.models
 
-sealed class ChatIntentHandler {
-    data class UpdateAnswer(val answer: String) : ChatIntentHandler()
-    data object SendAnswer : ChatIntentHandler()
-    data object FetchSession : ChatIntentHandler()
-    data object ResetState : ChatIntentHandler()
-    data object SaveHighScore : ChatIntentHandler()
-    data object ToggleGameOverDialog : ChatIntentHandler()
+import android.net.Uri
+import ke.don.core_designsystem.material_theme.WhatBeatsIcons
+
+data class SharableUiState(
+    val imageUri: Uri? = null,
+    val isLoading: Boolean = false,
+)
+
+enum class Channel(val icon: Int? = null, val text: String = "") {
+    Whatsapp(WhatBeatsIcons.whatsApp),
+    Instagram(WhatBeatsIcons.instagram),
+    Twitter(WhatBeatsIcons.twitter),
+    More,
 }

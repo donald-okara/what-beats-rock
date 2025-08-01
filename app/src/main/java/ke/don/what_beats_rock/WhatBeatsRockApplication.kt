@@ -20,11 +20,13 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.appcheck.FirebaseAppCheck
 import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import dagger.hilt.android.HiltAndroidApp
+import ke.don.core_datasource.remote.RemoteConfigManager
 
 @HiltAndroidApp
 class WhatBeatsRockApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        RemoteConfigManager.init()
         FirebaseApp.initializeApp(this)
         FirebaseAppCheck.getInstance().installAppCheckProviderFactory(
             DebugAppCheckProviderFactory.getInstance(),

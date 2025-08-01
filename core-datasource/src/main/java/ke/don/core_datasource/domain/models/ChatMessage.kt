@@ -19,13 +19,31 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PodiumProfile(
-    val position: Int = 0, // 1, 2, 3 (not necessarily in order)
+data class SpotlightPair(
+    val prompt: String = "",
     val score: Int = 0,
-    val profileUrl: String? = null,
-    val lastPlayed: Long? = null,
-    val createdAt: String? = null,
-    val userName: String = "",
-    val id: String = "",
-    val isCurrentUser: Boolean = false,
+    val isHighScore: Boolean = false,
+    val userMessage: ChatMessage.User,
+    val botMessage: ChatMessage.Bot,
 ) : Parcelable
+
+@Parcelize
+data class SpotlightModel(
+    val profileUrl: String? = null,
+    val spotlightPair: SpotlightPair? = null,
+) : Parcelable
+
+sealed class ChatMessage : Parcelable {
+    @Parcelize
+    data class Bot(
+        val message: String,
+        val timestamp: Long,
+        val awardedPoints: Int? = null, // null = regular message, else show score
+    ) : ChatMessage()
+
+    @Parcelize
+    data class User(
+        val answer: String,
+        val timestamp: Long,
+    ) : ChatMessage()
+}

@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/feature-leaderboard" />
             <option value="$PROJECT_DIR$/feature-onboarding" />
             <option value="$PROJECT_DIR$/feature-profile" />
+            <option value="$PROJECT_DIR$/feature-share" />
           </set>
         </option>
       </GradleProjectSettings>

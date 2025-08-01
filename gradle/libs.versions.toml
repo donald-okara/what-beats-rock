@@ -34,6 +34,7 @@ playServicesAuth = "21.3.0"
 firebaseFirestoreKtx = "26.0.0"
 firebaseFirestore = "26.0.0"
 graphicsShapesAndroid = "1.0.1"
+firebaseConfig = "23.0.0"
 
 
 [libraries]
@@ -82,6 +83,7 @@ play-services-auth = { group = "com.google.android.gms", name = "play-services-a
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
 androidx-graphics-shapes-android = { group = "androidx.graphics", name = "graphics-shapes-android", version.ref = "graphicsShapesAndroid" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config", version.ref = "firebaseConfig" }
 
 [bundles]
 hilt = [

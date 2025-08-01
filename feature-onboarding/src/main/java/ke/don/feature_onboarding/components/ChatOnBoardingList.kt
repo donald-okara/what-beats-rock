@@ -20,7 +20,6 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -32,7 +31,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -40,12 +38,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.core_designsystem.material_theme.components.ChatBubble
+import ke.don.core_designsystem.material_theme.components.LoadingOverlay
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
@@ -134,13 +132,10 @@ private fun ChatStepItem(
                 timestamp = System.currentTimeMillis().toRelativeTime(),
                 isSent = false,
                 isError = step.isError,
-                annotatedText =
-                (uiState.authUiState as AuthUiState.Error).message?.let {
-                    AnnotatedString(
-                        it,
-                    )
-                }
-                    ?: step.render(),
+                annotatedText = when (val state = uiState.authUiState) {
+                    is AuthUiState.Error -> AnnotatedString(state.message ?: "Something went wrong")
+                    else -> step.render()
+                },
             )
         }
     }
@@ -178,24 +173,6 @@ private fun ActionButtons(
         ) {
             Text("Skip")
         }
-    }
-}
-
-@Composable
-private fun LoadingOverlay() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.3f))
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        awaitPointerEvent() // consume all touch input
-                    }
-                }
-            },
-    ) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
     }
 }
 

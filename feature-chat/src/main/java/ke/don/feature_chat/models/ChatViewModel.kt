@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_datasource.domain.ChatBotResponse
+import ke.don.core_datasource.domain.models.ChatMessage
+import ke.don.core_datasource.domain.models.SpotlightPair
 import ke.don.core_datasource.domain.use_cases.ChatUseCase
 import ke.don.core_datasource.remote.ai.GeminiResult
 import kotlinx.coroutines.async
@@ -60,6 +62,11 @@ class ChatViewModel @Inject constructor(
             is ChatIntentHandler.SaveHighScore -> {
                 updateHighScore(uiState.value.score)
             }
+            is ChatIntentHandler.ToggleGameOverDialog -> updateUiState(
+                _uiState.value.copy(
+                    showGameOver = !_uiState.value.showGameOver,
+                ),
+            )
         }
     }
 
@@ -256,11 +263,15 @@ class ChatViewModel @Inject constructor(
 
             // End game if invalid
             if (!response.isValid || response.awardedPoints == 0) {
+                val spotlight = findSpotlightPair(prompt = uiState.value.lastAnswer, score = uiState.value.score, isHighScore = uiState.value.highScoreMessageSent, updatedMessages)
+
                 updateUiState(
                     currentState.copy(
                         messages = updatedMessages,
                         answer = "",
                         gameOver = true,
+                        showGameOver = true,
+                        spotlightPair = spotlight,
                         highScoreMessageSent = isHighScore,
                     ),
                 )
@@ -290,6 +301,34 @@ class ChatViewModel @Inject constructor(
                     messages = _uiState.value.messages + followUpMessage,
                 ),
             )
+        }
+    }
+
+    fun findSpotlightPair(
+        prompt: String,
+        score: Int,
+        isHighScore: Boolean,
+        messages: List<ChatMessage>,
+    ): SpotlightPair? {
+        val botWithPoints = messages
+            .mapIndexedNotNull { index, message ->
+                if (message is ChatMessage.Bot && message.awardedPoints != null) {
+                    Pair(index, message)
+                } else {
+                    null
+                }
+            }
+            .maxByOrNull { it.second.awardedPoints ?: 0 } // first with highest score
+
+        return botWithPoints?.let { (botIndex, botMessage) ->
+            val userMessage = messages.subList(0, botIndex)
+                .lastOrNull { it is ChatMessage.User } as? ChatMessage.User
+
+            if (userMessage != null) {
+                SpotlightPair(prompt = prompt, isHighScore = isHighScore, score = score, userMessage = userMessage, botMessage = botMessage)
+            } else {
+                null
+            }
         }
     }
 

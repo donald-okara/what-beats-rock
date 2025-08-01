@@ -34,9 +34,11 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import ke.don.core_datasource.domain.models.SpotlightModel
 import ke.don.feature_chat.models.ChatIntentHandler
 import ke.don.feature_chat.models.ChatViewModel
 import ke.don.feature_chat.screens.ChatScreenContent
+import ke.don.feature_share.models.SharableScreenModel
 
 class ChatScreen : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -46,6 +48,11 @@ class ChatScreen : Screen {
         val state by viewModel.uiState.collectAsState()
         val handleIntent = viewModel::handleIntent
         val navigator = LocalNavigator.current
+
+        val spotlightModel = SpotlightModel(
+            profileUrl = state.profile.photoUrl,
+            spotlightPair = state.spotlightPair,
+        )
 
         LaunchedEffect(viewModel) {
             handleIntent(ChatIntentHandler.FetchSession)
@@ -81,6 +88,7 @@ class ChatScreen : Screen {
                 modifier = Modifier.padding(innerPadding),
                 uiState = state,
                 handleIntent = handleIntent,
+                navigateToShare = { navigator?.push(ScreenshotScreen(SharableScreenModel.GameSpotlight(spotlightModel))) },
             )
         }
     }

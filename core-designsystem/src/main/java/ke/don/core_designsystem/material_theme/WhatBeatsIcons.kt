@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ke.don.feature_chat.models
+package ke.don.core_designsystem.material_theme
 
-sealed class ChatIntentHandler {
-    data class UpdateAnswer(val answer: String) : ChatIntentHandler()
-    data object SendAnswer : ChatIntentHandler()
-    data object FetchSession : ChatIntentHandler()
-    data object ResetState : ChatIntentHandler()
-    data object SaveHighScore : ChatIntentHandler()
-    data object ToggleGameOverDialog : ChatIntentHandler()
+import ke.don.core_designsystem.R
+
+object WhatBeatsIcons {
+    val whatsApp = R.drawable.whatsapp
+    val instagram = R.drawable.instagram
+    val twitter = R.drawable.twitter
 }
