@@ -17,7 +17,7 @@ object RemoteConfigManager {
         )
         remoteConfig.setDefaultsAsync(
             mapOf(
-                "store_link" to "Default from module"
+                "store_link" to "https://youtu.be/dQw4w9WgXcQ?si=vDg-LTXiZk_j8W9Z"
             )
         )
         remoteConfig.fetchAndActivate()

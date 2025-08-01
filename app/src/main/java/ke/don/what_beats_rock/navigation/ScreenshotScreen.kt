@@ -15,28 +15,35 @@
  */
 package ke.don.what_beats_rock.navigation
 
+import android.os.Parcelable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.feature_share.models.SharableScreenModel
 import ke.don.feature_share.models.SharableViewModel
 import ke.don.feature_share.screens.ScreenshotScreenContent
+import kotlinx.parcelize.Parcelize
 
+
+@Parcelize
 class ScreenshotScreen(
     val screenModel: SharableScreenModel,
-) : Screen {
+) : Screen, Parcelable {
     @Composable
     override fun Content() {
         val viewModel: SharableViewModel = hiltViewModel()
         val handleIntent = viewModel::handleIntent
         val state by viewModel.uiState.collectAsState()
+        val navigator = LocalNavigator.current
 
         ScreenshotScreenContent(
             handleIntent = handleIntent,
             state = state,
             screenModel = screenModel,
+            navigateBack = {navigator?.pop()}
         )
     }
 }

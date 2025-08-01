@@ -35,7 +35,7 @@ class SharableViewModel @Inject constructor() : ViewModel() {
 
     fun handleIntent(intent: SharableIntentHandler) {
         when (intent) {
-            is SharableIntentHandler.CaptureScreen -> captureScreen(intent.picture, context = intent.context)
+            is SharableIntentHandler.CaptureScreen -> captureScreen(intent.picture, context = intent.context, channel = intent.channel)
 
             is SharableIntentHandler.ShareImage -> {}
         }
@@ -48,6 +48,7 @@ class SharableViewModel @Inject constructor() : ViewModel() {
     fun captureScreen(
         picture: Picture,
         context: Context,
+        channel: Channel
     ) {
         viewModelScope.launch {
             updateState { it.copy(isLoading = true) }
@@ -62,15 +63,34 @@ class SharableViewModel @Inject constructor() : ViewModel() {
 
             updateState { it.copy(isLoading = false) }
 
-            shareScreen(uri, context)
+            shareScreen(uri, context, channel)
+
+            clearUri()
         }
     }
 
     fun shareScreen(
         uri: Uri,
         context: Context,
+        channel: Channel
     ) {
         val caption = RemoteConfigManager.getString("store_link")
-        shareBitmap(context, uri, caption)
+
+        val annotatedCaption = buildString {
+            append("Join the game\n\n")
+            append(caption)
+        }
+
+        when(channel){
+            Channel.Whatsapp -> shareToWhatsApp(context, uri, annotatedCaption)
+            Channel.Instagram -> shareToInstagram(context, uri, annotatedCaption)
+            Channel.Twitter -> shareToTwitter(context, uri, annotatedCaption)
+            Channel.More -> shareBitmap(context, uri, annotatedCaption)
+
+        }
+    }
+
+    fun clearUri() {
+        updateState { it.copy(imageUri = null) }
     }
 }

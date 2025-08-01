@@ -16,8 +16,16 @@
 package ke.don.feature_share.models
 
 import android.net.Uri
+import ke.don.core_designsystem.material_theme.WhatBeatsIcons
 
 data class SharableUiState(
     val imageUri: Uri? = null,
     val isLoading: Boolean = false,
 )
+
+enum class Channel(val icon: Int? = null, val text: String = "") {
+    Whatsapp(WhatBeatsIcons.whatsApp),
+    Instagram(WhatBeatsIcons.instagram),
+    Twitter(WhatBeatsIcons.twitter),
+    More
+}

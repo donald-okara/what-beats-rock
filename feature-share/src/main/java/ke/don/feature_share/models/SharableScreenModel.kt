@@ -15,10 +15,15 @@
  */
 package ke.don.feature_share.models
 
+import android.os.Parcelable
 import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.SpotlightModel
+import kotlinx.parcelize.Parcelize
 
-sealed class SharableScreenModel {
+sealed class SharableScreenModel: Parcelable {
+    @Parcelize
     class Profile(val profile: PodiumProfile) : SharableScreenModel()
+
+    @Parcelize
     class GameSpotlight(val spotlight: SpotlightModel) : SharableScreenModel()
 }

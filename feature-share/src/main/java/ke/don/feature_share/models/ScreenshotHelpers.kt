@@ -15,6 +15,7 @@
  */
 package ke.don.feature_share.models
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.createChooser
@@ -24,6 +25,7 @@ import android.graphics.Picture
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
+import android.widget.Toast
 import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.core.graphics.createBitmap
@@ -74,6 +76,7 @@ fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int
     }
 }
 
+
 fun shareBitmap(context: Context, uri: Uri, caption: String = "") {
     ShareCompat.IntentBuilder(context)
         .setType("image/png")
@@ -82,4 +85,51 @@ fun shareBitmap(context: Context, uri: Uri, caption: String = "") {
         .setChooserTitle("Share your image")
         .startChooser()
 }
+
+fun shareToWhatsApp(context: Context, uri: Uri, caption: String = "") {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "image/png"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        putExtra(Intent.EXTRA_TEXT, caption)
+        setPackage("com.whatsapp")
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    try {
+        context.startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, "WhatsApp not installed", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun shareToInstagram(context: Context, uri: Uri, caption: String = "") {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "image/*"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        putExtra(Intent.EXTRA_TEXT, caption)
+        setPackage("com.instagram.android")
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    try {
+        context.startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, "Instagram not installed", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun shareToTwitter(context: Context, uri: Uri, caption: String = "") {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "image/*"
+        putExtra(Intent.EXTRA_STREAM, uri)
+        putExtra(Intent.EXTRA_TEXT, caption)
+        setPackage("com.twitter.android")
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+    try {
+        context.startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        Toast.makeText(context, "Twitter (X) not installed", Toast.LENGTH_SHORT).show()
+    }
+}
+
+
 

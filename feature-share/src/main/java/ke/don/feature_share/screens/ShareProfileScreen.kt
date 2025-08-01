@@ -60,8 +60,11 @@ import ke.don.feature_share.components.PolaroidFrame
 fun ShareProfileScreen(
     modifier: Modifier = Modifier,
     profile: PodiumProfile,
-    comment: String = "New personal best!",
 ) {
+    val comment = when{
+        profile.position < 3 -> "The view from the podium is crazy"
+        else -> "Beat my score"
+    }
     PolaroidFrame(
         title = "Spotlight"
     ) {

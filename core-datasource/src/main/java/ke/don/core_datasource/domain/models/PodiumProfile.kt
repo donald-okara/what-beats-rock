@@ -15,6 +15,10 @@
  */
 package ke.don.core_datasource.domain.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class PodiumProfile(
     val position: Int = 0, // 1, 2, 3 (not necessarily in order)
     val score: Int = 0,
@@ -24,4 +28,4 @@ data class PodiumProfile(
     val userName: String = "",
     val id: String = "",
     val isCurrentUser: Boolean = false,
-)
+): Parcelable

@@ -46,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.core_designsystem.material_theme.components.ChatBubble
+import ke.don.core_designsystem.material_theme.components.LoadingOverlay
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
@@ -179,23 +180,6 @@ private fun ActionButtons(
     }
 }
 
-@Composable
-private fun LoadingOverlay() {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.3f))
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (true) {
-                        awaitPointerEvent() // consume all touch input
-                    }
-                }
-            },
-    ) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-    }
-}
 
 @Preview
 @Composable
