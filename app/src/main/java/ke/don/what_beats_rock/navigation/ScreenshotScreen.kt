@@ -27,7 +27,6 @@ import ke.don.feature_share.models.SharableViewModel
 import ke.don.feature_share.screens.ScreenshotScreenContent
 import kotlinx.parcelize.Parcelize
 
-
 @Parcelize
 class ScreenshotScreen(
     val screenModel: SharableScreenModel,
@@ -43,7 +42,7 @@ class ScreenshotScreen(
             handleIntent = handleIntent,
             state = state,
             screenModel = screenModel,
-            navigateBack = {navigator?.pop()}
+            navigateBack = { navigator?.pop() },
         )
     }
 }

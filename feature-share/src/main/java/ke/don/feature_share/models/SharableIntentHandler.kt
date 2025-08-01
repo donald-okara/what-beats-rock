@@ -22,7 +22,7 @@ sealed class SharableIntentHandler {
     class CaptureScreen(
         val picture: Picture,
         val context: Context,
-        val channel: Channel
+        val channel: Channel,
     ) : SharableIntentHandler()
 
     class ShareImage(

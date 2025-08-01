@@ -18,7 +18,6 @@ package ke.don.feature_share.models
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.createChooser
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Picture
@@ -76,7 +75,6 @@ fun File.writeBitmap(bitmap: Bitmap, format: Bitmap.CompressFormat, quality: Int
     }
 }
 
-
 fun shareBitmap(context: Context, uri: Uri, caption: String = "") {
     ShareCompat.IntentBuilder(context)
         .setType("image/png")
@@ -130,6 +128,3 @@ fun shareToTwitter(context: Context, uri: Uri, caption: String = "") {
         Toast.makeText(context, "Twitter (X) not installed", Toast.LENGTH_SHORT).show()
     }
 }
-
-
-

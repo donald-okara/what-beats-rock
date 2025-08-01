@@ -25,16 +25,15 @@ data class SpotlightPair(
     val isHighScore: Boolean = false,
     val userMessage: ChatMessage.User,
     val botMessage: ChatMessage.Bot,
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class SpotlightModel(
     val profileUrl: String? = null,
     val spotlightPair: SpotlightPair? = null,
-): Parcelable
+) : Parcelable
 
-
-sealed class ChatMessage: Parcelable {
+sealed class ChatMessage : Parcelable {
     @Parcelize
     data class Bot(
         val message: String,

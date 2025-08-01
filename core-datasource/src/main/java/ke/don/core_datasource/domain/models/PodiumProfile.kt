@@ -28,4 +28,4 @@ data class PodiumProfile(
     val userName: String = "",
     val id: String = "",
     val isCurrentUser: Boolean = false,
-): Parcelable
+) : Parcelable

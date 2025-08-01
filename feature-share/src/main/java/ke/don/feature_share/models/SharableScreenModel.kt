@@ -20,7 +20,7 @@ import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.models.SpotlightModel
 import kotlinx.parcelize.Parcelize
 
-sealed class SharableScreenModel: Parcelable {
+sealed class SharableScreenModel : Parcelable {
     @Parcelize
     class Profile(val profile: PodiumProfile) : SharableScreenModel()
 

@@ -15,48 +15,28 @@
  */
 package ke.don.feature_share.screens
 
-import android.Manifest
-import android.graphics.Picture
-import android.os.Build
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.graphics.Canvas
-import androidx.compose.ui.graphics.drawscope.draw
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.platform.LocalContext
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import ke.don.core_designsystem.material_theme.components.LoadingOverlay
 import ke.don.feature_share.components.ShareFrameLayout
 import ke.don.feature_share.models.SharableIntentHandler
 import ke.don.feature_share.models.SharableScreenModel
 import ke.don.feature_share.models.SharableUiState
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -74,15 +54,15 @@ fun ScreenshotScreenContent(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
-                navigationIcon = { IconButton({ navigateBack() }){ Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back") } }
+                navigationIcon = { IconButton({ navigateBack() }) { Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = "Back") } },
             )
-        }
+        },
     ) { padding ->
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .padding(padding)
-        ){
+                .padding(padding),
+        ) {
             ShareFrameLayout(
                 state = state,
                 handleIntent = handleIntent,
@@ -93,11 +73,10 @@ fun ScreenshotScreenContent(
                     is SharableScreenModel.GameSpotlight -> ShareSpotlightScreen(spotlightModel = screenModel.spotlight)
                 }
 
-                if (state.isLoading){
+                if (state.isLoading) {
                     LoadingOverlay()
                 }
             }
         }
-
     }
 }

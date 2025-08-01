@@ -16,11 +16,8 @@
 package ke.don.feature_share.screens
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,8 +44,8 @@ fun ShareSpotlightScreen(
     spotlightModel: SpotlightModel,
 ) {
     PolaroidFrame(
-        title = "Spotlight"
-    ){
+        title = "Spotlight",
+    ) {
         SpotlightComponent(
             modifier = modifier,
             spotlightModel = spotlightModel,

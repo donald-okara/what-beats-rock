@@ -27,5 +27,5 @@ enum class Channel(val icon: Int? = null, val text: String = "") {
     Whatsapp(WhatBeatsIcons.whatsApp),
     Instagram(WhatBeatsIcons.instagram),
     Twitter(WhatBeatsIcons.twitter),
-    More
+    More,
 }

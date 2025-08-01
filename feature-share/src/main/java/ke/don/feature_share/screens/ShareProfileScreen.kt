@@ -22,12 +22,9 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -61,12 +58,12 @@ fun ShareProfileScreen(
     modifier: Modifier = Modifier,
     profile: PodiumProfile,
 ) {
-    val comment = when{
+    val comment = when {
         profile.position < 3 -> "The view from the podium is crazy"
         else -> "Beat my score"
     }
     PolaroidFrame(
-        title = "Spotlight"
+        title = "Spotlight",
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
@@ -116,7 +113,6 @@ fun ShareProfileScreen(
                 color = MaterialTheme.colorScheme.primary,
             )
         }
-        
     }
 }
 

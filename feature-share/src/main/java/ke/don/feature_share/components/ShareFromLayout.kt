@@ -1,14 +1,27 @@
+/*
+ * Copyright © 2025 Donald O. Isoe (isoedonald@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package ke.don.feature_share.components
 
 import android.Manifest
-import android.graphics.Bitmap
 import android.graphics.Picture
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,21 +37,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -47,19 +53,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.Canvas
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.drawscope.draw
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.node.Ref
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -68,10 +68,8 @@ import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.feature_share.models.Channel
 import ke.don.feature_share.models.SharableIntentHandler
-import ke.don.feature_share.models.SharableScreenModel
 import ke.don.feature_share.models.SharableUiState
 import kotlinx.coroutines.launch
-
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -97,7 +95,7 @@ fun ShareFrameLayout(
     )
 
     fun shareBitmap(
-        channel: Channel
+        channel: Channel,
     ) {
         coroutineScope.launch {
             if (writeStorageAccessState.allPermissionsGranted) {
@@ -121,7 +119,7 @@ fun ShareFrameLayout(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         // ✅ This is the part that will be captured
         Box(
@@ -159,7 +157,6 @@ fun ShareFrameLayout(
             ) {
                 content()
             }
-
         }
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -172,26 +169,26 @@ fun ShareFrameLayout(
 @Composable
 fun ShareRow(
     modifier: Modifier = Modifier,
-    shareBitmap: (Channel) -> Unit
-){
+    shareBitmap: (Channel) -> Unit,
+) {
     Column(
         verticalArrangement = Arrangement.spacedBy(32.dp, Alignment.Top),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Text(
             text = "Share with",
             style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
 
         LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             items(Channel.entries) {
                 ChannelIcon(
                     channel = it,
-                    shareBitmap = shareBitmap
+                    shareBitmap = shareBitmap,
                 )
             }
         }
@@ -202,27 +199,27 @@ fun ShareRow(
 fun ChannelIcon(
     modifier: Modifier = Modifier,
     channel: Channel,
-    shareBitmap: (Channel) -> Unit
-){
+    shareBitmap: (Channel) -> Unit,
+) {
     val iconSize = 32.dp
     Column(
         modifier = modifier.padding(4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Surface(
-            onClick = {shareBitmap(channel)},
+            onClick = { shareBitmap(channel) },
             shape = MaterialTheme.shapes.large,
             tonalElevation = 8.dp,
-            modifier = modifier.wrapContentSize()
+            modifier = modifier.wrapContentSize(),
         ) {
-            when (channel){
+            when (channel) {
                 in listOf(Channel.Whatsapp, Channel.Instagram, Channel.Twitter) -> {
                     WBIcon(
                         iconResource = channel.icon!!,
                         size = iconSize,
                         modifier = Modifier
-                            .padding(8.dp)
+                            .padding(8.dp),
                     )
                 }
                 else -> {
@@ -232,19 +229,16 @@ fun ChannelIcon(
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier
                             .padding(8.dp)
-                            .size(iconSize)
+                            .size(iconSize),
                     )
-
                 }
-
             }
-
         }
 
         Text(
             text = channel.text.ifEmpty { channel.name },
             style = MaterialTheme.typography.labelSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -252,23 +246,24 @@ fun ChannelIcon(
 @Preview
 @Composable
 fun ChannelIconPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark : Boolean
-){
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
+) {
     ThemedPreviewTemplate(isDark) {
         ChannelIcon(
             channel = Channel.Whatsapp,
-            shareBitmap = {}
+            shareBitmap = {},
         )
     }
 }
+
 @Preview
 @Composable
 fun ShareRowPreview(
-    @PreviewParameter(ThemeModeProvider::class) isDark : Boolean
-){
+    @PreviewParameter(ThemeModeProvider::class) isDark: Boolean,
+) {
     ThemedPreviewTemplate(isDark) {
         ShareRow(
-            shareBitmap = {}
+            shareBitmap = {},
         )
     }
 }
