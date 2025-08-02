@@ -32,7 +32,7 @@ object RemoteConfigManager {
         )
         remoteConfig.setDefaultsAsync(
             mapOf(
-                "store_link" to "https://youtu.be/dQw4w9WgXcQ?si=vDg-LTXiZk_j8W9Z",
+                "store_link" to "https://play.google.com/store/apps/details?id=ke.don.what_beats_rock",
             ),
         )
         remoteConfig.fetchAndActivate()
