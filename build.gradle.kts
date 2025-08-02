@@ -9,7 +9,8 @@ plugins {
     alias(libs.plugins.google.gms.google.services) apply false
     alias(libs.plugins.hilt.android) apply false
     alias(libs.plugins.android.library) apply false
-    id("com.diffplug.spotless") version "6.25.0" // Use latest version
+    id("com.diffplug.spotless") version "6.25.0"
+    alias(libs.plugins.google.firebase.crashlytics) apply false // Use latest version
 }
 
 // 👇 Add this block here:

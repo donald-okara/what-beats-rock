@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -49,6 +50,7 @@ import ke.don.core_designsystem.material_theme.components.TypingBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_onboarding.R
 import ke.don.feature_onboarding.models.AuthUiState
 import ke.don.feature_onboarding.models.OnBoardingIntentHandler
 import ke.don.feature_onboarding.models.OnBoardingUiState
@@ -133,7 +135,7 @@ private fun ChatStepItem(
                 isSent = false,
                 isError = step.isError,
                 annotatedText = when (val state = uiState.authUiState) {
-                    is AuthUiState.Error -> AnnotatedString(state.message ?: "Something went wrong")
+                    is AuthUiState.Error -> AnnotatedString("Something went wrong")
                     else -> step.render()
                 },
             )
@@ -162,7 +164,7 @@ private fun ActionButtons(
             onClick = { handleIntent(OnBoardingIntentHandler.ShowNextStep) },
             enabled = canClick,
         ) {
-            Text("Next")
+            Text(stringResource(R.string.next))
         }
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -171,7 +173,7 @@ private fun ActionButtons(
             onClick = { handleIntent(OnBoardingIntentHandler.SkipToLast) },
             enabled = canClick,
         ) {
-            Text("Skip")
+            Text(stringResource(R.string.skip))
         }
     }
 }

@@ -119,7 +119,7 @@ fun ProfileScreenContent(
                 val formatted = DateFormat.getDateInstance().format(Date(it))
                 AssistChip(
                     onClick = {},
-                    label = { Text("Last Played: $formatted") },
+                    label = { Text(stringResource(R.string.last_played, formatted)) },
                     leadingIcon = { Icon(Icons.Default.History, contentDescription = null) },
                 )
             }
@@ -127,7 +127,7 @@ fun ProfileScreenContent(
             profile.createdAt?.let {
                 AssistChip(
                     onClick = {},
-                    label = { Text("Joined: ${it.take(10)}") },
+                    label = { Text(stringResource(R.string.joined, it.take(10))) },
                     leadingIcon = { Icon(Icons.Default.CalendarToday, contentDescription = null) },
                 )
             }
@@ -135,7 +135,7 @@ fun ProfileScreenContent(
             profile.score.let {
                 AssistChip(
                     onClick = {},
-                    label = { Text("High Score: $it") },
+                    label = { Text(stringResource(R.string.high_score, it)) },
                     leadingIcon = { Icon(Icons.Outlined.Star, contentDescription = null) },
                 )
             }
@@ -162,8 +162,8 @@ fun ProfileScreenContent(
             dialogType = DialogType.DANGER,
             icon = Icons.Outlined.PersonOff,
             checklistItems = listOf(
-                "This would delete all your progress",
-                "This cannot be undone",
+                stringResource(R.string.this_would_delete_all_your_progress),
+                stringResource(R.string.this_cannot_be_undone),
             ),
         )
     }
@@ -173,8 +173,8 @@ fun ProfileScreenContent(
             modifier = modifier,
             onDismissRequest = { intentHandler(ProfileIntentHandler.ToggleSignOutDialog) },
             onConfirmation = { intentHandler(ProfileIntentHandler.SignOut(navigateToSignin)) },
-            dialogTitle = "Sign out",
-            dialogText = "Are you sure you want to sign out?",
+            dialogTitle = stringResource(R.string.sign_out),
+            dialogText = stringResource(R.string.are_you_sure_you_want_to_sign_out),
             dialogType = DialogType.DANGER,
             icon = Icons.Default.Logout,
         )

@@ -58,7 +58,15 @@ fun SpotlightComponent(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
         ) {
             Text(
-                text = if (spotlightPair?.isHighScore == true) "New high score! \uD83C\uDFC6 ${spotlightPair?.score} points" else "Score: ${spotlightPair?.score}",
+                text =
+                if (spotlightPair?.isHighScore == true) {
+                    stringResource(
+                        ke.don.feature_chat.R.string.new_high_score_points,
+                        spotlightPair.score,
+                    )
+                } else {
+                    stringResource(ke.don.feature_chat.R.string.score, spotlightPair?.score ?: 0)
+                },
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -87,7 +95,7 @@ fun SpotlightComponent(
             )
 
             Button(onClick = { navigateToShare(spotlightModel) }) {
-                Text(text = "Share")
+                Text(text = stringResource(ke.don.feature_chat.R.string.share))
             }
         }
     }
@@ -121,11 +129,11 @@ fun GameOverDialog(
         icon = {
             Image(
                 painter = painterResource(Images.appLogo),
-                contentDescription = "Game over",
+                contentDescription = stringResource(ke.don.feature_chat.R.string.game_over),
                 Modifier.size(32.dp),
             )
         },
-        title = { Text(text = "Game over") },
+        title = { Text(text = stringResource(ke.don.feature_chat.R.string.game_over)) },
         text = {
             SpotlightComponent(modifier, spotlightModel, navigateToShare)
         },
@@ -133,7 +141,7 @@ fun GameOverDialog(
         confirmButton = {
             TextButton(onClick = { handleIntent(ChatIntentHandler.ResetState) }, enabled = enabled) {
                 Text(
-                    text = "New Game",
+                    text = stringResource(ke.don.feature_chat.R.string.new_game),
                     color = if (enabled) onContainerColor else disabledColor,
                 )
             }

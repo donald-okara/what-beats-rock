@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,6 +52,7 @@ import ke.don.core_designsystem.material_theme.components.leaderboard.Crown
 import ke.don.core_designsystem.material_theme.components.leaderboard.CrownColor
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_share.R
 import ke.don.feature_share.components.PolaroidFrame
 
 @Composable
@@ -59,11 +61,11 @@ fun ShareProfileScreen(
     profile: PodiumProfile,
 ) {
     val comment = when {
-        profile.position < 3 -> "The view from the podium is crazy"
-        else -> "Beat my score"
+        profile.position < 3 -> stringResource(R.string.the_view_from_the_podium_is_crazy)
+        else -> stringResource(R.string.beat_my_score)
     }
     PolaroidFrame(
-        title = "Spotlight",
+        title = stringResource(R.string.spotlight),
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.Top),
@@ -95,7 +97,7 @@ fun ShareProfileScreen(
             )
 
             Text(
-                text = "High Score: ${profile.score} \uD83C\uDFC6 ",
+                text = stringResource(R.string.high_score, profile.score),
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.Bold,
             )

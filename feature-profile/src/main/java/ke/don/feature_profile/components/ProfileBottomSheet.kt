@@ -142,7 +142,7 @@ fun ProfileSheetHeader(
         ) {
             AsyncImage(
                 model = profile.profileUrl,
-                contentDescription = "Profile Photo",
+                contentDescription = stringResource(R.string.profile_photo),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(imageSize)
