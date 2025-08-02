@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="score">Score: %1$d</string>
+    <string name="new_high_score_points">New high score! 🏆 %1$d points</string>
+    <string name="share">Share</string>
+    <string name="game_over">Game over</string>
+    <string name="new_game">New Game</string>
+    <string name="and_that_s_a_wrap">And that\'s a wrap! You racked up</string>
+    <string name="fancy_another_round">" points. Fancy another round?"</string>
+    <string name="tap_me_to_start_again">Tap me to start again</string>
+    <string name="we_had_trouble_saving_your_highscore">We had trouble saving your highscore. Tap my to try again</string>
+    <string name="something_went_wrong">Something went wrong, please confirm you have your internet on and tap to retry</string>
+    <string name="you_have_games_left_today">You have %1$d games left today.</string>
+    <string name="nothing_beats_rock">Nothing beats rock</string>
+    <string name="unless">Unless...</string>
+    <string name="what_beats_rock">what beats rock 🤔?</string>
+    <string name="you_ve_played_all_your_games_for_today">You\'ve played all your games for today! 🎉 Come back tomorrow for more fun 😊</string>
+    <string name="what_beats">What beats %1$s</string>
+    <string name="a_hammer">A hammer</string>
+</resources>

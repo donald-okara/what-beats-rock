@@ -4,4 +4,12 @@
     <string name="delete_profile">Delete profile</string>
     <string name="delete_profile_confirmation">Are you sure you want to delete your profile?</string>
     <string name="logout">Logout</string>
+    <string name="profile_photo">Profile Photo</string>
+    <string name="last_played">Last Played: %1$s</string>
+    <string name="joined">Joined: %1$s</string>
+    <string name="high_score">High Score: %1$d</string>
+    <string name="this_would_delete_all_your_progress">This would delete all your progress</string>
+    <string name="this_cannot_be_undone">This cannot be undone</string>
+    <string name="sign_out">Sign out</string>
+    <string name="are_you_sure_you_want_to_sign_out">Are you sure you want to sign out?</string>
 </resources>

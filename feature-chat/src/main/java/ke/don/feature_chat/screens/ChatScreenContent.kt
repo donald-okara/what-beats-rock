@@ -31,6 +31,7 @@ import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +47,7 @@ import ke.don.core_designsystem.material_theme.components.TypingBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_chat.R
 import ke.don.feature_chat.components.GameOverDialog
 import ke.don.feature_chat.components.ShimmerChatPlaceholder
 import ke.don.feature_chat.models.ChatIntentHandler
@@ -96,6 +98,7 @@ fun ChatList(
                     value = uiState.answer,
                     onValueChange = { handleIntent(ChatIntentHandler.UpdateAnswer(it)) },
                     enabled = enabled,
+                    lastPrompt = uiState.lastAnswer,
                     modifier = Modifier
                         .fillMaxWidth(),
                 )
@@ -115,11 +118,11 @@ fun ChatList(
                     TextBubble(
                         isSent = false,
                         annotatedText = buildAnnotatedString {
-                            append("And that's a wrap! You racked up")
+                            append(stringResource(R.string.and_that_s_a_wrap))
                             withStyle(style = SpanStyle(fontWeight = FontWeight.ExtraBold)) {
                                 append(" ${uiState.score}")
                             }
-                            append(" points. Fancy another round?")
+                            append(stringResource(R.string.fancy_another_round))
                         },
                     )
 
@@ -128,7 +131,7 @@ fun ChatList(
                     TextBubble(
                         isSent = false,
                         annotatedText = buildAnnotatedString {
-                            append("Tap me to start again")
+                            append(stringResource(R.string.tap_me_to_start_again))
                         },
                         onClick = {
                             handleIntent(ChatIntentHandler.ResetState)
@@ -143,7 +146,7 @@ fun ChatList(
             AnimatedVisibility(visible = uiState.highScoreError) {
                 TextBubble(
                     isSent = false,
-                    text = "We had trouble saving your highscore. Tap my to try again",
+                    text = stringResource(R.string.we_had_trouble_saving_your_highscore),
                     isError = true,
                     onClick = { handleIntent(ChatIntentHandler.SaveHighScore) },
                 )
@@ -206,7 +209,7 @@ fun ChatList(
                 TextBubble(
                     modifier = modifier.animateItem(),
                     isSent = false,
-                    text = "Something went wrong, please confirm you have your internet on and tap to retry",
+                    text = stringResource(R.string.something_went_wrong),
                     isError = true,
                     onClick = { handleIntent(ChatIntentHandler.FetchSession) },
                 )
@@ -215,19 +218,25 @@ fun ChatList(
             item(key = "intro") {
                 if (uiState.gamesPlayed < 5) {
                     Column(modifier = Modifier.animateItem()) {
-                        TextBubble(isSent = false, text = "You have ${5 - uiState.gamesPlayed} games left today.")
+                        TextBubble(
+                            isSent = false,
+                            text = stringResource(
+                                R.string.you_have_games_left_today,
+                                5 - uiState.gamesPlayed,
+                            ),
+                        )
                         Spacer(modifier = Modifier.height(4.dp))
 
-                        TextBubble(isSent = false, text = "Nothing beats rock")
+                        TextBubble(isSent = false, text = stringResource(R.string.nothing_beats_rock))
                         Spacer(modifier = Modifier.height(4.dp))
-                        TextBubble(isSent = false, text = "Unless...")
+                        TextBubble(isSent = false, text = stringResource(R.string.unless))
                         Spacer(modifier = Modifier.height(4.dp))
-                        TextBubble(isSent = false, text = "what beats rock 🤔?")
+                        TextBubble(isSent = false, text = stringResource(R.string.what_beats_rock))
                     }
                 } else {
                     TextBubble(
                         isSent = false,
-                        text = "You've played all your games for today! 🎉 Come back tomorrow for more fun 😊",
+                        text = stringResource(R.string.you_ve_played_all_your_games_for_today),
                     )
                 }
             }
@@ -248,11 +257,12 @@ fun UserInputBar(
     modifier: Modifier = Modifier,
     onMessageSent: () -> Unit,
     value: String,
+    lastPrompt: String,
     enabled: Boolean = true,
     onValueChange: (String) -> Unit,
 ) {
     val length = value.length
-    val limit = 15
+    val limit = 40
     val isError = length > limit
     val errorMessage = if (isError) "Message too long" else null
 
@@ -264,8 +274,8 @@ fun UserInputBar(
         onClick = {
             if (!isError) onMessageSent()
         },
-        label = "",
-        placeholder = "Thor's hammer",
+        label = stringResource(R.string.what_beats, lastPrompt),
+        placeholder = stringResource(R.string.a_hammer),
         maxLength = 15,
         nameLength = value.length,
         isError = value.length > 15,

@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -36,6 +37,7 @@ import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.toRelativeTime
 import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
+import ke.don.feature_share.R
 import ke.don.feature_share.components.PolaroidFrame
 
 @Composable
@@ -44,7 +46,7 @@ fun ShareSpotlightScreen(
     spotlightModel: SpotlightModel,
 ) {
     PolaroidFrame(
-        title = "Spotlight",
+        title = stringResource(R.string.spotlight),
     ) {
         SpotlightComponent(
             modifier = modifier,
@@ -75,9 +77,9 @@ fun SpotlightComponent(
         Text(
             text = buildAnnotatedString {
                 if (spotlightPair.isHighScore) {
-                    append("🏆 New high score! ${spotlightPair.score} pts")
+                    append(stringResource(R.string.new_high_score_pts, spotlightPair.score))
                 } else {
-                    append("Score: ${spotlightPair.score}")
+                    append(stringResource(R.string.score, spotlightPair.score))
                 }
             },
             style = MaterialTheme.typography.titleMedium,

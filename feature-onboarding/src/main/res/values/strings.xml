@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="tap_to_continue_with_google">Tap to continue with google</string>
+</resources>
