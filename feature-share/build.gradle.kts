@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.bundles.voyager)
+    implementation(libs.koffee)
 
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)

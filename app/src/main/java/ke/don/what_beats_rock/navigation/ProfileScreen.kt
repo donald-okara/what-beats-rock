@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.Warning
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,7 +47,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import ke.don.core_designsystem.material_theme.components.EmptyScreen
-import ke.don.core_designsystem.material_theme.components.SnackManager
 import ke.don.feature_profile.model.ProfileIntentHandler
 import ke.don.feature_profile.model.ProfileViewModel
 import ke.don.feature_profile.screens.ProfileScreenContent
@@ -64,17 +62,6 @@ class ProfileScreen(
         val uiState by viewModel.uiState.collectAsState()
         val handleIntent = viewModel::handleIntent
         val navigator = LocalNavigator.current
-        val snackbarHostState = remember { SnackbarHostState() }
-
-        LaunchedEffect(Unit) {
-            viewModel.eventFlow.collect { event ->
-                when (event) {
-                    is SnackManager.ShowSnackbar -> {
-                        snackbarHostState.showSnackbar(message = event.message, withDismissAction = true)
-                    }
-                }
-            }
-        }
 
         LaunchedEffect(viewModel) {
             if (id == null) {
@@ -91,7 +78,6 @@ class ProfileScreen(
         }
 
         Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
                     title = {

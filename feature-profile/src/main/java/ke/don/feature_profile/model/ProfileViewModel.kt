@@ -20,7 +20,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.repositories.ProfileRepository
-import ke.don.core_designsystem.material_theme.components.SnackManager
+import ke.don.koffee.domain.Koffee
+import ke.don.koffee.model.ToastAction
+import ke.don.koffee.model.ToastType
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,9 +37,6 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> get() = _uiState
-
-    private val _eventChannel = Channel<SnackManager>()
-    val eventFlow = _eventChannel.receiveAsFlow()
 
     fun handleIntent(intent: ProfileIntentHandler) {
         when (intent) {
@@ -74,12 +73,6 @@ class ProfileViewModel @Inject constructor(
         _uiState.update(transform)
     }
 
-    fun showSnackbar(message: String) {
-        viewModelScope.launch {
-            _eventChannel.send(SnackManager.ShowSnackbar(message))
-        }
-    }
-
     fun fetchMyProfile() {
         viewModelScope.launch {
             updateState { state ->
@@ -107,7 +100,11 @@ class ProfileViewModel @Inject constructor(
                             errorMessage = result.exceptionOrNull()?.message,
                         )
                     }
-                    showSnackbar(result.exceptionOrNull()?.message ?: "Something went wrong")
+                    Koffee.show(
+                        title = "Something went wrong",
+                        description = result.exceptionOrNull()?.message ?: "",
+                        type = ToastType.Error
+                    )
                 }
             }
         }
@@ -140,7 +137,11 @@ class ProfileViewModel @Inject constructor(
                             errorMessage = result.exceptionOrNull()?.message,
                         )
                     }
-                    showSnackbar(result.exceptionOrNull()?.message ?: "Something went wrong")
+                    Koffee.show(
+                        title = "Something went wrong",
+                        description = result.exceptionOrNull()?.message ?: "",
+                        type = ToastType.Error
+                    )
                 }
             }
         }
@@ -165,7 +166,11 @@ class ProfileViewModel @Inject constructor(
                             signoutErrorMessage = result.exceptionOrNull()?.message,
                         )
                     }
-                    showSnackbar(result.exceptionOrNull()?.message ?: "Something went wrong")
+                    Koffee.show(
+                        title = "Something went wrong",
+                        description = result.exceptionOrNull()?.message ?: "",
+                        type = ToastType.Error
+                    )
                 }
             }
         }
@@ -190,7 +195,11 @@ class ProfileViewModel @Inject constructor(
                             deleteErrorMessage = result.exceptionOrNull()?.message,
                         )
                     }
-                    showSnackbar(result.exceptionOrNull()?.message ?: "Something went wrong")
+                    Koffee.show(
+                        title = "Something went wrong",
+                        description = result.exceptionOrNull()?.message ?: "",
+                        type = ToastType.Error
+                    )
                 }
             }
         }

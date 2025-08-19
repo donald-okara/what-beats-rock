@@ -69,15 +69,15 @@ import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.feature_share.models.Channel
 import ke.don.feature_share.models.SharableIntentHandler
 import ke.don.feature_share.models.SharableUiState
+import ke.don.koffee.domain.Koffee
+import ke.don.koffee.model.ToastAction
+import ke.don.koffee.model.ToastType
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun ShareFrameLayout(
     modifier: Modifier = Modifier,
-    title: String = "Share this",
-    state: SharableUiState,
-    snackbarHostState: SnackbarHostState,
     handleIntent: (SharableIntentHandler) -> Unit,
     content: @Composable () -> Unit,
 ) {
@@ -101,14 +101,18 @@ fun ShareFrameLayout(
             if (writeStorageAccessState.allPermissionsGranted) {
                 handleIntent(SharableIntentHandler.CaptureScreen(picture, context, channel))
             } else if (writeStorageAccessState.shouldShowRationale) {
-                val result = snackbarHostState.showSnackbar(
-                    message = "The storage permission is needed to save the image",
-                    actionLabel = "Grant Access",
+                Koffee.show(
+                    title = "Permission needed",
+                    description = "The storage permission is needed to save the image",
+                    type = ToastType.Neutral,
+                    primaryAction = ToastAction(
+                        label = "Grant Access",
+                        dismissAfter = true,
+                        onClick = {
+                            writeStorageAccessState.launchMultiplePermissionRequest()
+                        }
+                    )
                 )
-
-                if (result == SnackbarResult.ActionPerformed) {
-                    writeStorageAccessState.launchMultiplePermissionRequest()
-                }
             } else {
                 writeStorageAccessState.launchMultiplePermissionRequest()
             }

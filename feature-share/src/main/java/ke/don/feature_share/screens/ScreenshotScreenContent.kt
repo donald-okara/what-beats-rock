@@ -47,10 +47,7 @@ fun ScreenshotScreenContent(
     navigateBack: () -> Unit,
     state: SharableUiState,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
@@ -64,9 +61,7 @@ fun ScreenshotScreenContent(
                 .padding(padding),
         ) {
             ShareFrameLayout(
-                state = state,
                 handleIntent = handleIntent,
-                snackbarHostState = snackbarHostState,
             ) {
                 when (screenModel) {
                     is SharableScreenModel.Profile -> ShareProfileScreen(profile = screenModel.profile)
