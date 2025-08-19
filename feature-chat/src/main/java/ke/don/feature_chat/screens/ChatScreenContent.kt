@@ -277,7 +277,7 @@ fun UserInputBar(
     onValueChange: (String) -> Unit,
 ) {
     val length = value.length
-    val limit = 40
+    val limit = 30
     val isError = length > limit
     val errorMessage = if (isError) "Message too long" else null
 
@@ -287,13 +287,15 @@ fun UserInputBar(
         onValueChange = onValueChange,
         trailingIcon = Icons.AutoMirrored.Outlined.Send,
         onClick = {
-            if (!isError) onMessageSent()
+            if (!isError) {
+                onMessageSent()
+            }
         },
         label = stringResource(R.string.what_beats, lastPrompt),
         placeholder = stringResource(R.string.a_hammer),
-        maxLength = 15,
-        nameLength = value.length,
-        isError = value.length > 15,
+        maxLength = limit,
+        nameLength = length,
+        isError = isError,
         enabled = enabled,
         showLength = true,
         errorMessage = errorMessage,

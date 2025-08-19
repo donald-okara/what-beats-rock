@@ -68,6 +68,8 @@ fun FormTextField(
         nameLength >= maxLength - 5 -> MaterialTheme.colorScheme.tertiary
         else -> MaterialTheme.colorScheme.onSurface
     }
+    val enableIcon= enabled && !isError
+    val iconColor = if (enableIcon)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(0.6f)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -133,8 +135,8 @@ fun FormTextField(
             shape = RoundedCornerShape(16.dp),
             trailingIcon = if (onClick != null && trailingIcon != null) {
                 {
-                    IconButton(onClick = { if (enabled) onClick() }) {
-                        Icon(imageVector = trailingIcon, contentDescription = label, tint = MaterialTheme.colorScheme.primary)
+                    IconButton(onClick = { if (enableIcon) onClick() }) {
+                        Icon(imageVector = trailingIcon, contentDescription = label, tint = iconColor)
                     }
                 }
             } else {
