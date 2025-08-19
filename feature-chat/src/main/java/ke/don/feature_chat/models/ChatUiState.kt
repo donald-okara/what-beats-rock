@@ -41,5 +41,5 @@ data class ChatUiState(
     val spotlightPair: SpotlightPair? = null,
 
     // 👇 new field
-    val showLeaveDialog: Boolean = false
+    val showLeaveDialog: Boolean = false,
 )

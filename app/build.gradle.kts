@@ -58,7 +58,6 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.koffee)
 
-
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.appcheck.ktx)

@@ -51,7 +51,6 @@ dependencies {
     implementation(libs.bundles.voyager)
     implementation(libs.koffee)
 
-
     implementation(libs.androidx.foundation)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.firebase.appcheck.ktx)

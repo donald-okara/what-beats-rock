@@ -98,7 +98,7 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun showLeaveGame(){
+    fun showLeaveGame() {
         updateUiState(
             _uiState.value.copy(
                 showLeaveDialog = !_uiState.value.showLeaveDialog,
@@ -106,7 +106,7 @@ class ChatViewModel @Inject constructor(
         )
     }
 
-    fun handleLeaveDialogResponse(onQuit: () -> Unit){
+    fun handleLeaveDialogResponse(onQuit: () -> Unit) {
         Koffee.show(
             title = "Game Over",
             description = "You left the game with ${_uiState.value.score} points",
@@ -115,8 +115,8 @@ class ChatViewModel @Inject constructor(
             secondaryAction = ToastAction(
                 label = "Ok, Got it",
                 onClick = {},
-                dismissAfter = true
-            )
+                dismissAfter = true,
+            ),
         )
 
         onQuit()
@@ -127,7 +127,6 @@ class ChatViewModel @Inject constructor(
             ),
         )
     }
-
 
     suspend fun fetchSession(): Boolean {
         val result = useCase.fetchChatSession()

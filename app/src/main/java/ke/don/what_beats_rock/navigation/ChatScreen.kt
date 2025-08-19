@@ -66,7 +66,6 @@ class ChatScreen : Screen {
             handleIntent(ChatIntentHandler.ShowLeaveGameDialog)
         }
 
-
         Scaffold(
             topBar = {
                 TopAppBar(

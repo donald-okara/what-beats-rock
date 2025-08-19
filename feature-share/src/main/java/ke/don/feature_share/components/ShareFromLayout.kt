@@ -39,8 +39,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,7 +66,6 @@ import ke.don.core_designsystem.material_theme.ui.theme.ThemeModeProvider
 import ke.don.core_designsystem.material_theme.ui.theme.ThemedPreviewTemplate
 import ke.don.feature_share.models.Channel
 import ke.don.feature_share.models.SharableIntentHandler
-import ke.don.feature_share.models.SharableUiState
 import ke.don.koffee.domain.Koffee
 import ke.don.koffee.model.ToastAction
 import ke.don.koffee.model.ToastType
@@ -110,8 +107,8 @@ fun ShareFrameLayout(
                         dismissAfter = true,
                         onClick = {
                             writeStorageAccessState.launchMultiplePermissionRequest()
-                        }
-                    )
+                        },
+                    ),
                 )
             } else {
                 writeStorageAccessState.launchMultiplePermissionRequest()

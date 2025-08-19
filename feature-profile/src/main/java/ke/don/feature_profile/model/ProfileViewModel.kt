@@ -21,12 +21,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import ke.don.core_datasource.domain.models.PodiumProfile
 import ke.don.core_datasource.domain.repositories.ProfileRepository
 import ke.don.koffee.domain.Koffee
-import ke.don.koffee.model.ToastAction
 import ke.don.koffee.model.ToastType
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -103,7 +100,7 @@ class ProfileViewModel @Inject constructor(
                     Koffee.show(
                         title = "Something went wrong",
                         description = result.exceptionOrNull()?.message ?: "",
-                        type = ToastType.Error
+                        type = ToastType.Error,
                     )
                 }
             }
@@ -140,7 +137,7 @@ class ProfileViewModel @Inject constructor(
                     Koffee.show(
                         title = "Something went wrong",
                         description = result.exceptionOrNull()?.message ?: "",
-                        type = ToastType.Error
+                        type = ToastType.Error,
                     )
                 }
             }
@@ -169,7 +166,7 @@ class ProfileViewModel @Inject constructor(
                     Koffee.show(
                         title = "Something went wrong",
                         description = result.exceptionOrNull()?.message ?: "",
-                        type = ToastType.Error
+                        type = ToastType.Error,
                     )
                 }
             }
@@ -198,7 +195,7 @@ class ProfileViewModel @Inject constructor(
                     Koffee.show(
                         title = "Something went wrong",
                         description = result.exceptionOrNull()?.message ?: "",
-                        type = ToastType.Error
+                        type = ToastType.Error,
                     )
                 }
             }

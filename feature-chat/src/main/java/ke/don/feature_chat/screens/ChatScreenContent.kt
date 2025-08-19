@@ -62,7 +62,7 @@ fun ChatScreenContent(
     uiState: ChatUiState,
     navigateToShare: (SpotlightModel) -> Unit,
     handleIntent: (ChatIntentHandler) -> Unit,
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -80,9 +80,9 @@ fun ChatScreenContent(
         )
     }
 
-    if (uiState.showLeaveDialog){
+    if (uiState.showLeaveDialog) {
         ConfirmationDialog(
-            onDismissRequest =  { handleIntent(ChatIntentHandler.ShowLeaveGameDialog) },
+            onDismissRequest = { handleIntent(ChatIntentHandler.ShowLeaveGameDialog) },
             onConfirmation = { handleIntent(ChatIntentHandler.HandleLeaveResponse(navigateBack)) },
             dialogTitle = "Leaving so soon?",
             dialogText = "Your progress will be lost if you leave the game",

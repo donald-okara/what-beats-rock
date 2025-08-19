@@ -36,7 +36,6 @@ import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
 import ke.don.koffee.annotations.ExperimentalKoffeeApi
-import ke.don.koffee.domain.Koffee
 import ke.don.koffee.model.KoffeeDefaults
 import ke.don.koffee.ui.KoffeeBar
 import ke.don.koffee.ui.toasts_suite.GlowingToast
@@ -59,15 +58,15 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     KoffeeBar(
                         config = KoffeeDefaults.config.copy(
-                            layout = { GlowingToast(it) }
-                        )
+                            layout = { GlowingToast(it) },
+                        ),
                     ) {
                         Navigator(screen = initialScreen) { navigator ->
                             AnimatedContent(
                                 targetState = navigator.lastItem,
                                 transitionSpec = {
                                     (scaleIn(initialScale = 0.9f) + fadeIn()) togetherWith
-                                            (scaleOut(targetScale = 1.1f) + fadeOut())
+                                        (scaleOut(targetScale = 1.1f) + fadeOut())
                                 },
                                 contentKey = { it.key },
                             ) { screen ->
@@ -75,7 +74,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-
                 }
             }
         }
