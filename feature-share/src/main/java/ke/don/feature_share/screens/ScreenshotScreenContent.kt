@@ -26,10 +26,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import ke.don.core_designsystem.material_theme.components.LoadingOverlay
@@ -47,10 +44,7 @@ fun ScreenshotScreenContent(
     navigateBack: () -> Unit,
     state: SharableUiState,
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
     Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
                 title = {},
@@ -64,9 +58,7 @@ fun ScreenshotScreenContent(
                 .padding(padding),
         ) {
             ShareFrameLayout(
-                state = state,
                 handleIntent = handleIntent,
-                snackbarHostState = snackbarHostState,
             ) {
                 when (screenModel) {
                     is SharableScreenModel.Profile -> ShareProfileScreen(profile = screenModel.profile)

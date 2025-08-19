@@ -22,11 +22,13 @@ import com.google.firebase.appcheck.debug.DebugAppCheckProviderFactory
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.HiltAndroidApp
 import ke.don.core_datasource.remote.RemoteConfigManager
+import ke.don.koffee.domain.Koffee
 
 @HiltAndroidApp
 class WhatBeatsRockApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        Koffee.init {}
         RemoteConfigManager.init()
         FirebaseApp.initializeApp(this)
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(true)

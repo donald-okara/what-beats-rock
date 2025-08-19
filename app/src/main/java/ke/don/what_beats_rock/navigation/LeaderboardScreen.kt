@@ -93,7 +93,9 @@ class LeaderboardScreen() : Screen {
                     actions = {
                         if (auth != null) {
                             IconButton(
-                                onClick = { handleIntentLocal(LeaderboardIntentHandler.NavigateMyProfile) },
+                                onClick = {
+                                    handleIntentLocal(LeaderboardIntentHandler.NavigateMyProfile)
+                                },
                             ) {
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
@@ -104,8 +106,16 @@ class LeaderboardScreen() : Screen {
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-                                        .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape),
+                                        .background(
+                                            MaterialTheme.colorScheme.primaryContainer.copy(
+                                                alpha = 0.3f,
+                                            ),
+                                        )
+                                        .border(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                            CircleShape,
+                                        ),
                                 )
                             }
                         }

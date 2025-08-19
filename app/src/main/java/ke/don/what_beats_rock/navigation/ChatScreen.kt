@@ -15,10 +15,10 @@
  */
 package ke.don.what_beats_rock.navigation
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -62,6 +62,9 @@ class ChatScreen : Screen {
                 handleIntent(ChatIntentHandler.ResetState)
             }
         }
+        BackHandler(enabled = true) {
+            handleIntent(ChatIntentHandler.ShowLeaveGameDialog)
+        }
 
         Scaffold(
             topBar = {
@@ -73,7 +76,7 @@ class ChatScreen : Screen {
                     },
                     navigationIcon = {
                         IconButton(
-                            onClick = { navigator?.pop() },
+                            onClick = { handleIntent(ChatIntentHandler.ShowLeaveGameDialog) },
                         ) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
@@ -88,6 +91,7 @@ class ChatScreen : Screen {
                 modifier = Modifier.padding(innerPadding),
                 uiState = state,
                 handleIntent = handleIntent,
+                navigateBack = { navigator?.pop() },
                 navigateToShare = { navigator?.push(ScreenshotScreen(SharableScreenModel.GameSpotlight(spotlightModel))) },
             )
         }

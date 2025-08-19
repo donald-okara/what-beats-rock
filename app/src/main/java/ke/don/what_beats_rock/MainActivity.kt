@@ -35,11 +35,16 @@ import cafe.adriel.voyager.navigator.Navigator
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
+import ke.don.koffee.annotations.ExperimentalKoffeeApi
+import ke.don.koffee.model.KoffeeDefaults
+import ke.don.koffee.ui.KoffeeBar
+import ke.don.koffee.ui.toasts_suite.GlowingToast
 import ke.don.what_beats_rock.navigation.LeaderboardScreen
 import ke.don.what_beats_rock.navigation.OnboardingScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalKoffeeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -51,16 +56,22 @@ class MainActivity : ComponentActivity() {
                 val isLoggedIn = auth.currentUser != null
                 val initialScreen = if (isLoggedIn) LeaderboardScreen() else OnboardingScreen()
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    Navigator(screen = initialScreen) { navigator ->
-                        AnimatedContent(
-                            targetState = navigator.lastItem,
-                            transitionSpec = {
-                                (scaleIn(initialScale = 0.9f) + fadeIn()) togetherWith
-                                    (scaleOut(targetScale = 1.1f) + fadeOut())
-                            },
-                            contentKey = { it.key },
-                        ) { screen ->
-                            screen.Content()
+                    KoffeeBar(
+                        config = KoffeeDefaults.config.copy(
+                            layout = { GlowingToast(it) },
+                        ),
+                    ) {
+                        Navigator(screen = initialScreen) { navigator ->
+                            AnimatedContent(
+                                targetState = navigator.lastItem,
+                                transitionSpec = {
+                                    (scaleIn(initialScale = 0.9f) + fadeIn()) togetherWith
+                                        (scaleOut(targetScale = 1.1f) + fadeOut())
+                                },
+                                contentKey = { it.key },
+                            ) { screen ->
+                                screen.Content()
+                            }
                         }
                     }
                 }

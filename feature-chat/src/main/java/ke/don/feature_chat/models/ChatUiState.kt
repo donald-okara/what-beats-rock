@@ -38,7 +38,8 @@ data class ChatUiState(
     val score: Int = 0,
     val gameOver: Boolean = false,
     val showGameOver: Boolean = false,
-    // 👇 new field
-
     val spotlightPair: SpotlightPair? = null,
+
+    // 👇 new field
+    val showLeaveDialog: Boolean = false,
 )
