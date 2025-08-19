@@ -54,6 +54,9 @@ import ke.don.core_designsystem.material_theme.components.Images
 import ke.don.feature_leaderboard.models.LeaderboardIntentHandler
 import ke.don.feature_leaderboard.models.LeaderboardViewModel
 import ke.don.feature_leaderboard.screens.LeaderboardScreenContent
+import ke.don.koffee.domain.Koffee
+import ke.don.koffee.model.ToastDuration
+import ke.don.koffee.model.ToastType
 
 @OptIn(ExperimentalMaterial3Api::class)
 class LeaderboardScreen() : Screen {
@@ -93,7 +96,9 @@ class LeaderboardScreen() : Screen {
                     actions = {
                         if (auth != null) {
                             IconButton(
-                                onClick = { handleIntentLocal(LeaderboardIntentHandler.NavigateMyProfile) },
+                                onClick = {
+                                    handleIntentLocal(LeaderboardIntentHandler.NavigateMyProfile)
+                                },
                             ) {
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
@@ -104,8 +109,16 @@ class LeaderboardScreen() : Screen {
                                     contentScale = ContentScale.Crop,
                                     modifier = Modifier
                                         .clip(CircleShape)
-                                        .background(MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f))
-                                        .border(2.dp, MaterialTheme.colorScheme.primary.copy(alpha = 0.5f), CircleShape),
+                                        .background(
+                                            MaterialTheme.colorScheme.primaryContainer.copy(
+                                                alpha = 0.3f
+                                            )
+                                        )
+                                        .border(
+                                            2.dp,
+                                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                                            CircleShape
+                                        ),
                                 )
                             }
                         }
