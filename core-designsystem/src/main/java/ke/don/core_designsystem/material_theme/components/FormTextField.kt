@@ -68,7 +68,7 @@ fun FormTextField(
         nameLength >= maxLength - 5 -> MaterialTheme.colorScheme.tertiary
         else -> MaterialTheme.colorScheme.onSurface
     }
-    val enableIcon= enabled && !isError
+    val enableIcon = enabled && !isError
     val iconColor = if (enableIcon)MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(0.6f)
 
     Column(
