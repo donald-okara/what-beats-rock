@@ -24,6 +24,10 @@ import ke.don.core_datasource.domain.models.ChatMessage
 import ke.don.core_datasource.domain.models.SpotlightPair
 import ke.don.core_datasource.domain.use_cases.ChatUseCase
 import ke.don.core_datasource.remote.ai.GeminiResult
+import ke.don.koffee.domain.Koffee
+import ke.don.koffee.model.ToastAction
+import ke.don.koffee.model.ToastDuration
+import ke.don.koffee.model.ToastType
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -67,6 +71,12 @@ class ChatViewModel @Inject constructor(
                     showGameOver = !_uiState.value.showGameOver,
                 ),
             )
+            is ChatIntentHandler.ShowLeaveGameDialog -> {
+                showLeaveGame()
+            }
+            is ChatIntentHandler.HandleLeaveResponse -> {
+                handleLeaveDialogResponse(intent.onQuit)
+            }
         }
     }
 
@@ -87,6 +97,37 @@ class ChatViewModel @Inject constructor(
             )
         }
     }
+
+    fun showLeaveGame(){
+        updateUiState(
+            _uiState.value.copy(
+                showLeaveDialog = !_uiState.value.showLeaveDialog,
+            ),
+        )
+    }
+
+    fun handleLeaveDialogResponse(onQuit: () -> Unit){
+        Koffee.show(
+            title = "Game Over",
+            description = "You left the game with ${_uiState.value.score} points",
+            type = ToastType.Info,
+            duration = ToastDuration.Long,
+            secondaryAction = ToastAction(
+                label = "Ok, Got it",
+                onClick = {},
+                dismissAfter = true
+            )
+        )
+
+        onQuit()
+
+        updateUiState(
+            _uiState.value.copy(
+                showLeaveDialog = false,
+            ),
+        )
+    }
+
 
     suspend fun fetchSession(): Boolean {
         val result = useCase.fetchChatSession()

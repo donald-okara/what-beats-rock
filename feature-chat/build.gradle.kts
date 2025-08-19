@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.firebase.appcheck.ktx)
     implementation(libs.firebase.appcheck.playintegrity)
     implementation(libs.firebase.appcheck.debug)
+    implementation(libs.koffee)
 
     ksp(libs.hilt.android.compiler)
     implementation(libs.bundles.hilt)

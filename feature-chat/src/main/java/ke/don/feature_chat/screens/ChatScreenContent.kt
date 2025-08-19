@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.automirrored.outlined.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,6 +42,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import ke.don.core_datasource.domain.models.ChatMessage
 import ke.don.core_datasource.domain.models.SpotlightModel
+import ke.don.core_designsystem.material_theme.components.ConfirmationDialog
+import ke.don.core_designsystem.material_theme.components.DialogType
 import ke.don.core_designsystem.material_theme.components.FormTextField
 import ke.don.core_designsystem.material_theme.components.TextBubble
 import ke.don.core_designsystem.material_theme.components.TypingBubble
@@ -59,6 +62,7 @@ fun ChatScreenContent(
     uiState: ChatUiState,
     navigateToShare: (SpotlightModel) -> Unit,
     handleIntent: (ChatIntentHandler) -> Unit,
+    navigateBack: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -73,6 +77,17 @@ fun ChatScreenContent(
             uiState = uiState,
             handleIntent = handleIntent,
             navigateToShare = navigateToShare,
+        )
+    }
+
+    if (uiState.showLeaveDialog){
+        ConfirmationDialog(
+            onDismissRequest =  { handleIntent(ChatIntentHandler.ShowLeaveGameDialog) },
+            onConfirmation = { handleIntent(ChatIntentHandler.HandleLeaveResponse(navigateBack)) },
+            dialogTitle = "Leaving so soon?",
+            dialogText = "Your progress will be lost if you leave the game",
+            dialogType = DialogType.WARNING,
+            icon = Icons.AutoMirrored.Outlined.Logout,
         )
     }
 }
@@ -320,6 +335,6 @@ fun ChatScreenPreview(
     )
 
     ThemedPreviewTemplate(isDark) {
-        ChatScreenContent(uiState = previewUiState, navigateToShare = {}, handleIntent = {})
+        ChatScreenContent(uiState = previewUiState, navigateToShare = {}, handleIntent = {}, navigateBack = {})
     }
 }

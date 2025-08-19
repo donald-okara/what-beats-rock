@@ -37,7 +37,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import ke.don.core_designsystem.material_theme.ui.theme.AppTheme
 import ke.don.koffee.annotations.ExperimentalKoffeeApi
 import ke.don.koffee.domain.Koffee
+import ke.don.koffee.model.KoffeeDefaults
 import ke.don.koffee.ui.KoffeeBar
+import ke.don.koffee.ui.toasts_suite.GlowingToast
 import ke.don.what_beats_rock.navigation.LeaderboardScreen
 import ke.don.what_beats_rock.navigation.OnboardingScreen
 
@@ -55,7 +57,11 @@ class MainActivity : ComponentActivity() {
                 val isLoggedIn = auth.currentUser != null
                 val initialScreen = if (isLoggedIn) LeaderboardScreen() else OnboardingScreen()
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    KoffeeBar {
+                    KoffeeBar(
+                        config = KoffeeDefaults.config.copy(
+                            layout = { GlowingToast(it) }
+                        )
+                    ) {
                         Navigator(screen = initialScreen) { navigator ->
                             AnimatedContent(
                                 targetState = navigator.lastItem,
