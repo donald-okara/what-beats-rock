@@ -1,5 +1,11 @@
 # 🪨 What Beats Rock?
 
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=ke.don.what_beats_rock&pcampaignid=web_share">
+    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" height="80"/>
+  </a>
+</p>
+
 **What Beats Rock?** is a playful, AI-powered game that transforms the classic rock-paper-scissors mechanic into an infinite loop of logic, creativity, and fun. Users are prompted with a question like:
 
 > **What beats rock?**
